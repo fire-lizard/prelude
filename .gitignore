@@ -2,6 +2,7 @@
 *.obj
 *.sbr
 *.pdb
+*.aps
 *.exe
 .vs/
 external/

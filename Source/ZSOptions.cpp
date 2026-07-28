@@ -42,6 +42,28 @@ typedef enum
 
 } OPTIONS_CONTROLS;
 
+// Window sizes offered by the resolution button. The game keeps rendering at
+// its base resolution and the GL layer scales that frame to whichever of these
+// is picked, so switching is immediate - no reload, no restart.
+static const struct { int w, h; } ScreenSizes[] =
+{
+	{  800,  600 },
+	{ 1024,  768 },
+	{ 1152,  864 },
+	{ 1920, 1080 },
+};
+#define NUM_SCREEN_SIZES (int)(sizeof(ScreenSizes) / sizeof(ScreenSizes[0]))
+
+static void SetScreenSizeText(ZSWindow *pWin)
+{
+	int w = 0, h = 0;
+	char Text[16];
+
+	opengl_get_resolution(&w, &h);
+	sprintf(Text, "%ix%i", w, h);
+	pWin->SetText(Text);
+}
+
 typedef enum
 {
 	IDC_LOAD_GAME,
@@ -60,34 +82,10 @@ void ZSOptionWin::LoadSettings()
 	BOOL Test;
 
 	ZSWindow *pWin;
-	
-/*	SeekTo(fp,"WIDTH");
-	int Width;
-	Width = GetInt(fp);
 
-	pWin = GetChild(IDC_SCREEN_SIZE);
+	SetScreenSizeText(GetChild(IDC_SCREEN_SIZE));
 
-	switch(Width)
-	{
-	case 640:
-		pWin->SetText("640x480");
-		break;
-	case 800:
-		pWin->SetText("800x600");
-		break;
-	case 1024:
-		pWin->SetText("1024x768");
-		break;
-	case 1280:
-		pWin->SetText("1280x1024");
-		break;
-	default:
-		break;
-	}
-
-	SeekTo(fp,"HEIGHT");
-*/	
-	SeekTo(fp,"SOUND");	
+	SeekTo(fp,"SOUND");
 	Test = (BOOL)GetInt(fp);
 	pWin = GetChild(IDC_FX_TOGGLE);
 	Test = Engine->Sound()->FxAreOn();
@@ -310,29 +308,10 @@ void ZSOptionWin::SaveSettings()
 
 	ZSWindow *pWin;
 
-	
-	//pWin = GetChild(IDC_SCREEN_SIZE);
-/*	if(!strcmp(pWin->GetText(),"640x480"))
-	{
-		fprintf(ftemp,"WIDTH  640\nHEIGHT  480\n");
-	}
-	else
-	if(!strcmp(pWin->GetText(),"800x600"))
-	{
-*/
-		fprintf(ftemp,"WIDTH  800\nHEIGHT  600\n");
-/*	}
-	else
-	if(!strcmp(pWin->GetText(),"1024x768"))
-	{
-		fprintf(ftemp,"WIDTH  1024\nHEIGHT  768\n");
-	}
-	else
-	if(!strcmp(pWin->GetText(),"1280x1024"))
-	{
-		fprintf(ftemp,"WIDTH  1280\nHEIGHT  1024\n");
-	}
-*/
+	// The resolution the game renders and lays its GUI out at. Fixed - the
+	// window size below is what the Resolution button changes.
+	fprintf(ftemp,"WIDTH  800\nHEIGHT  600\n");
+
 	fprintf(ftemp,"WINDOWED");
 	SeekTo(fp,"WINDOWED");
 	if(GetInt(fp))
@@ -343,6 +322,12 @@ void ZSOptionWin::SaveSettings()
 	{
 		fprintf(ftemp,"    0\n");
 	}
+
+	int WinResX = 0;
+	int WinResY = 0;
+	opengl_get_resolution(&WinResX, &WinResY);
+	fprintf(ftemp,"WINRESX    %i\n", WinResX);
+	fprintf(ftemp,"WINRESY    %i\n", WinResY);
 
 
 	fprintf(ftemp,"DRAWWORLD");
@@ -560,6 +545,24 @@ int ZSOptionWin::Command(int IDFrom, int Command, int Param)
 
 			break;
 */
+		case IDC_SCREEN_SIZE:
+		{
+			int w = 0, h = 0, i;
+
+			opengl_get_resolution(&w, &h);
+			for(i = 0; i < NUM_SCREEN_SIZES; i++)
+			{
+				if(ScreenSizes[i].w == w && ScreenSizes[i].h == h)
+					break;
+			}
+			// A size that is not on the list (an old gui.ini) starts the cycle
+			// over rather than being skipped past.
+			i = (i < NUM_SCREEN_SIZES) ? (i + 1) % NUM_SCREEN_SIZES : 0;
+
+			opengl_set_resolution(ScreenSizes[i].w, ScreenSizes[i].h);
+			SetScreenSizeText(GetChild(IDC_SCREEN_SIZE));
+			break;
+		}
 		case IDC_DIFFICULTY_LEVEL:
 			int DifLevel;
 			pWin = GetChild(IDC_DIFFICULTY_LEVEL);
@@ -851,14 +854,16 @@ ZSOptionWin::ZSOptionWin(int NewID)
 	AddChild(pText);
 
 
-	SeekTo(fp,"SCREENSIZE");	
+	SeekTo(fp,"SCREENSIZE");
 	LoadRect(&rLoad,fp);
 
-//	pButton = new ZSButton(BUTTON_NORMAL, IDC_SCREEN_SIZE, XYWH(rLoad));
+	pButton = new ZSButton(BUTTON_NORMAL, IDC_SCREEN_SIZE, XYWH(rLoad));
+	pButton->Show();
+	AddChild(pButton);
 
-//resolution change disabled
-//	pButton->Hide();
-//	AddChild(pButton);
+	pText = new ZSText(IDC_SCREEN_SIZE + 50, rLoad.right + 2, rLoad.top, "Resolution");
+	pText->Show();
+	AddChild(pText);
 
 	SeekTo(fp,"BACKSIDEDRAW");
 	LoadRect(&rLoad,fp);

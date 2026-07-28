@@ -580,6 +580,18 @@ HWND ZSGraphicsSystem::Init(HINSTANCE hInstance)
 
 	Windowed = GetInt(fp);
 
+	// Window size, changeable from the in-game options. Independent of
+	// WIDTH/HEIGHT above: that is the resolution the game renders and lays its
+	// GUI out at, this is only how big the window showing it is. Missing from
+	// older gui.ini files, in which case the window is 1:1 with the render.
+	int WinResX = ScreenWidth;
+	int WinResY = ScreenHeight;
+
+	if (SeekTo(fp, "WINRESX"))
+		WinResX = GetInt(fp);
+	if (SeekTo(fp, "WINRESY"))
+		WinResY = GetInt(fp);
+
 	fclose(fp);
 
 	DEBUG_INFO(" done.\n\n")
@@ -587,7 +599,7 @@ HWND ZSGraphicsSystem::Init(HINSTANCE hInstance)
 	DEBUG_INFO("Creating Windows interface Window\n");
 
 #ifdef OPENGL
-	MainWindow = (HWND) opengl_create_window(ScreenWidth, ScreenHeight, true);
+	MainWindow = (HWND) opengl_create_window(ScreenWidth, ScreenHeight, true, WinResX, WinResY);
 #else
 	MainWindow = CreateWindowEx(0,
 			WINDOW_CLASS_NAME,

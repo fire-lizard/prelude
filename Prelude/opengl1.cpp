@@ -23,6 +23,13 @@ typedef struct _opengl_general_desc {
 	float baseResRatio = 0;
 	float baseResVar = 0;
 
+	// Resolution the player asked for, which is not always the one they get:
+	// a window as big as the desktop is shrunk to fit the work area. Rendering
+	// follows nativeRes* (what the window really is), the options screen shows
+	// and cycles from this.
+	int reqResX = 0;
+	int reqResY = 0;
+
 	GLuint renderBuffer;
 	GLuint pixelsFrameBuffer;
 } opengl_general_desc;
@@ -1012,37 +1019,124 @@ inline void opengl_do_redraw() {
 
 void ZSInput_key_event(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-void * opengl_create_window(int w, int h, int windowed) {
-	DWORD tid;
+#define OPENGL_WINDOW_TITLE	"Prelude to Darkness"
 
+// The game always renders a frame at the base resolution from gui.ini and this
+// layer scales that frame into the window, so the window size is a free choice:
+// it only feeds the viewport maths. BeginScene, flush_surface and the mouse
+// mapping all recompute from these three fields every time they run, so
+// changing resolution needs nothing more than this.
+static void opengl_sync_window_size(void) {
+	int fbw = 0, fbh = 0;
+
+	glfwGetFramebufferSize(opengl_local_context.window, &fbw, &fbh);
+	if (fbw <= 0 || fbh <= 0 || opengl_local_context.baseResY <= 0) {
+		return;
+	}
+
+	opengl_local_context.nativeResX = fbw;
+	opengl_local_context.nativeResY = fbh;
+	opengl_local_context.baseResVar = (float)fbh / (float)opengl_local_context.baseResY;
+
+	int xp = (fbw - ((float)opengl_local_context.baseResX * opengl_local_context.baseResVar)) / 2;
+	glViewport(xp, 0, fbw - xp * 2, fbh);
+	debug_info("window %ix%i, base %ix%i, scale %f, pillarbox %i", fbw, fbh,
+		opengl_local_context.baseResX, opengl_local_context.baseResY,
+		opengl_local_context.baseResVar, xp);
+}
+
+// Size the window to `w`x`h` and centre it, shrinking it if the frame and title
+// bar would not fit the monitor work area - picking a resolution at or above
+// the desktop's then gives the largest window that stays fully reachable
+// instead of one hanging off the bottom of the screen. glfwSetWindowPos places
+// the client area, hence the frame terms.
+static void opengl_place_window(int w, int h) {
+	int ax = 0, ay = 0, aw = 0, ah = 0;
+	int fl = 0, ft = 0, fr = 0, fb = 0;
+
+	glfwGetMonitorWorkarea(glfwGetPrimaryMonitor(), &ax, &ay, &aw, &ah);
+	glfwGetWindowFrameSize(opengl_local_context.window, &fl, &ft, &fr, &fb);
+
+	if (aw > 0 && w > aw - fl - fr) w = aw - fl - fr;
+	if (ah > 0 && h > ah - ft - fb) h = ah - ft - fb;
+
+	glfwSetWindowSize(opengl_local_context.window, w, h);
+	glfwSetWindowPos(opengl_local_context.window,
+		ax + fl + (aw - (w + fl + fr)) / 2,
+		ay + ft + (ah - (h + ft + fb)) / 2);
+}
+
+static void opengl_close_callback(GLFWwindow * window) {
+	opengl_exit();
+}
+
+void opengl_set_resolution(int w, int h) {
+	if (!opengl_local_context.window) {
+		return;
+	}
+
+	opengl_local_context.reqResX = w;
+	opengl_local_context.reqResY = h;
+
+	opengl_place_window(w, h);
+	opengl_sync_window_size();
+}
+
+void opengl_get_resolution(int * w, int * h) {
+	*w = opengl_local_context.reqResX;
+	*h = opengl_local_context.reqResY;
+}
+
+// Window pixel -> game pixel. The frame is drawn at baseResVar scale with `xp`
+// pillarbox columns either side, so undo exactly that; the game's GUI, mouse
+// clamps and hit tests are all in base-resolution coordinates.
+// ponytail: assumes window coords are framebuffer pixels, true unless GLFW is
+// asked to scale to monitor DPI - divide by the fb/window ratio if that changes.
+void opengl_window_to_base(double wx, double wy, int * bx, int * by) {
+	float s = opengl_local_context.baseResVar;
+
+	if (s <= 0.0f) {
+		*bx = (int)wx;
+		*by = (int)wy;
+		return;
+	}
+
+	int xp = (opengl_local_context.nativeResX - ((float)opengl_local_context.baseResX * s)) / 2;
+
+	*bx = (int)((wx - xp) / s);
+	*by = (int)(wy / s);
+
+	if (*bx < 0) *bx = 0;
+	if (*by < 0) *by = 0;
+}
+
+void * opengl_create_window(int w, int h, int windowed, int winW, int winH) {
 	glfwSetErrorCallback(glfw_err_callback);
 	if (!glfwInit()) {
 		exit(EXIT_FAILURE);
 	}
 
 	const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	int nativex = mode->width;
-	int nativey = mode->height;
 
-#ifdef _WIN32
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+	// Size comes from the in-game options, not from dragging the window edge -
+	// one code path for the resolution instead of two.
+	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-	opengl_local_context.window = glfwCreateWindow(nativex, nativey, "ZSMain", NULL, NULL);
-#elif __linux__
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-	if (!windowed) {
-		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-		glfwWindowHint(GLFW_DECORATED, GL_FALSE);
-		opengl_local_context.window = glfwCreateWindow(nativex,nativey, "ZSMain", glfwGetPrimaryMonitor(), NULL);	
+	if (windowed) {
+		opengl_local_context.reqResX = winW;
+		opengl_local_context.reqResY = winH;
+		opengl_local_context.window = glfwCreateWindow(winW, winH, OPENGL_WINDOW_TITLE, NULL, NULL);
 	}
 	else {
-		opengl_local_context.window = glfwCreateWindow(nativex,nativey, "ZSMain",NULL, NULL);	
+		opengl_local_context.reqResX = mode->width;
+		opengl_local_context.reqResY = mode->height;
+		glfwWindowHint(GLFW_DECORATED, GL_FALSE);
+		opengl_local_context.window = glfwCreateWindow(mode->width, mode->height,
+			OPENGL_WINDOW_TITLE, glfwGetPrimaryMonitor(), NULL);
 	}
-	
-	
-#endif
+
 	if (!opengl_local_context.window) {
 		glfwTerminate();
 		exit(EXIT_FAILURE);
@@ -1051,61 +1145,34 @@ void * opengl_create_window(int w, int h, int windowed) {
 	opengl_local_context.baseResY = h;
 	opengl_local_context.baseResX = w;
 	opengl_local_context.baseResRatio = (float)w / (float)h;
-	
+
 
 	//glfwSetKeyCallback(opengl_local_context.window, opengl_key_event);
 	glfwSetKeyCallback(opengl_local_context.window, ZSInput_key_event);
-	
+
 	glfwSetMouseButtonCallback(opengl_local_context.window, opengl_mouse_event);
 	glfwSetCursorPosCallback(opengl_local_context.window, opengl_mouse_cursor_event);
 	glfwSetScrollCallback(opengl_local_context.window, opengl_mouse_wheel_event);
+	// A decorated window has a close button; without this it does nothing.
+	glfwSetWindowCloseCallback(opengl_local_context.window, opengl_close_callback);
 
 	glfwMakeContextCurrent(opengl_local_context.window);
-	int ix = glewInit();
+	glewInit();
 
 	glfwSwapInterval(1);
-	
+
+	if (windowed) {
+		opengl_place_window(winW, winH);
+	}
+	opengl_sync_window_size();
 
 #ifdef _WIN32
-	int sx = GetSystemMetrics(SM_CXSCREEN);
-	int sy = GetSystemMetrics(SM_CYSCREEN);
+	void * wd = (void*)glfwGetWin32Window(opengl_local_context.window);
 #elif __linux__
-	//int sx = WidthOfScreen(XScreenOfDisplay(glfwGetX11Display(), 0));
-	//int sy = HeightOfScreen(XScreenOfDisplay(glfwGetX11Display(), 0));
-	int nscreens;
-	XineramaScreenInfo * screens = XineramaQueryScreens(glfwGetX11Display(),&nscreens);
-
-	// it seems that in some screen managers X11 provides a single screen for multiple monitors
-	// which messes the resolution, changed it to use xinerama to get the native res of a fixed
-	// monitors
-	int sx = screens[0].width;
-	int sy = screens[0].height;	
-	
-#endif
-		
-	opengl_local_context.nativeResX = sx;
-	opengl_local_context.nativeResY = sy;
-	opengl_local_context.baseResVar = (float)sy / (float)h;
-	debug_info("native screen res %i %i", sx, sy);
-
-#ifdef _WIN32
-	HWND wd = glfwGetWin32Window(opengl_local_context.window);
-	SetWindowPos(wd, NULL, 0, 0, sx, sy, SWP_NOZORDER);
-	ShowWindowAsync(wd, SW_SHOWMAXIMIZED);
-	DWORD s = GetWindowLong(wd, GWL_STYLE);
-	DWORD se = GetWindowLong(wd, GWL_EXSTYLE);
-
-	SetWindowLong(wd, GWL_STYLE, 0);
-	SetWindowLong(wd, GWL_EXSTYLE, se & ~(WS_EX_DLGMODALFRAME | WS_EX_WINDOWEDGE | WS_EX_CLIENTEDGE | WS_EX_STATICEDGE));
-	debug_info("Window handler %X\n", wd);
-#elif __linux__	
 	void * wd = (void*)glfwGetX11Window(opengl_local_context.window);
 #endif
-		
-	int xp = (opengl_local_context.nativeResX - ((float)opengl_local_context.baseResX*opengl_local_context.baseResVar)) / 2;
-	glViewport(xp, 0, opengl_local_context.nativeResX-xp * 2, opengl_local_context.nativeResY);
-	debug_info("Viewport at %i,%i,%i,%i", xp, 0, opengl_local_context.nativeResX-xp*2, opengl_local_context.nativeResY);
-	
+	debug_info("Window handler %X\n", wd);
+
 
 #ifdef OPENGL_RENDER_TO_BUFFER
 	/*glGenRenderbuffers(1, &opengl_local_context.renderBuffer);
@@ -1235,6 +1302,17 @@ void opengl_exit() {
 
 void opengl_poll() {
 	glfwPollEvents();
+}
+
+// The game draws its own cursor, so the system one is hidden - but only over
+// the client area. Win32's ShowCursor(FALSE) would also blank it over the
+// title bar, which a windowed game still needs you to be able to grab.
+void opengl_show_cursor(int show) {
+	if (!opengl_local_context.window) {
+		return;
+	}
+	glfwSetInputMode(opengl_local_context.window, GLFW_CURSOR,
+		show ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN);
 }
 
 #ifdef __linux__

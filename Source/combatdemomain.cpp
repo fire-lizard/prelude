@@ -365,7 +365,7 @@ int main(int argc, char * argv[]) {
 
 //	ShowWindow(hMainWindow, SW_SHOW);
 	
-	ShowCursor(FALSE);
+	opengl_show_cursor(FALSE);
 
 	//create the progress window
 	ZSText *pProgressText;
@@ -989,7 +989,7 @@ int main(int argc, char * argv[]) {
 	pMain->SetState(WINDOW_STATE_DONE);
 		
 	// end while
-	ShowCursor(TRUE);
+	opengl_show_cursor(TRUE);
 
 	// return to Windows like this
 	return(0);

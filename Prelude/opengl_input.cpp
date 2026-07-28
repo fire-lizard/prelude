@@ -214,9 +214,13 @@ void opengl_mouse_event(GLFWwindow* window, int button, int action, int mods) {
 }
 
 void opengl_mouse_cursor_event(GLFWwindow* window, double xpos, double ypos) {
-	
-	if (mouseDevice) {		
-		mouseDevice->setMouseEvent(-1,-1,-1, xpos,ypos);
+
+	if (mouseDevice) {
+		// The game's windows, hit tests and mouse clamps are all in base
+		// resolution pixels; GLFW reports window pixels.
+		int bx, by;
+		opengl_window_to_base(xpos, ypos, &bx, &by);
+		mouseDevice->setMouseEvent(-1,-1,-1, bx, by);
 	}
 }
 

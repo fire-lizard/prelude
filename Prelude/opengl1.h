@@ -1002,8 +1002,14 @@ extern opengl_input_data_format c_dfDIMouse;
 extern opengl_input_data_format c_dfDIKeyboard;
 
 // opengl
-void * opengl_create_window(int, int, int);
+void * opengl_create_window(int baseW, int baseH, int windowed, int winW, int winH);
 void opengl_get_native_res(int * x, int * y);
+// Window (output) resolution - independent of the base resolution the game
+// renders at, which stays fixed because the GUI is laid out in its pixels.
+void opengl_set_resolution(int w, int h);
+void opengl_get_resolution(int * w, int * h);
+void opengl_window_to_base(double wx, double wy, int * bx, int * by);
+void opengl_show_cursor(int show);
 void flush_surface(opengl_surface * surface);
 void opengl_set_primary_surface(opengl_surface * surface);
 void opengl_set_backbuffer(opengl_surface * bbuffer);
