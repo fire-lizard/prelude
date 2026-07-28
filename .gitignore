@@ -1,0 +1,8 @@
+*.o
+*.obj
+*.sbr
+*.pdb
+*.exe
+.vs/
+external/
+build/
