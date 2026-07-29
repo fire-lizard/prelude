@@ -188,53 +188,31 @@ void ZSTexture::Load(const char * fname, LPDIRECT3DDEVICE7 D3DDevice, LPDIRECTDR
 		pAlphaLevel->Lock(NULL, &Desc2, DDLOCK_WAIT, NULL);
 		pSourceLevel->Lock(NULL, &Desc, DDLOCK_WAIT, NULL);
 		
-		if(!NeedColorKey)
+		// The .ovr alpha map does not have to match the base texture's resolution:
+		// upscaled art keeps the original overlays, so walking both surfaces one
+		// pixel at a time runs off the end of the smaller one. Sample by ratio.
+		// ponytail: nearest neighbour, matches the rest of this port's scaling
+		if(Desc.dwWidth && Desc.dwHeight)
 		{
-			for( DWORD y = 0; y < Desc.dwHeight; y++ )  
-			{  
+			for( DWORD y = 0; y < Desc.dwHeight; y++ )
+			{
 				SurfPtr = (DWORD* )(( BYTE* )Desc.lpSurface + y * Desc.lPitch );
-				AlphaPtr =(DWORD* )(( BYTE* )Desc2.lpSurface + y * Desc2.lPitch );
-				
-				for( DWORD x = 0; x < Desc.dwWidth; x++ )  
-				{  
-					AlphaLevel = (RGBA_GETRED(*AlphaPtr) + RGBA_GETGREEN(*AlphaPtr) + RGBA_GETBLUE(*AlphaPtr)) / 3;
-					sr = RGBA_GETRED(*SurfPtr);
-					sg = RGBA_GETGREEN(*SurfPtr);
-					sb = RGBA_GETBLUE(*SurfPtr);
-					sa = RGBA_GETALPHA(*SurfPtr);
-					
-					NewColor = RGBA_MAKE(sr, sg, sb, AlphaLevel);
-					*SurfPtr = NewColor;
-				
-					SurfPtr++;  
-					AlphaPtr++;
-				}  
-			}
-		}
-		else
-		{
-			for( DWORD y = 0; y < Desc.dwHeight; y++ )  
-			{  
-				SurfPtr = (DWORD* )(( BYTE* )Desc.lpSurface + y * Desc.lPitch );
-				AlphaPtr =(DWORD* )(( BYTE* )Desc2.lpSurface + y * Desc2.lPitch );
-				
-				for( DWORD x = 0; x < Desc.dwWidth; x++ )  
-				{  
-					BaseColor = *SurfPtr;
-					AlphaColor = *AlphaPtr;
+				AlphaPtr =(DWORD* )(( BYTE* )Desc2.lpSurface + (y * Desc2.dwHeight / Desc.dwHeight) * Desc2.lPitch );
 
-					AlphaLevel = (RGBA_GETRED(*AlphaPtr) + RGBA_GETGREEN(*AlphaPtr) + RGBA_GETBLUE(*AlphaPtr)) / 3;
+				for( DWORD x = 0; x < Desc.dwWidth; x++ )
+				{
+					AlphaColor = AlphaPtr[x * Desc2.dwWidth / Desc.dwWidth];
+
+					AlphaLevel = (RGBA_GETRED(AlphaColor) + RGBA_GETGREEN(AlphaColor) + RGBA_GETBLUE(AlphaColor)) / 3;
 					sr = RGBA_GETRED(*SurfPtr);
 					sg = RGBA_GETGREEN(*SurfPtr);
 					sb = RGBA_GETBLUE(*SurfPtr);
-					sa = RGBA_GETALPHA(*SurfPtr);
-					
+
 					NewColor = RGBA_MAKE(sr, sg, sb, AlphaLevel);
 					*SurfPtr = NewColor;
-					
-					SurfPtr++;  
-					AlphaPtr++;
-				}  
+
+					SurfPtr++;
+				}
 			}
 		}
 

@@ -40,6 +40,14 @@ uint32* bmp_load(const char * path, int * iw, int * ih) {
 	int size = ftell(fp);
 	fseek(fp, 0, SEEK_SET);
 	byte * tmp = (byte*)malloc(size);
+
+	// Upscaled art can push a 32bit build close to its 2GB address space, and
+	// an unchecked malloc here just faults on header-> below with no clue why.
+	if (!tmp) {
+		debug_info("out of memory loading %s (%i bytes)", path, size);
+		exit(0);
+	}
+
 	int rt = fread(tmp, 1, size, fp);
 	
 	if (rt != size) {

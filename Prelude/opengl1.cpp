@@ -937,6 +937,12 @@ int D3DXCreateTextureFromFile(opengl_device* pd3dDevice, LPDWORD pFlags, LPDWORD
 	surface->pixels = tmp;
 	strcpy(surface->filename, pSrcName);
 
+	// This loads the bitmap at its own size rather than resampling to the
+	// requested one, so report back what the caller actually got - otherwise
+	// ZSTexture::Width/Height keep the size textures.txt asked for.
+	*pWidth = w;
+	*pHeight = h;
+
 	
 	if (*pNumMipMaps > 1) {
 		surface->createMipMaps(*pNumMipMaps - 1);

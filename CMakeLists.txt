@@ -154,6 +154,7 @@ set(OPENGL_FILES
 
 if(WIN32)
 set(OS_FILES
+	Script1.rc
 )
 else()
 set(OS_FILES
