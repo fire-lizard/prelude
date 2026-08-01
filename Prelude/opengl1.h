@@ -169,6 +169,9 @@ typedef struct _opengl_aux_dblt opengl_aux_dblt;
 
 typedef struct _opengl_surface {
 	int hasTexture = 0;
+	// Set whenever `pixels` changes, cleared once the new contents reach the GL
+	// texture. Without it every bind re-uploaded the whole texture.
+	int dirty = 1;
 	DWORD watermark;
 	GLuint tex;
 	opengl_clipper* clipper;
@@ -217,6 +220,7 @@ typedef struct _opengl_surface {
 		filename[0] = 0;
 		h = w = 0;
 		hasTexture = 0;
+		dirty = 1;
 	}
 
 	void buildSurface(int w, int h);
@@ -788,6 +792,7 @@ typedef struct _opengl_device {
 
 	GLuint bound_textures[128];
 	int bound_textures_size;
+	GLuint cur_tex;
 	std::unordered_map<opengl_surface*, int> texmap;
 	
 	std::vector<opengl_vertex> tmp_vertex_buffer;

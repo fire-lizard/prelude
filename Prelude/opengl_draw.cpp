@@ -10,6 +10,8 @@ void debug_info(const char * str, ...);
 
 int opengl_surface::Blt(LPRECT rect, _opengl_surface * src, LPRECT srcRect, DWORD flags, opengl_aux_dblt * blt_info) {
 
+	dirty = 1;
+
 	int i,j;
 	RECT area = { 0, };
 	RECT sarea = { 0, };
@@ -179,6 +181,8 @@ int _opengl_surface::Lock(LPRECT r, opengl_surface_desc2 * s, DWORD a, HANDLE b)
 	s->ddpfPixelFormat.dwBBitMask = 0xFF0000;
 	s->ddpfPixelFormat.dwRGBBitCount = 32;
 	assert(pixels != NULL);
+	// Hands the caller a raw pointer it may write through, so assume it does.
+	dirty = 1;
 	s->lpSurface = pixels;
 	s->lPitch = w*4;
 
@@ -209,6 +213,8 @@ int _opengl_surface::Flip(opengl_draw * draw, DWORD flags) {
 	uint32 * p = bbuffer->pixels;
 	bbuffer->pixels = pixels;
 	pixels = p;
+	dirty = 1;
+	bbuffer->dirty = 1;
 	char dbg[4196];
 	dbg[0] = 0;
 	int i, j;
@@ -317,7 +323,8 @@ _opengl_surface::_opengl_surface(struct _opengl_surface * iref, opengl_draw * id
 void opengl_surface::buildSurface(int iw, int ih) {
 	w = iw;
 	h = ih;
-	
+	dirty = 1;
+
 	pixels = new uint32[w*h];
 	glGenTextures(1, &tex);
 	hasTexture = 1;
@@ -333,11 +340,12 @@ void opengl_surface::buildSurface(int iw, int ih) {
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-int _opengl_surface::bltBitmap(const char * fname, int width, int height) {	
+int _opengl_surface::bltBitmap(const char * fname, int width, int height) {
 	delete[] pixels;
 	pixels = bmp_load(fname, &w, &h);
 	assert(pixels != NULL);
 	strcpy(filename, fname);
+	dirty = 1;
 	return 0;
 	//this->Blt(&rect,)
 }
@@ -347,6 +355,7 @@ int _opengl_surface::loadBitmap(const char * fname) {
 	pixels = bmp_load(fname, &w, &h);
 	assert(pixels != NULL);
 	strcpy(filename, fname);
+	dirty = 1;
 	return 0;
 }
 
@@ -358,12 +367,7 @@ int _opengl_surface::createMipMaps(int number) {
 
 void _opengl_surface::flush() {
 
-	if (hasTexture) {
-		glBindTexture(GL_TEXTURE_2D, tex);
-
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
+	// flush_surface re-uploads this same surface below, so one upload is enough.
 	flush_surface(this);
 }
 

@@ -162,9 +162,10 @@ int D3DXLoadTextureFromSurface(opengl_device * pd3dDevice, opengl_surface * pTex
 			opengl_local_context.nativeResY,
 			pSurfaceSrc->pixels, pSurfaceSrc->w, pSurfaceSrc->h, 0, 0, pSurfaceSrc->w, pSurfaceSrc->h, 0, 0);
 		
-		flip_surface_pixels(pSurfaceSrc->pixels, pSurfaceSrc->w, pSurfaceSrc->h);		
-		
+		flip_surface_pixels(pSurfaceSrc->pixels, pSurfaceSrc->w, pSurfaceSrc->h);
+
 		delete[] tmp;
+		pSurfaceSrc->dirty = 1;
 	}
 
 	if (pTexture->w != pSurfaceSrc->w || pTexture->h != pSurfaceSrc->h) {
@@ -191,8 +192,9 @@ int D3DXLoadTextureFromSurface(opengl_device * pd3dDevice, opengl_surface * pTex
 	}
 	else {
 		memcpy(pTexture->pixels, pSurfaceSrc->pixels, pTexture->w* pTexture->h*sizeof(uint32));
-		
+
 	}
+	pTexture->dirty = 1;
 	return 0;
 }
 
@@ -251,6 +253,7 @@ int _opengl_3d::CreateDevice(DWORD, opengl_surface * surface, opengl_device ** o
 	dev->world.identity();
 	dev->bound_textures_size = 0;
 	dev->useTexture = -1;
+	dev->cur_tex = 0;
 
 	dev->surface = surface;
 
@@ -562,7 +565,7 @@ void _opengl_device::prepareDraw(DWORD vtype) {
 
 	if (useTexture >= 0) {
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, bound_textures[0]);
+		glBindTexture(GL_TEXTURE_2D, cur_tex);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, states.tex_mag_filter);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, states.tex_min_filter);
@@ -593,7 +596,7 @@ GLuint _opengl_device::mapPrimitiveType(opengl_primitive_type type) {
 
 int _opengl_device::DrawPrimitive(opengl_primitive_type type, DWORD vtype, void * verts, DWORD n, DWORD flags) {
 	GLuint gl_primitive = mapPrimitiveType(type);
-		
+
 	prepareDraw(vtype);
 
 	glDepthFunc(GL_LEQUAL);
@@ -796,8 +799,9 @@ int _opengl_device::GetTransform(opengl_transforms mode, opengl_matrix * m) {
 	return 0;
 }
 
-int _opengl_device::Clear(DWORD Count, const opengl_rect * pRects, DWORD Flags, opengl_color Color, float Z, DWORD Stencil) {	
+int _opengl_device::Clear(DWORD Count, const opengl_rect * pRects, DWORD Flags, opengl_color Color, float Z, DWORD Stencil) {
 	memset(surface->pixels, 0, local_vp.dwHeight * surface->w * 4);
+	surface->dirty = 1;
 	glClearColor(0, 0, 0, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	return 0;
@@ -861,9 +865,11 @@ int _opengl_device::ValidateDevice(LPDWORD) {
 	return 0;
 }
 
+// Every surface keeps its own GL texture and only re-uploads when its pixels
+// actually changed. Binding used to funnel every texture through one shared GL
+// name, which meant a full glTexImage2D per draw call - 4 MB apiece once the
+// art is upscaled to 1024x1024, ~250 MB a frame in the open world.
 int _opengl_device::SetTexture(DWORD Stage, opengl_surface *surface) {
-	GLuint tex;
-
 	if (!surface) {
 		useTexture = -1;
 		return 0;
@@ -875,26 +881,24 @@ int _opengl_device::SetTexture(DWORD Stage, opengl_surface *surface) {
 		exit(0);
 	}
 
-	if (bound_textures_size == 0) {
-		tex = bound_textures[bound_textures_size];
+	if (!surface->hasTexture) {
+		glGenTextures(1, &surface->tex);
+		surface->hasTexture = 1;
+		surface->dirty = 1;
+	}
 
-		glBindTexture(GL_TEXTURE_2D, tex);
+	glBindTexture(GL_TEXTURE_2D, surface->tex);
+	cur_tex = surface->tex;
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	if (surface->dirty) {
+		// Wrap mode is per texture object, so it has to be set on each new one.
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
-		
-		bound_textures_size++;
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
+		surface->dirty = 0;
 	}
-	else {
-		tex = bound_textures[0];
-		glBindTexture(GL_TEXTURE_2D, tex);
-	}
-	
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
 
 	tex_stages[Stage] = surface;
 	return 0;
@@ -1291,7 +1295,7 @@ void flush_surface(opengl_surface * surface) {
 	glEnd();
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-	
+
 	opengl_do_redraw();
 
 	glClearColor(0, 0, 0, 1);
