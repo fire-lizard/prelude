@@ -135,7 +135,8 @@ Creature::Creature()
 	{
 		InitTextures();
 
-		TempSurf = Engine->Graphics()->CreateSurface(128,128,0,Engine->Graphics()->GetMask());
+		//InitTextures() sized the group from peopletextures.ini, the composite has to match
+		TempSurf = Engine->Graphics()->CreateSurface(PeopleTextures.GetWidth(),PeopleTextures.GetHeight(),0,Engine->Graphics()->GetMask());
 
 		if(!TempSurf)
 		{
@@ -7948,6 +7949,21 @@ void Creature::InitTextures()
 
 		delete[] FileName;
 	}
+
+	//The body sheet is only 128x128 in the shipped art. Upscaled PeopleTextures come with a
+	//rescaled peopletextures.ini, and every overlay past 128 used to be clipped away by the
+	//blits below, which is what left dressed characters walking around naked.
+	int SheetW = 128;
+	int SheetH = 128;
+	for(n = 0; n <= CHEST; n++)
+	{
+		if(BodyDest[n].right > SheetW)
+			SheetW = BodyDest[n].right;
+		if(BodyDest[n].bottom > SheetH)
+			SheetH = BodyDest[n].bottom;
+	}
+	PeopleTextures.SetWidth(SheetW);
+	PeopleTextures.SetHeight(SheetH);
 
 	char SkinName[32];
 	for(n = 0; n < NUM_SKINS; n++)
