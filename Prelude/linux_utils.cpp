@@ -119,23 +119,30 @@ FILE * fopen(const char * fname, const char * mode) {
 		closedir(d);
 	}
 
+	// ponytail: separate buffer - dir aliases tmp, and glibc's snprintf clears the
+	// destination before reading the arguments, so formatting into tmp turned every
+	// absolute path into "/<basename>".
+	char located[1024];
+
 	if (!target_name[0]) {
 		if (mode[0] == 'r') {
 			return NULL;
 		} else {
-			strcpy(target_name, fname);
+			// nothing to match against, create the file exactly as asked
+			strcpy(located, fname);
 		}
 	}
-	
-	int err = snprintf(tmp, sizeof(tmp), "%s/%s",dir,target_name);
-	if ((err < 0) || (size_t(err) > sizeof(tmp))) {
-		return NULL;
+	else {
+		int err = snprintf(located, sizeof(located), "%s/%s",dir,target_name);
+		if ((err < 0) || (size_t(err) >= sizeof(located))) {
+			return NULL;
+		}
 	}
 
-	//printf("located %s for %s\n", tmp, fname);
-	
+	//printf("located %s for %s\n", located, fname);
 
-	return native_fopen(tmp, mode);
+
+	return native_fopen(located, mode);
 }
 
 #endif
