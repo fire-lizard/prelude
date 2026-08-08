@@ -123,17 +123,30 @@ def gui(path=None):
     root = tk.Tk()
     root.title("Prelude Save Editor")
     if not path:
+        # Hide the empty root while the dialog is up. Left mapped underneath it,
+        # Windows brings it back without activating it, and a window that was
+        # never activated gives no widget keyboard focus - cells look editable,
+        # clicks land, and typing goes nowhere.
+        root.withdraw()
         path = filedialog.askopenfilename(
+            parent=root,
             title="Open Prelude savegame", filetypes=[("Savegames", "*.gam *.sav"), ("All", "*.*")],
             initialdir=os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "saves"))
+        root.deiconify()
         if not path:
             return
     save = Save(path)
     root.title("Prelude Save Editor - " + os.path.basename(path))
 
+    # Save goes in first, anchored to the bottom: packed after an expanding
+    # notebook it is the thing that gets squeezed off a short screen.
+    bar = ttk.Frame(root)
+    bar.pack(side="bottom", fill="x")
+
     nb = ttk.Notebook(root)
-    nb.pack(fill="both", expand=True)
+    nb.pack(side="top", fill="both", expand=True)
     entries = []                          # (fields, name, StringVar)
+    first = []                            # first cell, to seed keyboard focus
 
     for fields in save.members:
         frame = ttk.Frame(nb, padding=6)
@@ -142,8 +155,11 @@ def gui(path=None):
             col, row = divmod(i, 32)
             ttk.Label(frame, text=name).grid(row=row, column=col * 2, sticky="w", padx=(8, 2))
             var = tk.StringVar(value=str(save.get(fields, name)))
-            ttk.Entry(frame, textvariable=var, width=9).grid(row=row, column=col * 2 + 1, sticky="w")
+            cell = ttk.Entry(frame, textvariable=var, width=9)
+            cell.grid(row=row, column=col * 2 + 1, sticky="w")
             entries.append((fields, name, var))
+            if not first:
+                first.append(cell)
 
     def do_save():
         try:
@@ -155,7 +171,16 @@ def gui(path=None):
         save.write()
         messagebox.showinfo("Saved", "Written to %s\n(backup: %s.bak)" % (path, path))
 
-    ttk.Button(root, text="Save", command=do_save).pack(pady=4)
+    ttk.Button(bar, text="Save", command=do_save).pack(pady=4)
+
+    # Windows only hands foreground to a process that already had it, so a
+    # window opened from a terminal can come up inactive. Take it explicitly and
+    # put the caret in a cell so the keyboard has somewhere to go.
+    root.lift()
+    root.focus_force()
+    if first:
+        first[0].focus_set()
+
     root.mainloop()
 
 
