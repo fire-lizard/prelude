@@ -321,7 +321,11 @@ void ZSGraphicsSystem::DrawBox(LPDIRECTDRAWSURFACE7 Target, LPRECT rBox, DWORD C
 {
 	DDBLTFX BltFx;
 	BltFx.dwSize = sizeof(BltFx);
-	BltFx.dwFillColor = Color;
+	// RGB() leaves the top byte clear, and a colour fill is written to the
+	// surface verbatim. Loaded bitmaps all carry 0xFF there, and the GL layer
+	// presents the surface with alpha blending on - so a box drawn straight
+	// from RGB() is fully transparent. Opaque is what every caller wants.
+	BltFx.dwFillColor = Color | 0xFF000000;
 	RECT rDraw;
 	rDraw.top = rBox->top;
 	rDraw.left = rBox->left;

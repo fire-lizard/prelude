@@ -39,6 +39,36 @@ typedef enum
 LPDIRECTDRAWSURFACE7 MapWin::MapBackground = NULL;
 LPDIRECTDRAWSURFACE7 MapWin::MapSurface = NULL;
 
+// Which slice of the world each 400x400 town bitmap covers, so the party can be
+// plotted on it. The town maps are hand drawn and carry no scale of their own -
+// these were recovered by fitting the world/bitmap coordinate pairs that the
+// addlocation script calls in events.txt and people.txt already give for every
+// town landmark (median fit error is 5-17 bitmap pixels, so the marker lands on
+// the right block, not necessarily the right doorstep). Each one contains that
+// town's World::TownAreas rect, and Citadel's spans both the West and East
+// Citadel areas, matching the way Show() folds those two into one map.
+//
+// To redo these: collect the 7-argument addlocation calls, group by map number,
+// and take a median-slope fit of world x/y against map x/y per town.
+static const struct
+{
+	const char *Name;
+	int left, top, right, bottom;
+} TownMapAreas[] =
+{
+	{ "Kellen",         1043,  970, 1443, 1438 },
+	{ "Jerrock",          35,  852,  147, 1055 },
+	{ "Crossing East",  1982, 1072, 2436, 1610 },
+	{ "the Barrier",    2866, 2509, 3062, 2743 },
+	{ "the Academy",     201, 2605,  312, 2761 },
+	{ "the Monastery",    44,  -26,  412,  414 },
+	{ "Ironwood",       2793,  247, 3204,  762 },
+	{ "Citadel",        1729,    3, 2058,  365 },
+	{ "Land's End",      301, 1642, 1612, 2987 },
+};
+#define NUM_TOWN_MAP_AREAS (int)(sizeof(TownMapAreas) / sizeof(TownMapAreas[0]))
+#define TOWN_MAP_SIZE 400
+
 
 void MapWin::SwitchTowns(int NewTown)
 {
@@ -491,22 +521,50 @@ void MapWin::Scroll(int XOffset, int YOffset)
 
 	}
 
+	// Party marker.
 	D3DVECTOR *pPosition;
 	pPosition = PreludeParty.GetLeader()->GetPosition();
-	if(pPosition->x > rArea.left && pPosition->x < rArea.right &&
-			pPosition->y > rArea.top && pPosition->y < rArea.bottom)
+
+	DrawParty = FALSE;
+
+	if(CurTown < 1)
 	{
-		rParty.left = (((pPosition->x - rArea.left) * MapFactor) - 3) + BXOffset;
-		rParty.right = (rParty.left + 6);
-		rParty.top = (((pPosition->y - rArea.top) * MapFactor) - 3) + BYOffset;
-		rParty.bottom = (rParty.top + 6);
-		
-		//DrawParty = TRUE;
+		//valley map: the bitmap is the world, scaled and scrolled
+		if(pPosition->x > rArea.left && pPosition->x < rArea.right &&
+			pPosition->y > rArea.top && pPosition->y < rArea.bottom)
+		{
+			rParty.left = (((pPosition->x - rArea.left) * MapFactor) - 3) + BXOffset;
+			rParty.right = (rParty.left + 6);
+			rParty.top = (((pPosition->y - rArea.top) * MapFactor) - 3) + BYOffset;
+			rParty.bottom = (rParty.top + 6);
+
+			DrawParty = TRUE;
+		}
 	}
 	else
 	{
-		DrawParty = FALSE;
+		//town map: drawn unscaled, so bitmap pixels are screen offsets, the
+		//same way the town locator buttons above are placed
+		for(int t = 0; t < NUM_TOWN_MAP_AREAS; t++)
+		{
+			if(strcmp(TownMapAreas[t].Name, &TownNames[CurTown - 1][0]))
+				continue;
 
+			if(pPosition->x >= TownMapAreas[t].left && pPosition->x <= TownMapAreas[t].right &&
+				pPosition->y >= TownMapAreas[t].top && pPosition->y <= TownMapAreas[t].bottom)
+			{
+				float TownW = (float)(TownMapAreas[t].right - TownMapAreas[t].left);
+				float TownH = (float)(TownMapAreas[t].bottom - TownMapAreas[t].top);
+
+				rParty.left = (int)(((pPosition->x - TownMapAreas[t].left) * TOWN_MAP_SIZE) / TownW) - 3 + BXOffset;
+				rParty.right = (rParty.left + 6);
+				rParty.top = (int)(((pPosition->y - TownMapAreas[t].top) * TOWN_MAP_SIZE) / TownH) - 3 + BYOffset;
+				rParty.bottom = (rParty.top + 6);
+
+				DrawParty = TRUE;
+			}
+			break;
+		}
 	}
 
 
