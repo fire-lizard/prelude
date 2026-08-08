@@ -29,6 +29,8 @@ typedef struct _opengl_general_desc {
 	// and cycles from this.
 	int reqResX = 0;
 	int reqResY = 0;
+	int fullscreen = 0;
+	int pendingFullscreen = 0;
 
 	GLuint renderBuffer;
 	GLuint pixelsFrameBuffer;
@@ -1088,6 +1090,12 @@ void opengl_set_resolution(int w, int h) {
 	opengl_local_context.reqResX = w;
 	opengl_local_context.reqResY = h;
 
+	// Fullscreen covers the monitor whatever this says; the pick is remembered
+	// and applied when the window comes back.
+	if (opengl_local_context.fullscreen) {
+		return;
+	}
+
 	opengl_place_window(w, h);
 	opengl_sync_window_size();
 }
@@ -1095,6 +1103,49 @@ void opengl_set_resolution(int w, int h) {
 void opengl_get_resolution(int * w, int * h) {
 	*w = opengl_local_context.reqResX;
 	*h = opengl_local_context.reqResY;
+}
+
+// Borderless fullscreen on the primary monitor. The frame is scaled to whatever
+// the window is, so this only has to move the window - no reload, no restart,
+// and the render resolution is untouched.
+//
+// Deferred to opengl_poll rather than done where it is asked for: the options
+// screen calls this from inside the game's input dispatch, half way through a
+// frame, and reconfiguring the window under a live GL context there is asking
+// for trouble. opengl_poll is once per frame with nothing else in flight.
+static void opengl_apply_fullscreen(int on) {
+	if (!opengl_local_context.window || !on == !opengl_local_context.fullscreen) {
+		return;
+	}
+
+	opengl_local_context.fullscreen = on ? 1 : 0;
+
+	if (on) {
+		const GLFWvidmode * mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+		glfwSetWindowMonitor(opengl_local_context.window, glfwGetPrimaryMonitor(),
+			0, 0, mode->width, mode->height, mode->refreshRate);
+	}
+	else {
+		glfwSetWindowMonitor(opengl_local_context.window, NULL, 0, 0,
+			opengl_local_context.reqResX, opengl_local_context.reqResY, GLFW_DONT_CARE);
+		opengl_place_window(opengl_local_context.reqResX, opengl_local_context.reqResY);
+	}
+
+	// glfwSwapInterval is per context, and the context survives the move, but
+	// the driver drops the setting on some Windows GL implementations.
+	glfwSwapInterval(1);
+	opengl_sync_window_size();
+}
+
+void opengl_set_fullscreen(int on) {
+	opengl_local_context.pendingFullscreen = on ? 1 : 0;
+}
+
+// What the options screen shows and what it toggles from: the request, which is
+// at most one frame ahead of the window.
+int opengl_get_fullscreen(void) {
+	return opengl_local_context.pendingFullscreen;
 }
 
 // Window pixel -> game pixel. The frame is drawn at baseResVar scale with `xp`
@@ -1312,6 +1363,7 @@ void opengl_exit() {
 
 void opengl_poll() {
 	glfwPollEvents();
+	opengl_apply_fullscreen(opengl_local_context.pendingFullscreen);
 }
 
 // The game draws its own cursor, so the system one is hidden - but only over

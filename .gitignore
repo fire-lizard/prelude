@@ -4,6 +4,7 @@
 *.pdb
 *.aps
 *.exe
+*.pyc
 .vs/
 external/
 build/

@@ -38,7 +38,8 @@ typedef enum
 	IDC_FULLBODYSELECT,
 	IDC_HIGHLIGHTINFO,
 	IDC_VERBOSECOMBAT,
-	IDC_CAMERA_PANNING1
+	IDC_CAMERA_PANNING1,
+	IDC_FULLSCREEN
 
 } OPTIONS_CONTROLS;
 
@@ -287,14 +288,26 @@ void ZSOptionWin::LoadSettings()
 		pWin->SetText("Off");
 	}
 
-	pWin = GetChild(IDC_CAMERA_PANNING1);	
+	pWin = GetChild(IDC_CAMERA_PANNING1);
 	if (Engine->customOptions.cameraBorderPanningEnabled) {
 		pWin->SetText("On");
 	}
 	else {
 		pWin->SetText("Off");
 	}
-	
+
+	// Read from the window itself rather than gui.ini: the two can differ until
+	// Hide() writes the file back out.
+	pWin = GetChild(IDC_FULLSCREEN);
+	if(opengl_get_fullscreen())
+	{
+		pWin->SetText("On");
+	}
+	else
+	{
+		pWin->SetText("Off");
+	}
+
 	fclose(fp);
 }
 
@@ -328,6 +341,7 @@ void ZSOptionWin::SaveSettings()
 	opengl_get_resolution(&WinResX, &WinResY);
 	fprintf(ftemp,"WINRESX    %i\n", WinResX);
 	fprintf(ftemp,"WINRESY    %i\n", WinResY);
+	fprintf(ftemp,"FULLSCREEN    %i\n", opengl_get_fullscreen());
 
 
 	fprintf(ftemp,"DRAWWORLD");
@@ -563,6 +577,21 @@ int ZSOptionWin::Command(int IDFrom, int Command, int Param)
 			SetScreenSizeText(GetChild(IDC_SCREEN_SIZE));
 			break;
 		}
+		case IDC_FULLSCREEN:
+			Test = opengl_get_fullscreen();
+			pWin = GetChild(IDC_FULLSCREEN);
+
+			if(Test)
+			{
+				pWin->SetText("Off");
+				opengl_set_fullscreen(FALSE);
+			}
+			else
+			{
+				pWin->SetText("On");
+				opengl_set_fullscreen(TRUE);
+			}
+			break;
 		case IDC_DIFFICULTY_LEVEL:
 			int DifLevel;
 			pWin = GetChild(IDC_DIFFICULTY_LEVEL);
@@ -865,10 +894,20 @@ ZSOptionWin::ZSOptionWin(int NewID)
 	pText->Show();
 	AddChild(pText);
 
+	// The row below Resolution. Its own button is commented out below, so the
+	// rect was being loaded and thrown away.
 	SeekTo(fp,"BACKSIDEDRAW");
 	LoadRect(&rLoad,fp);
 
-	SeekTo(fp,"XPCONFIRM");	
+	pButton = new ZSButton(BUTTON_NORMAL, IDC_FULLSCREEN, XYWH(rLoad));
+	pButton->Show();
+	AddChild(pButton);
+
+	pText = new ZSText(IDC_FULLSCREEN + 50, rLoad.right + 2, rLoad.top, "Fullscreen");
+	pText->Show();
+	AddChild(pText);
+
+	SeekTo(fp,"XPCONFIRM");
 	LoadRect(&rLoad,fp);
 
 	pButton = new ZSButton(BUTTON_NORMAL, IDC_XPCONFIRM, XYWH(rLoad));

@@ -1013,6 +1013,9 @@ void opengl_get_native_res(int * x, int * y);
 // renders at, which stays fixed because the GUI is laid out in its pixels.
 void opengl_set_resolution(int w, int h);
 void opengl_get_resolution(int * w, int * h);
+// Borderless fullscreen on the primary monitor, independent of both resolutions.
+void opengl_set_fullscreen(int on);
+int opengl_get_fullscreen(void);
 void opengl_window_to_base(double wx, double wy, int * bx, int * by);
 void opengl_show_cursor(int show);
 void flush_surface(opengl_surface * surface);

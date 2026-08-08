@@ -592,6 +592,13 @@ HWND ZSGraphicsSystem::Init(HINSTANCE hInstance)
 	if (SeekTo(fp, "WINRESY"))
 		WinResY = GetInt(fp);
 
+	// Also missing from older gui.ini files, in which case the game starts
+	// windowed. Applied below - the window is always created windowed first so
+	// there is a size to go back to.
+	int FullScreen = 0;
+	if (SeekTo(fp, "FULLSCREEN"))
+		FullScreen = GetInt(fp);
+
 	fclose(fp);
 
 	DEBUG_INFO(" done.\n\n")
@@ -600,6 +607,8 @@ HWND ZSGraphicsSystem::Init(HINSTANCE hInstance)
 
 #ifdef OPENGL
 	MainWindow = (HWND) opengl_create_window(ScreenWidth, ScreenHeight, true, WinResX, WinResY);
+	if (FullScreen)
+		opengl_set_fullscreen(TRUE);
 #else
 	MainWindow = CreateWindowEx(0,
 			WINDOW_CLASS_NAME,
