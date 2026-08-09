@@ -110,8 +110,25 @@ class Save:
         open(self.path, "wb").write(self.data)
 
 
-def numeric(save, fields):
-    return [n for n in save.names if fields[n][0] in (DATA_INT, DATA_FLOAT)]
+# The editable set, in display order. Names are the game's own field names, so
+# POWER OF FLAME / GIFTS OF GODDESS are spelled as SaveBinCreatures spells them.
+GROUPS = [
+    ("Attributes", ["STRENGTH", "DEXTERITY", "CHARISMA", "INTELLIGENCE",
+                    "WILLPOWER", "ENDURANCE", "SPEED"]),
+    ("Combat skills", ["SWORD", "DAGGER", "AXE", "BLUNT", "POLEARM",
+                       "MISSILE", "UNARMED", "THROWING", "ARMOR"]),
+    ("Non-combat skills", ["STEALTH", "TINKER", "PICKPOCKET", "LITERACY AND LORE",
+                           "SPEECH", "BARTER", "MUSIC", "MEDICAL", "NATURE"]),
+    ("Magic skills", ["POWER OF FLAME", "GIFTS OF GODDESS", "THAUMATURGY"]),
+]
+
+
+def groups(fields):
+    """Groups with only the fields this save actually carries."""
+    for title, names in GROUPS:
+        present = [n for n in names if n in fields]
+        if present:
+            yield title, present
 
 
 # ---- GUI ------------------------------------------------------------------
@@ -151,15 +168,18 @@ def gui(path=None):
     for fields in save.members:
         frame = ttk.Frame(nb, padding=6)
         nb.add(frame, text=save.get(fields, "NAME"))
-        for i, name in enumerate(numeric(save, fields)):
-            col, row = divmod(i, 32)
-            ttk.Label(frame, text=name).grid(row=row, column=col * 2, sticky="w", padx=(8, 2))
-            var = tk.StringVar(value=str(save.get(fields, name)))
-            cell = ttk.Entry(frame, textvariable=var, width=9)
-            cell.grid(row=row, column=col * 2 + 1, sticky="w")
-            entries.append((fields, name, var))
-            if not first:
-                first.append(cell)
+        for col, (title, names) in enumerate(groups(fields)):
+            ttk.Label(frame, text=title, font="TkDefaultFont 9 bold").grid(
+                row=0, column=col * 2, columnspan=2, sticky="w", padx=(8, 2), pady=(0, 4))
+            for row, name in enumerate(names, start=1):
+                ttk.Label(frame, text=name.title()).grid(
+                    row=row, column=col * 2, sticky="w", padx=(8, 2))
+                var = tk.StringVar(value=str(save.get(fields, name)))
+                cell = ttk.Entry(frame, textvariable=var, width=9)
+                cell.grid(row=row, column=col * 2 + 1, sticky="w")
+                entries.append((fields, name, var))
+                if not first:
+                    first.append(cell)
 
     def do_save():
         try:
@@ -193,8 +213,10 @@ def main(argv):
     if len(argv) == 1:
         for fields in save.members:
             print("[%s]" % save.get(fields, "NAME"))
-            for name in numeric(save, fields):
-                print("  %-20s %s" % (name, save.get(fields, name)))
+            for title, names in groups(fields):
+                print("  %s:" % title)
+                for name in names:
+                    print("    %-20s %s" % (name.title(), save.get(fields, name)))
         return
     who, field, value = argv[1], argv[2].upper(), argv[3]
     for fields in save.members:
