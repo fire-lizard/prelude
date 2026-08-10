@@ -1023,7 +1023,7 @@ void Region::Save(FILE *fp)
 	Wall *pWall;
 
 	pWall = Walls;
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #undef True
 #undef False
 #endif

@@ -59,7 +59,7 @@
 #include "zssaychar.h"
 #include "zsmessage.h"
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include "linux_aux_wrapper.h"
 #endif
 
@@ -7528,7 +7528,7 @@ void ReImportCreatures(FILE *fp)
 			}
 			else
 			{
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 				fseek1(fp, -1, 1);
 #elif _WIN32
 				fseek(fp,-1,1);
@@ -7593,7 +7593,7 @@ void ReImportCreatures(FILE *fp)
 			}
 			else
 			{
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 				fseek1(fp, -1, 1);
 #elif _WIN32
 				fseek(fp,-1,1);
@@ -7693,7 +7693,7 @@ int LoadCreatures(FILE *fp)
 		}
 		else
 		{
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 			fseek1(fp, -1, 1);
 #elif _WIN32
 			fseek(fp,-1,1);
@@ -9770,13 +9770,15 @@ else
 		DEBUG_INFO("Base Not Found\n");
 		D3DVECTOR vBlarg;
 		int TempInt;
-		long TempLong;
+		// Creature::Save writes Data as int32_t; a native long would eat 4 bytes
+		// of the next record on LP64 and desync the whole object stream.
+		int32_t TempLong;
 		float TempFloat;
 
 
 		fread(&vBlarg,	sizeof(D3DVECTOR),1,fp);
 		fread(&TempInt, sizeof(int),1,fp);
-		fread(&TempLong, sizeof(long),1,fp);
+		fread(&TempLong, sizeof(TempLong),1,fp);
 		fread(&TempFloat, sizeof(float),1,fp);
 		fread(&TempFloat, sizeof(float),1,fp);
 		fread(&TempFloat, sizeof(float),1,fp);
@@ -10105,7 +10107,7 @@ if(!PreludeWorld->FullSelect())
 	return pIntersectBox->Intersect(0, (D3DVECTOR *)&vTransStart,(D3DVECTOR *)&vTransEnd);
 }
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #undef Status
 #endif
 

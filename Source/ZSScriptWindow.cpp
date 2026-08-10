@@ -8,7 +8,7 @@
 #include "creatures.h"
 #include "party.h"
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include "linux_aux_wrapper.h"
 #endif
 
@@ -51,7 +51,7 @@ void ZSScriptWin::Clear()
 
 }
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 int SaveBinCreatures(FILE *fp);
 #endif
 
@@ -696,7 +696,7 @@ void ZSScriptWin::ExecuteGameCommand()
 			DEBUG_INFO(CharacterName);
 			DEBUG_INFO("\n");
 			int val = (int)strlen(CharacterID) + 1; // FIXME
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 			fseek1(fp, -(val), SEEK_CUR);
 #elif _WIN32
 			fseek(fp, -(val), SEEK_CUR);

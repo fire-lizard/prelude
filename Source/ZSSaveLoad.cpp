@@ -329,7 +329,7 @@ int slotCompare(const GameListWinGameSlot & a, const GameListWinGameSlot & b) {
 
 void GameListWin::LoadAllSaves() {
 
-#if __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	LoadPatternSaves("save.*\\.gam$");
 	LoadPatternSaves("quicksave-.*\\.gam$");
 #else	

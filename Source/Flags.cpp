@@ -15,12 +15,15 @@ void Flag::Save(FILE *fp)
 	BOOL NextHere = TRUE;
 	BOOL NextNotHere = FALSE;
 	fwrite(Name,32,1,fp);
-	uint32_t value = (uint32_t)(uintptr_t)Value;
+	// Signed: flag values are ints (GetIntValue/Print treat them as such) and the
+	// casts that store them sign-extend, so an unsigned round-trip would flag every
+	// negative value as "a pointer" and zero it.
+	int32_t value = (int32_t)(intptr_t)Value;
 	// We can't serialize meaningfully flags that contain a real pointer and not a glorified int
 	// For 32/64 bit reasons, but REALLY for semantic reasons, so let's catch those
 	// The common case is ^PartyMember^ which is just used in a transient way and should not be persistent
 	// Wo we should fix the script to reset it to NULL when it's not used anymore
-	if ((void*)value != Value)
+	if ((void*)(intptr_t)value != Value)
 	{
 		char tmp[256];
 		sprintf(tmp, "Serializing Flag \"%s\" which seems to hold a pointer, please fixup the scripts", Name);
@@ -45,9 +48,9 @@ void Flag::Load(FILE *fp)
 {
 	BOOL NextHere;
 	fread(Name,32,1,fp);
-	uint32_t value;
+	int32_t value;
 	fread(&value,sizeof(value),1,fp);
-	Value = (void*)value;
+	Value = (void*)(intptr_t)value;
 	fread(&NextHere,sizeof(NextHere),1,fp);
 	if(NextHere)
 	{

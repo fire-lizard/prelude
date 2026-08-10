@@ -128,7 +128,7 @@ int ZSSoundSystem::Init(HWND hWindow)
 
 #ifdef _WIN32
 	GetCurrentDirectory(256,Root);
-#elif __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	getcwd(Root, 256);
 #endif
 

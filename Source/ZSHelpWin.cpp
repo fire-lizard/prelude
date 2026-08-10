@@ -6,7 +6,7 @@
 #include "ZSutilities.h"
 #include "zsdescribe.h"
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include "linux_aux_wrapper.h"
 #endif
 
@@ -280,7 +280,7 @@ int GetRelated(const char *Topic, char **Related)
 	
 	if(Found)
 	{
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 		long Start;
 		long End;
 		long Cur;
@@ -293,7 +293,7 @@ int GetRelated(const char *Topic, char **Related)
 #endif		
 		
 		SeekTo(fp,"[");
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 		End = ftell(fp);
 		fseek(fp, Start, SEEK_SET);
 #elif _WIN32
@@ -303,7 +303,7 @@ int GetRelated(const char *Topic, char **Related)
 #endif	
 		while(SeekTo(fp,"Related:"))
 		{
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 			Cur = ftell(fp);
 #elif _WIN32
 			fgetpos(fp,&Cur);

@@ -10,7 +10,7 @@
 #include "things.h"
 #include "ZSHelpWin.h"
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include "linux_aux_wrapper.h"
 #endif
 
@@ -387,7 +387,7 @@ void Talk(Thing *pWho)
 	{
 		
 		int val = (int)strlen(CharacterID) + 1; // FIXME changed here to signed, but might break it?
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 		fseek1(fp, -(val), SEEK_CUR);
 #elif _WIN32
 		fseek(fp, -(val), SEEK_CUR);

@@ -1,7 +1,7 @@
 #ifndef _LINUX_WRAPPER_
 #define _LINUX_WRAPPER_
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 
 #include <unistd.h>
 #include <pthread.h>

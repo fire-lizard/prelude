@@ -68,7 +68,7 @@ ZSFont::~ZSFont()
     SAFEDELETEARRAY(lpbi);      // Free buffer for BITMAPINFO
 }
 //---------------------------------------------------------------------------
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #undef Success
 #endif
 
@@ -104,7 +104,7 @@ try
 		ReadFile(f, &bmfh, sizeof(bmfh), &BytesRead, NULL);
 
 		// Check whether it's a valid DDF file:
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 		if ((bmfh.bfType != 19778)  // 'BM'
 			|| (bmfh.bfReserved1 != 0x4444) || (bmfh.bfReserved2 != 0x4646)) {
 			printf("bad %i %i %i\n", bmfh.bfType, bmfh.bfReserved1, bmfh.bfReserved2);

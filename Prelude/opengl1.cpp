@@ -639,7 +639,12 @@ int _opengl_device::DrawPrimitive(opengl_primitive_type type, DWORD vtype, void 
 		glBufferData(GL_ARRAY_BUFFER, n * sizeof(opengl_vertex), verts, GL_DYNAMIC_DRAW);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glEnableClientState(GL_VERTEX_ARRAY);
-		glVertexPointer(3, GL_FLOAT, 0, (void*)0);
+		// stride 32, not 0: all three vertex structs are 32 bytes, and every other
+		// array here already says 32. Stride 0 means tightly packed, so positions
+		// were read every 12 bytes. Desktop GL hid it because generic attribute 0
+		// (set with the right stride in CreateDevice) aliases gl_Vertex and wins;
+		// macOS's legacy 2.1 software renderer uses this pointer instead.
+		glVertexPointer(3, GL_FLOAT, 32, (void*)0);
 		glTexCoordPointer(2, GL_FLOAT, 32, (void*)24);
 		glDisableClientState(GL_COLOR_ARRAY);
 
@@ -661,7 +666,12 @@ int _opengl_device::DrawPrimitive(opengl_primitive_type type, DWORD vtype, void 
 		glBufferData(GL_ARRAY_BUFFER, n * sizeof(opengl_lvertex), verts, GL_DYNAMIC_DRAW);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glEnableClientState(GL_VERTEX_ARRAY);
-		glVertexPointer(3, GL_FLOAT, 0, (void*)0);
+		// stride 32, not 0: all three vertex structs are 32 bytes, and every other
+		// array here already says 32. Stride 0 means tightly packed, so positions
+		// were read every 12 bytes. Desktop GL hid it because generic attribute 0
+		// (set with the right stride in CreateDevice) aliases gl_Vertex and wins;
+		// macOS's legacy 2.1 software renderer uses this pointer instead.
+		glVertexPointer(3, GL_FLOAT, 32, (void*)0);
 		glTexCoordPointer(2, GL_FLOAT, 32, (void*)24);
 		glEnableClientState(GL_COLOR_ARRAY);
 		glColorPointer(4, GL_UNSIGNED_BYTE, 32, (void*)16);
@@ -678,7 +688,12 @@ int _opengl_device::DrawPrimitive(opengl_primitive_type type, DWORD vtype, void 
 		glBufferData(GL_ARRAY_BUFFER, n * sizeof(opengl_tlvertex), verts, GL_DYNAMIC_DRAW);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glEnableClientState(GL_VERTEX_ARRAY);
-		glVertexPointer(3, GL_FLOAT, 0, (void*)0);
+		// stride 32, not 0: all three vertex structs are 32 bytes, and every other
+		// array here already says 32. Stride 0 means tightly packed, so positions
+		// were read every 12 bytes. Desktop GL hid it because generic attribute 0
+		// (set with the right stride in CreateDevice) aliases gl_Vertex and wins;
+		// macOS's legacy 2.1 software renderer uses this pointer instead.
+		glVertexPointer(3, GL_FLOAT, 32, (void*)0);
 		glTexCoordPointer(2, GL_FLOAT, 32, (void*)24);
 		glEnableClientState(GL_COLOR_ARRAY);
 		glColorPointer(4, GL_UNSIGNED_BYTE, 32, (void*)16);
@@ -1181,6 +1196,10 @@ void * opengl_create_window(int w, int h, int windowed, int winW, int winH) {
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+#ifdef __APPLE__
+	// keep framebuffer == window size; the renderer assumes they match
+	glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
+#endif
 	// Size comes from the in-game options, not from dragging the window edge -
 	// one code path for the resolution instead of two.
 	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
@@ -1218,7 +1237,24 @@ void * opengl_create_window(int w, int h, int windowed, int winW, int winH) {
 	glfwSetWindowCloseCallback(opengl_local_context.window, opengl_close_callback);
 
 	glfwMakeContextCurrent(opengl_local_context.window);
-	glewInit();
+	GLenum glewStatus = glewInit();
+	if (glewStatus != GLEW_OK) {
+		// every gl* the game calls is a GLEW pointer, so this is fatal but
+		// would otherwise only show up as a jump to NULL
+		debug_info("glewInit failed: %s\n", glewGetErrorString(glewStatus));
+	}
+
+#ifdef __APPLE__
+	// A legacy 2.1 context - all the Apple Software Renderer offers - exposes
+	// VAOs only through GL_APPLE_vertex_array_object, so GLEW leaves the
+	// ARB/core entry points NULL and the draw code calls straight into 0.
+	// Same ABI, so alias them.
+	if (!glGenVertexArrays && GLEW_APPLE_vertex_array_object) {
+		glGenVertexArrays    = (PFNGLGENVERTEXARRAYSPROC)glGenVertexArraysAPPLE;
+		glBindVertexArray    = (PFNGLBINDVERTEXARRAYPROC)glBindVertexArrayAPPLE;
+		glDeleteVertexArrays = (PFNGLDELETEVERTEXARRAYSPROC)glDeleteVertexArraysAPPLE;
+	}
+#endif
 
 	glfwSwapInterval(1);
 
@@ -1231,6 +1267,9 @@ void * opengl_create_window(int w, int h, int windowed, int winW, int winH) {
 	void * wd = (void*)glfwGetWin32Window(opengl_local_context.window);
 #elif __linux__
 	void * wd = (void*)glfwGetX11Window(opengl_local_context.window);
+#else
+	// no native handle needed; only debug-printed and returned as an opaque id
+	void * wd = (void*)opengl_local_context.window;
 #endif
 	debug_info("Window handler %X\n", wd);
 
@@ -1294,7 +1333,22 @@ void flush_surface(opengl_surface * surface) {
 	if (surface != opengl_local_context.primary) {
 		return;
 	}
-	
+
+	// ponytail: TEST HOOK - PTD_FPS=1 logs the achieved frame rate. Remove before shipping.
+	static int ptdFpsOn = -1;
+	if (ptdFpsOn < 0) ptdFpsOn = getenv("PTD_FPS") ? 1 : 0;
+	if (ptdFpsOn) {
+		static int frames = 0;
+		static auto t0 = std::chrono::steady_clock::now();
+		if (++frames >= 20) {
+			auto now = std::chrono::steady_clock::now();
+			double secs = std::chrono::duration<double>(now - t0).count();
+			debug_info("FPS %.2f (%d frames in %.1fs)\n", frames / secs, frames, secs);
+			frames = 0;
+			t0 = now;
+		}
+	}
+
 	//debug_info("draw from %X", surface->pixels);
 	int x=0, y=0, w, h;
 	
@@ -1377,7 +1431,7 @@ void opengl_show_cursor(int show) {
 		show ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN);
 }
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 void ShowCursor(BOOL bShow) {
 	if (!bShow) {
 		glfwSetInputMode(opengl_local_context.window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);

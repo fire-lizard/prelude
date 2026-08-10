@@ -1,5 +1,5 @@
 #include "linux_aux_wrapper.h"
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include <stdio.h>
 
 HANDLE CreateFile(LPCSTR lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, void * lpSecurityAttributes,

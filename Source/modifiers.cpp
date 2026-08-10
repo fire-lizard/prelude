@@ -219,8 +219,8 @@ void Modifier::Save(FILE *fp)
 	//type of modifier
 	fwrite(&ModType,sizeof(MOD_T),1,fp);  //type, 99% spell
 	fwrite(&Combat, sizeof(BOOL),1,fp);//combat or not
-	fwrite(&Start, sizeof(unsigned long),1,fp); //start round if combat, start minute if not
-	fwrite(&Duration, sizeof(unsigned long),1,fp); //duration in rounds of combat or in minutes
+	fwrite(&Start, sizeof(Start),1,fp); //start round if combat, start minute if not
+	fwrite(&Duration, sizeof(Duration),1,fp); //duration in rounds of combat or in minutes
 	fwrite(&Progression, sizeof(int),1,fp); //progressive change to stat on a per round or per half hour basis
 	fwrite(&Stat, sizeof(int),1,fp); //the stat being modified
 	fwrite(&Amount, sizeof(int),1,fp);	//the amount of the modifier
@@ -268,8 +268,8 @@ void Modifier::Load(FILE *fp)
 	//type of modifier
 	fread(&ModType,sizeof(MOD_T),1,fp);  //type, 99% spell
 	fread(&Combat, sizeof(BOOL),1,fp);//combat or not
-	fread(&Start, sizeof(unsigned long),1,fp); //start round if combat, start minute if not
-	fread(&Duration, sizeof(unsigned long),1,fp); //duration in rounds of combat or in minutes
+	fread(&Start, sizeof(Start),1,fp); //start round if combat, start minute if not
+	fread(&Duration, sizeof(Duration),1,fp); //duration in rounds of combat or in minutes
 	fread(&Progression, sizeof(int),1,fp); //progressive change to stat on a per round or per half hour basis
 	fread(&Stat, sizeof(int),1,fp); //the stat being modified
 	fread(&Amount, sizeof(int),1,fp);	//the amount of the modifier

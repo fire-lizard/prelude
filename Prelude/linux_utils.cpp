@@ -1,7 +1,7 @@
 #include "linux_aux_wrapper.h"
 #include "opengl1.h"
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include <dlfcn.h>
 #include <time.h>
 #include <dirent.h> 
@@ -24,15 +24,12 @@ void Sleep(DWORD millis) {
 }
 
 int GetSystemMetrics(int nIndex) {
-	
- 
+
 	 if (nIndex == SM_CXSCREEN) {
-		 int sc = WidthOfScreen(XScreenOfDisplay(glfwGetX11Display(), 0));
-		 return sc;
+		 return glfwGetVideoMode(glfwGetPrimaryMonitor())->width;
 	 }
 	 else if (nIndex == SM_CYSCREEN) {
-		 int sc = HeightOfScreen(XScreenOfDisplay(glfwGetX11Display(), 0));
-		 return sc;
+		 return glfwGetVideoMode(glfwGetPrimaryMonitor())->height;
 	 }
 	 else {
 		 printf("unimplemented GetSystemMetrics\n");

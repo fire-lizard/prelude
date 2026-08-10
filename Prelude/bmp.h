@@ -24,7 +24,7 @@ typedef struct bmp_header {
 	uint32 image_size;
 	// extra stuff we ignore
 } 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 __attribute__((packed))
 #endif
 bmp_header;

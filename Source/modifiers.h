@@ -24,8 +24,10 @@ private:
 	//type of modifier
 	MOD_T ModType;  //type, 99% spell
 	BOOL Combat;  //combat or not
-	unsigned long Start; //start round if combat, start minute if not
-	unsigned long Duration; //duration in rounds of combat or in minutes
+	// Fixed width: these are serialized straight into the savegame, and a native
+	// long would make the record 8 bytes longer on LP64 than every existing .gam
+	uint32_t Start; //start round if combat, start minute if not
+	uint32_t Duration; //duration in rounds of combat or in minutes
 	int Progression; //progressive change to stat on a per round or per half hour basis
 	int Stat; //the stat being modified
 	int Amount;	//the amount of the modifier
