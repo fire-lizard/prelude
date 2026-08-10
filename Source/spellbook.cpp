@@ -1,7 +1,7 @@
 #include "spellbook.h"
 #include <assert.h>
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include "linux_aux_wrapper.h"
 #endif
 
@@ -48,7 +48,7 @@ void LoadSpellbooks(FILE *fp)
 		}
 		else
 		{
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 			fseek1(fp, -1, 1);
 #elif _WIN32
 			fseek(fp, -1, 1);

@@ -39,7 +39,7 @@
 #define AMBIENT_FACTOR				0.5f
 #define MAXIMUM_CAMERA_DISTANCE		48.0f
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include "linux_aux_wrapper.h"
 #endif
 
@@ -2770,7 +2770,7 @@ int Area::SaveBrief()
 			{
 				//position the file pointer
 				int Error;
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 				Error = fseek1(StaticFile, Header.ChunkOffsets[xn + yn * this->ChunkWidth], SEEK_SET);
 #elif _WIN32
 				Error = fseek(StaticFile, Header.ChunkOffsets[xn + yn * this->ChunkWidth], SEEK_SET);
@@ -2840,7 +2840,7 @@ int Area::Save()
 		}
 	}
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	fseek1(fp, 0, SEEK_SET);
 #elif _WIN32
 	fseek(fp,0,SEEK_SET);
@@ -3760,7 +3760,7 @@ void Area::SaveNonStatic(FILE *fp)
 	}
 
 	int32_t ToNext;
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	long NextPos;
 	long EndPos;
 #elif _WIN32
@@ -3771,7 +3771,7 @@ void Area::SaveNonStatic(FILE *fp)
 	ToNext = 0;
 
 	fwrite(Header.Name,sizeof(char),32,myfp);
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	NextPos = ftell(myfp);
 #elif _WIN32
 	fgetpos(myfp, &NextPos);
@@ -3815,7 +3815,7 @@ void Area::SaveNonStatic(FILE *fp)
 		}
 	}
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	EndPos = ftell(myfp);
 #elif _WIN32
 	fgetpos(myfp, &EndPos);
@@ -3823,7 +3823,7 @@ void Area::SaveNonStatic(FILE *fp)
 	
 	ToNext = ftell(myfp);
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	fseek1(myfp, NextPos, SEEK_SET);
 #elif _WIN32
 	fseek(myfp, NextPos, SEEK_SET);
@@ -3831,7 +3831,7 @@ void Area::SaveNonStatic(FILE *fp)
 	
 	fwrite(&ToNext,sizeof(int32_t),1,myfp);
 	
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	fseek1(myfp, EndPos, SEEK_SET);
 #elif _WIN32
 	fseek(myfp, EndPos, SEEK_SET);
@@ -4184,7 +4184,7 @@ void  Area::ImportStuff(FILE *fpImport)
 
 			if(MainHeader.ChunkOffsets[xn + yn * ChunkWidth])
 			{
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 				fseek1(fpImport,MainHeader.ChunkOffsets[xn + yn * ChunkWidth], SEEK_SET);
 #elif _WIN32
 				fseek(fpImport, MainHeader.ChunkOffsets[xn + yn * ChunkWidth], SEEK_SET);
@@ -4258,7 +4258,7 @@ void  Area::ImportStuff(FILE *fpImport)
 
 	//memcpy(&Header,&NewHeader,sizeof(Header));
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	fseek1(newfp, 0, SEEK_SET);
 #elif _WIN32
 	fseek(newfp,0,SEEK_SET);
@@ -4317,7 +4317,7 @@ void Area::Combine(FILE *fpImport)
 
 			if(MainHeader.ChunkOffsets[xn + yn * ChunkWidth])
 			{
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 				fseek1(fpImport, MainHeader.ChunkOffsets[xn + yn * ChunkWidth], SEEK_SET);
 #elif _WIN32
 				fseek(fpImport,MainHeader.ChunkOffsets[xn + yn * ChunkWidth], SEEK_SET);
@@ -4395,7 +4395,7 @@ void Area::Combine(FILE *fpImport)
 
 	//memcpy(&Header,&NewHeader,sizeof(Header));
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	fseek1(newfp, 0, SEEK_SET);
 #elif _WIN32
 	fseek(newfp, 0, SEEK_SET);

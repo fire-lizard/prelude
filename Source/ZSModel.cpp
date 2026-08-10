@@ -25,7 +25,7 @@
 #include <fstream>
 #include "ZSEngine.h"
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include "linux_aux_wrapper.h"
 #endif
 
@@ -629,7 +629,7 @@ ZSModel::ZSModel()
 	equipmentlist = NULL;
 #ifdef _WIN32
 	ZeroMemory(&equipmentRegistrationMark, sizeof(equipmentRegistrationMark));
-#elif __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	memset(&equipmentRegistrationMark,0, sizeof(equipmentRegistrationMark));
 #endif
 	numWeaponSlotsDefined = -1;
@@ -639,7 +639,7 @@ ZSModel::ZSModel()
 	stridedNormals = NULL;
 #ifdef _WIN32
 	ZeroMemory(&stridedDataInfo, sizeof(D3DDRAWPRIMITIVESTRIDEDDATA));
-#elif __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	memset(&stridedDataInfo, 0, sizeof(D3DDRAWPRIMITIVESTRIDEDDATA));
 #endif
 	//set the strides.  
@@ -1343,7 +1343,7 @@ void GetFaceList(vector<FaceListEntry> &faceList, int numFaces, int numVertices,
 		//ignore FaceID
 		GetInt(fp);
 		//skip past the faceId's colon
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 		fseek1(fp, 1, SEEK_CUR);
 #elif _WIN32
 		fseek(fp, 1, SEEK_CUR);

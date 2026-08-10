@@ -9,7 +9,7 @@
 #include "party.h"
 #include <ctype.h>
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include "linux_aux_wrapper.h"
 #endif
 
@@ -356,7 +356,7 @@ void ScriptBlock::Import(FILE *fp)
 		{
 			TempArgs[NumArgs].SetType(ARG_FUNC_ID);
 			char *FuncName;
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 			fseek1(fp, -1, 1);
 #elif _WIN32
 			fseek(fp, -1, 1);
@@ -441,7 +441,7 @@ void ScriptBlock::Import(FILE *fp)
 		else
 		if(isdigit(c) || c == '-')
 		{
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 			fseek1(fp, -1, 1);
 #elif _WIN32
 			fseek(fp, -1, 1);

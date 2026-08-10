@@ -5,16 +5,18 @@ project(Prelude)
 option(SOUND_DRIVER_MINIAUDIO "Use MiniAudio sound driver" ON)
 option(BACKPORT_18            "Backport 1.8 updates"       ON)
 
-if(WIN32)
+if(WIN32 OR APPLE)
 add_subdirectory("external/glfw-3.4")
-add_subdirectory("external/glew-2.3.1")
+add_subdirectory("external/glew-2.3.1" EXCLUDE_FROM_ALL)
 else()
 find_package(glfw3 REQUIRED)
 find_package(GLEW REQUIRED)
 endif()
 
 find_package(OpenGL REQUIRED)
+if(NOT WIN32 AND NOT APPLE)
 find_package(X11 REQUIRED)
+endif()
 
 set(SOURCE_FILES
 	Source/actionmenuclass.cpp
@@ -182,14 +184,14 @@ add_executable(Prelude
 	${SOUND_FILES}
 )
 
-if ((CMAKE_CXX_COMPILER_ID STREQUAL "Clang") OR (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
+if ((CMAKE_CXX_COMPILER_ID MATCHES "Clang") OR (CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
 target_compile_options(Prelude PRIVATE
 	-Wall $<$<COMPILE_LANGUAGE:CXX>:-Wno-conversion-null>
 )
 endif()
 
 # The game makes a lot of use of variants held by void* and it's a 32bit game so casts from int to void* are benign
-if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 target_compile_options(Prelude PRIVATE
 	$<$<COMPILE_LANGUAGE:CXX>:-Wno-int-to-void-pointer-cast>
 	-Wno-unused-variable -Wno-unused-but-set-variable
@@ -222,7 +224,7 @@ if(BACKPORT_18)
 	target_compile_definitions(Prelude PRIVATE BACKPORT_18)
 endif()
 
-if(WIN32)
+if(WIN32 OR APPLE)
 target_include_directories(Prelude PUBLIC
 	"${PROJECT_SOURCE_DIR}/Prelude"
 	"${PROJECT_SOURCE_DIR}/Prelude/DXSource"
@@ -239,6 +241,11 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 set_target_properties(Prelude PROPERTIES WIN32_EXECUTABLE TRUE)
 target_link_libraries(Prelude PUBLIC
 	OpenGL::GL glfw libglew_static Winmm
+)
+elseif(APPLE)
+target_compile_definitions(Prelude PRIVATE GL_SILENCE_DEPRECATION)
+target_link_libraries(Prelude PUBLIC
+	OpenGL::GL glfw libglew_static
 )
 else()
 target_link_libraries(Prelude PUBLIC

@@ -70,10 +70,15 @@
 #include <mmsystem.h>
 #endif
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include <dirent.h>
 #include <regex.h>
+#endif
+#ifdef __linux__
 #include <openssl/sha.h>
+#endif
+#ifdef __APPLE__
+#include <CommonCrypto/CommonDigest.h>
 #endif
 
 
@@ -169,6 +174,19 @@ std::string HashBuffer(const void* pBuffer, size_t len)
 	return result;
 }
 
+#elif __APPLE__
+
+std::string HashBuffer(const void* pBuffer, size_t len)
+{
+	unsigned char hash[CC_SHA1_DIGEST_LENGTH];
+	CC_SHA1(pBuffer, (CC_LONG)len, hash);
+
+	char result[40 + 1];
+	for (size_t i = 0; i < 20; ++i)
+		sprintf(result + 2 * i, "%02x", (unsigned)hash[i]);
+	return std::string(result, 40);
+}
+
 #else
 
 std::string HashBuffer(const void* pBuffer, size_t len)
@@ -200,7 +218,7 @@ std::string HashFile(const char* path)
 	return result;
 }
 
-#if __linux__
+#if defined(__linux__) || defined(__APPLE__)
 void ClearHashedEvents() {
 	DIR *d;
 	regex_t    re;
@@ -270,7 +288,7 @@ void LoadEvents()
 #ifdef _WIN32
 int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE hprevinstance, LPSTR lpcmdline, int ncmdshow)
 {
-#elif __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 int main(int argc, char * argv[]) {
 	HINSTANCE hinstance = (HINSTANCE)1;
 #endif
@@ -759,10 +777,28 @@ int main(int argc, char * argv[]) {
 
 		pMain->SetDrawWorld(FALSE);
 
+		// ponytail: TEST HOOK - PTD_AUTOLOAD=<save.gam> skips the menus and drops
+		// straight into the world, so the in-game renderer and combat can be
+		// reproduced over ssh without driving the GUI. Remove before shipping.
+		const char * ptdAutoload = getenv("PTD_AUTOLOAD");
+		if (ptdAutoload && Init)
+		{
+			pMain->RemoveChild(pStart);
+			PreludeWorld->LoadGame(ptdAutoload);
+			PreludeWorld->SetGameState(GAME_STATE_NORMAL);
+			pMain->SetDrawWorld(DrawWorld);
+			pMain->Show();
+			ClearDescribe();
+			Describe(VERSION_NUMBER);
+			pMain->GoModal();
+			Init = FALSE;
+			break;
+		}
+
 		pMain->SetFocus(pStart);
 		Result = pStart->GoModal();
 		pStart->ReleaseFocus();
-		
+
 		pMain->RemoveChild(pStart);
 		if(Result == START_RESULT_OPTIONS)
 		{

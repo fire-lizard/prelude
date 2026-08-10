@@ -34,7 +34,7 @@
 #include "Minimap.h" //to unset when entering dungeons
 #include "zsdescribe.h"
 #include <ctime>
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include "linux_aux_wrapper.h"
 #endif
 
@@ -2075,7 +2075,7 @@ void World::SaveGame(const char *filename, const char *GameID)
 	fwrite(&RestHelp, sizeof(BOOL),1,fp);
 
 	char ver[32];
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	if (sizeof(size_t) == 8) {
 		// x64
 		sprintf(ver, "%s--x64--linux", VERSION_NUMBER);

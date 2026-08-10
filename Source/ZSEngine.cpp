@@ -24,7 +24,7 @@
 #ifdef _WIN32
 #include <windows.h>
 #include <windowsx.h>
-#elif __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 #include "linux_aux_wrapper.h"
 #endif
 #include <stdio.h>
@@ -33,7 +33,7 @@
 #include <assert.h>
 #include "ZSutilities.h"
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include "linux_aux_wrapper.h"
 #endif
 
@@ -310,7 +310,7 @@ void ZSEngine::LoadMeshes()
 	//if it does exist load in the Meshes as specified in the file
 
 	//read in the number of Meshes
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	fseek1(fp, 0, 0);
 #elif _WIN32
 	fseek(fp,0,0);

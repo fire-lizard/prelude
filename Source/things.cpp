@@ -23,7 +23,7 @@
 #include "gameitem.h"
 #include <assert.h>
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include "linux_aux_wrapper.h"
 #endif
 
@@ -513,7 +513,7 @@ int Thing::Arrow(D3DCOLORVALUE Color)
 	D3DMATERIAL7 TempMat;
 #ifdef _WIN32
 	ZeroMemory(&TempMat, sizeof(TempMat));
-#elif __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 	memset(&TempMat, 0, sizeof(TempMat));
 #endif	
 
@@ -925,7 +925,7 @@ int Thing::SaveFieldNames(FILE *fp)
 		//put a delimitting character between each field name
 		fputc(DELIMIT_CHARACTER,fp);
 	}
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	fseek1(fp, -1, 1);
 #elif _WIN32
 	fseek(fp, -1, 1);
@@ -1033,7 +1033,7 @@ int Thing::SaveData(FILE *fp)
 		fputc(DELIMIT_CHARACTER,fp);
 	}
 	//backup and replace the delimitting character with an endline
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	fseek1(fp, -1, 1);
 #elif _WIN32
 	fseek(fp, -1, 1);

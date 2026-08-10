@@ -2,7 +2,7 @@
 #ifdef _WIN32
 #include <windows.h>
 #include <windowsx.h>
-#elif __linux__
+#elif defined(__linux__) || defined(__APPLE__)
 #include "linux_aux_wrapper.h"
 #include <string.h>
 #endif
@@ -17,7 +17,7 @@ unsigned char RegistrationKey[256];
 
 void GetHardwareID()
 {
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	strcpy((char*)HardwareID, (char*) "myid");
 	return;
 #else

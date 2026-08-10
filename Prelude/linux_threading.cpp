@@ -1,7 +1,7 @@
 #include "linux_aux_wrapper.h"
 #include <stdio.h>
 #include <stdlib.h>
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 
 #include <errno.h>
 
@@ -66,7 +66,9 @@ HANDLE CreateThread(void * lpThreadAttributes, SIZE_T dwStackSize, LPTHREAD_STAR
 	pthread_create(&t->thread, 0, (void*(*)(void*))lpStartAddress, lpParameter);
 
 	if (lpThreadId) {
-		*lpThreadId = (DWORD)t->thread;
+		// pthread_t is a pointer on macOS; the game only treats the id as an
+		// opaque number, so truncation is fine
+		*lpThreadId = (DWORD)(uintptr_t)t->thread;
 	}
 
 	return t;

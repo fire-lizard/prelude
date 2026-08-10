@@ -37,7 +37,7 @@
 
 static int NextTalkWin = IDC_TALK_START;
 
-/* talk:  takes a character¹s name, i.e. talk(³Matt²), and 
+/* talk:  takes a characterï¿½s name, i.e. talk(ï¿½Mattï¿½), and 
 	searches through people.txt until it finds the character, 
 	then starts parsing after the !begin! keyword to start 
 	conversation */
@@ -550,7 +550,7 @@ ScriptArg *equippedtype(ScriptArg *ArgList, ScriptArg *pDestination)
 
 	return pDestination;
 }
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #undef Success
 #endif
 
@@ -793,8 +793,19 @@ ScriptArg *give(ScriptArg *ArgList, ScriptArg *pDestination)
 
 /* ask:  displays a submenu of choices and ask the player to 
 	choose one, then acts on that response */
-ScriptArg *ask(ScriptArg *ArgList, ScriptArg *pDestination) 
-{ 
+ScriptArg *ask(ScriptArg *ArgList, ScriptArg *pDestination)
+{
+	// ponytail: TEST HOOK - PTD_AUTOASK=<n> answers every (ask ...) with n instead
+	// of opening the modal choice window, so scripted encounters (and the combat
+	// they start) can be reproduced over ssh. Remove before shipping.
+	const char * ptdAutoAsk = getenv("PTD_AUTOASK");
+	if (ptdAutoAsk)
+	{
+		pDestination->SetType(ARG_NUMBER);
+		pDestination->SetIntValue(atoi(ptdAutoAsk));
+		return pDestination;
+	}
+
 	ZSWindow *pWin;
 
 	RECT AskRect;

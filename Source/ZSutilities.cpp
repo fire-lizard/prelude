@@ -9,13 +9,15 @@
 #pragma comment(lib, "DbgHelp.lib")
 #endif
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include "linux_aux_wrapper.h"
 #endif
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include <dirent.h>
 #include <regex.h>
+#endif
+#ifdef __linux__
 #include <openssl/sha.h>
 #endif
 
@@ -326,7 +328,7 @@ int GetInt(FILE *fp)
 	
 	blarg[ccount] = '\0';
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	fseek1(fp, -1, SEEK_CUR);
 #elif _WIN32
 	fseek(fp, -1, SEEK_CUR);
@@ -663,7 +665,7 @@ DATA_T GetFileData(FILE *fp, DATA_FIELD_T *dest)
 
 	c = fgetc(fp);
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	fseek1(fp, -1, SEEK_CUR);
 #elif _WIN32
 	fseek(fp, -1, SEEK_CUR);
@@ -772,7 +774,7 @@ int SeekTo(FILE *fp, const char *id)
 		return FALSE;
 	}
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	fseek1(fp, -1, SEEK_CUR);
 #elif _WIN32
 	fseek(fp, -1, SEEK_CUR);
@@ -835,7 +837,7 @@ int SeekToSkip(FILE *fp, const char *id)
 		return FALSE;
 	}
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	fseek1(fp, -1, SEEK_CUR);
 #elif _WIN32
 	fseek(fp, -1, SEEK_CUR);
@@ -858,7 +860,7 @@ char *GetPureString(FILE *fp)
 		c = (char)fgetc(fp);
 	}
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	fseek1(fp, -1, SEEK_CUR);
 #elif _WIN32
 	fseek(fp, -1, SEEK_CUR);
@@ -904,7 +906,7 @@ char *GetStringNoWhite(FILE *fp)
 		c = (char)fgetc(fp);
 	}
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	fseek1(fp, -1, SEEK_CUR);
 #elif _WIN32
 	fseek(fp, -1, SEEK_CUR);
@@ -1582,23 +1584,33 @@ BOOL Quad3DIntersect(D3DVECTOR *vRayStart, D3DVECTOR *vRayEnd, D3DVERTEX *vxA, D
 
 
 int GenericFindFiles(char * pattern, std::vector<findFilesData> * data) {
-#if __linux__
+#if defined(__linux__) || defined(__APPLE__)
 	DIR *d;
 	regex_t    re;
-	char regex[512];
 
-	int st = regcomp(&re, pattern, REG_EXTENDED | REG_NOSUB);
+	// This loop was copied from ClearHashedEvents(), where deleting the matches
+	// is the point. Here the matches are the player's savegames.
+	if (regcomp(&re, pattern, REG_EXTENDED | REG_NOSUB)) {
+		return -1;
+	}
 
 	struct dirent *dire;
 	d = opendir(".");
-	char target_name[1024] = { 0, };
-	if (d) {
-		while ((dire = readdir(d)) != NULL) {
-			if (!regexec(&re, dire->d_name, 0, 0, 0)) {
-				st = remove(dire->d_name);
-			}
+	if (!d) {
+		regfree(&re);
+		return -1;
+	}
+
+	while ((dire = readdir(d)) != NULL) {
+		if (!regexec(&re, dire->d_name, 0, 0, 0)) {
+			findFilesData f;
+			snprintf(f.name, sizeof(f.name), "%s", dire->d_name);
+			(*data).push_back(f);
 		}
 	}
+
+	closedir(d);
+	regfree(&re);
 
 	return (*data).size();
 #else

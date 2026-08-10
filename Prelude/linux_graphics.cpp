@@ -2,7 +2,7 @@
 #include "opengl1.h"
 #include "bmp.h"
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 
 int StretchDIBits(HDC hdc, int xDest, int yDest, int DestWidth, int DestHeight, int xSrc, int ySrc, int SrcWidth, int SrcHeight,
 	void * lpBits, BITMAPINFO * lpbmi, UINT iUsage, DWORD rop) {

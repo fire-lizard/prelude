@@ -2,7 +2,7 @@
 #include "regions.h"
 #include "ZSEngine.h"
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include "linux_aux_wrapper.h"
 #endif
 
@@ -199,7 +199,7 @@ void Wall::Draw()
 
 void Wall::Save(FILE *fp)
 {
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #undef True
 #undef False
 #endif

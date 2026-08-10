@@ -131,7 +131,7 @@ private:
 	int FrameAdd;
 	
 	//private update functions
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #undef None
 #endif
 	ACTION_RESULT_T None();

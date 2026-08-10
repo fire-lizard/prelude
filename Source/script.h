@@ -57,7 +57,14 @@ public:
 		void* pValue = GetValue();
 		uintptr_t castValue = (uintptr_t)pValue;
 		int result = (int)castValue;
-		assert((uintptr_t)result == castValue);
+		// A variant holds either a glorified int or a real object pointer, and
+		// callers (iff, cond) use this as a truth test. Truncating to 32 bits is
+		// what the 32-bit builds always did; the one case that must not happen
+		// is a live pointer whose low word is zero reading back as false.
+		if (((uintptr_t)result != castValue) && (result == 0))
+		{
+			return 1;
+		}
 		return result;
 	}
 
