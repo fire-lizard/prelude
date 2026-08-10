@@ -246,6 +246,7 @@ elseif(APPLE)
 target_compile_definitions(Prelude PRIVATE GL_SILENCE_DEPRECATION)
 target_link_libraries(Prelude PUBLIC
 	OpenGL::GL glfw libglew_static
+	"-framework CoreFoundation" "-framework CoreAudio" "-framework AudioToolbox"
 )
 else()
 target_link_libraries(Prelude PUBLIC
