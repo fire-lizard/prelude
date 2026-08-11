@@ -2369,6 +2369,7 @@
 	(saychar 0 300 300 [When your assignment is complete meet me at the Treefort Inn in Land's End for your reward.--  "P"])
 	(sflag ^NoteFromKellen^ 1)
 	(journal 171)
+	(addlocation [Treefort Inn] 616 2568 1 9 99 277)
 
 	(push 0)
 	(end)
