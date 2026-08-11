@@ -30,79 +30,57 @@ LPDIRECTDRAWSURFACE7 SaveWin::SaveWinSurface = NULL;
 
 int GameWin::Command(int IDFrom, int Command, int Param)
 {
-	char FileName[64];
+	char FileName[128];
 	char *SaveName;
+	GameListWin *list = (GameListWin *)this->GetParent();
 	if(Command == COMMAND_BUTTON_CLICKED)
 	{
 		switch(IDFrom)
 		{
 			case IDC_GAME_DELETE:
 				//pass this on to the parent;
-				GameListWin *pGList;
-				pGList = (GameListWin *)this->GetParent();
-				if(Confirm(this->GetParent(),"Delete Game?","yes","no"))	
+				if(list->HasPreloadedSlot(GameNumber) && Confirm(list,"Delete Game?","yes","no"))
 				{
-					pGList->DeleteGame(GameNumber);
+					list->DeleteGame(GameNumber);
 				}
 				break;
 			case IDC_GAME_SAVE:
-				if(!GameNumber)
+				if(list->HasPreloadedSlot(GameNumber))
 				{
-					GameNumber = 1;
-					FILE *fp;
-					do
+					//overwrite the file this row actually stands for. The row index is
+					//not a file number: the list is time sorted and mixes in quicksaves.
+					strcpy(FileName, list->GetPreloadedSlot(GameNumber).FileName);
+					if(!Confirm(list,"Replace Game?","yes","no"))
 					{
-						sprintf(FileName,"save%i.gam",GameNumber);
-						fp = fopen(FileName, "rb");
-						if(fp) 
-						{
-							GameNumber++;
-							fclose(fp);
-						}
-						else
-						{
-							break;
-						}
-					}while(TRUE);
-				}
-				sprintf(FileName,"save%i.gam",GameNumber);
-				
-				FILE *fp;
-				fp = fopen(FileName,"rb");
-				if(fp)
-				{
-					fclose(fp);
-					if(Confirm(this->GetParent(),"Replace Game?","yes","no"))	
-					{
-						SaveName = GetModalText("Save Name",GetText(),32);
-						if(SaveName)
-						{
-							PreludeWorld->SaveGame(FileName, SaveName);
-							GetParent()->GetParent()->SetReturnCode(1);
-							GetParent()->GetParent()->SetState(WINDOW_STATE_DONE);
-							SetText(SaveName);
-							delete[] SaveName;
-						}
+						break;
 					}
 				}
 				else
 				{
-					SaveName = GetModalText("Save Name",GetText(),32);
-					if(SaveName)
+					//"New Game" row - take the first free save slot
+					FILE *fp;
+					int n = 0;
+					do
 					{
-						SetText(SaveName);
-						PreludeWorld->SaveGame(FileName, SaveName);
-						GetParent()->GetParent()->SetState(WINDOW_STATE_DONE);
-						GetParent()->GetParent()->SetReturnCode(1);
-						delete[] SaveName;
-					}
+						sprintf(FileName,"save%i.gam",++n);
+						fp = fopen(FileName, "rb");
+						if(fp) fclose(fp);
+					}while(fp);
+				}
+
+				SaveName = GetModalText("Save Name",GetText(),32);
+				if(SaveName)
+				{
+					SetText(SaveName);
+					PreludeWorld->SaveGame(FileName, SaveName);
+					GetParent()->GetParent()->SetReturnCode(1);
+					GetParent()->GetParent()->SetState(WINDOW_STATE_DONE);
+					delete[] SaveName;
 				}
 				break;
 			case IDC_GAME_LOAD:
-				if(Confirm(this->GetParent(),"Load Game?","yes","no"))
+				if(list->HasPreloadedSlot(GameNumber) && Confirm(list,"Load Game?","yes","no"))
 				{
-					//sprintf(FileName,"save%i.gam",GameNumber);
-					GameListWin * list = (GameListWin*)GetParent();					
 					GameListWinGameSlot slot = list->GetPreloadedSlot(GameNumber);
 
 					GetParent()->GetParent()->SetReturnCode(1);
@@ -240,34 +218,33 @@ void GameListWin::SortGames()
 	int n = 1;
 	FILE *fp = NULL;
 	
-	NumGames = Preloaded.size();
+	//slot 0 is the "New Game" row, which only exists when saving
+	int Start = Save ? 0 : 1;
+	NumGames = Preloaded.size() + 1 - Start;
 
 	GameWin *pGWin;
 
 	int Limit;
 	Limit = NumGames - TopGame;
 
-	if(Limit >= MAX_GAMES_SHOWN)
+	if(Limit > MAX_GAMES_SHOWN)
 	{
 		Limit = MAX_GAMES_SHOWN;
-	}
-	int Start = 0;
-	if(!Save) 
-	{
-		Start = 1;
 	}
 
 	for(n = Start; n < Limit + Start; n++)
 	{
 		pGWin = (GameWin *)GetChild(IDC_GAME + n - Start);
-		pGWin->Show();
-		pGWin->SetGameNumber(TopGame + n);
-
+		if(pGWin)
+		{
+			pGWin->Show();
+			pGWin->SetGameNumber(TopGame + n);
+		}
 	}
 
-	for(; n < MAX_GAMES_SHOWN; n++)
+	for(; n < MAX_GAMES_SHOWN + Start; n++)
 	{
-		pGWin = (GameWin *)GetChild(IDC_GAME + n);
+		pGWin = (GameWin *)GetChild(IDC_GAME + n - Start);
 		if(pGWin)
 		{
 			pGWin->Hide();
@@ -278,18 +255,17 @@ void GameListWin::SortGames()
 	ZSVScroll *pScroll;
 	pScroll = (ZSVScroll *)GetChild(IDC_GAME_SCROLL);
 
-	pScroll->SetUpper((NumGames - MAX_GAMES_SHOWN) - 1);
+	pScroll->SetUpper(NumGames > MAX_GAMES_SHOWN ? NumGames - MAX_GAMES_SHOWN : 0);
 	pScroll->SetLower(0);
 	pScroll->SetPos(TopGame);
 }
 
 void GameListWin::DeleteGame(int num)
 {
+	if(!HasPreloadedSlot(num)) return;
 
-	GameListWin * list = (GameListWin*)GetParent();
-	GameListWinGameSlot slot = list->GetPreloadedSlot(num);
-
-	remove(slot.FileName);	
+	remove(GetPreloadedSlot(num).FileName);
+	Preloaded.erase(Preloaded.begin() + (num - 1));
 
 	ZSVScroll *pScroll;
 	pScroll = (ZSVScroll *)GetChild(IDC_GAME_SCROLL);
@@ -314,10 +290,14 @@ void GameListWin::LoadPatternSaves(char * pattern) {
 
 	for (it = files.begin(); it != files.end(); it++) {
 		FILE * fp = fopen((*it).name, "rb");
-		PTD_ASSERT(fp != NULL);
+		if(!fp) continue;
 		GameListWinGameSlot slot;
-		fread(&slot.StoredFileName, 1, 64 + 8, fp);
+		size_t got = fread(slot.StoredFileName, 1, sizeof(slot.StoredFileName), fp);
+		got += fread(&slot.Hour, 1, sizeof(slot.Hour), fp);
+		got += fread(&slot.TotalTime, 1, sizeof(slot.TotalTime), fp);
 		fclose(fp);
+		if(got != sizeof(slot.StoredFileName) + sizeof(slot.Hour) + sizeof(slot.TotalTime)) continue;
+		slot.StoredFileName[sizeof(slot.StoredFileName) - 1] = 0;
 		strcpy(slot.FileName, (*it).name);
 		Preloaded.push_back(slot);
 	}
@@ -330,9 +310,10 @@ int slotCompare(const GameListWinGameSlot & a, const GameListWinGameSlot & b) {
 void GameListWin::LoadAllSaves() {
 
 #if defined(__linux__) || defined(__APPLE__)
-	LoadPatternSaves("save.*\\.gam$");
-	LoadPatternSaves("quicksave-.*\\.gam$");
-#else	
+	//regexec is unanchored: without the ^ the first pattern also eats quicksave-*.gam
+	LoadPatternSaves("^save.*\\.gam$");
+	LoadPatternSaves("^quicksave-.*\\.gam$");
+#else
 	LoadPatternSaves(".\\save*.gam");
 	LoadPatternSaves(".\\quicksave-*.gam");
 #endif

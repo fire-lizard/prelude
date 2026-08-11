@@ -2,6 +2,7 @@
 #define SAVELOAD_H
 
 #include "ZSwindow.h"
+#include <cstdint>
 
 class GameWin : public ZSWindow
 {
@@ -19,14 +20,18 @@ public:
 
 };
 
-#pragma pack(1)
 typedef struct _GameListWinGameSlot {
 	char FileName[128];
 	char StoredFileName[64];
-	long Hour;
-	long TotalTime;
+	//World::SaveGame writes both of these as 32 bit, so "long" is wrong on LP64
+	int32_t Hour;
+	int32_t TotalTime;
 } GameListWinGameSlot;
-#pragma pack()
+
+//World::SaveGame writes the header as 64 chars + fwrite(&Hour,sizeof(int)) + fwrite(&TotalTime,sizeof(int))
+static_assert(sizeof(((GameListWinGameSlot *)0)->Hour) == sizeof(int)
+	&& sizeof(((GameListWinGameSlot *)0)->TotalTime) == sizeof(int),
+	"GameListWinGameSlot must match the savegame header World::SaveGame writes");
 
 class GameListWin : public ZSWindow
 {
