@@ -1,0 +1,95 @@
+
+<HTML>
+<BODY BGCOLOR="#000000" LINK="#99CCFF" VLINK="#99CCFF">
+<FONT SIZE="2" COLOR="#DFCAA2">
+
+
+<SCRIPT LANGUAGE = "JavaScript">
+<!--
+
+bName = navigator.appName;
+bVer = parseInt(navigator.appVersion);
+    if ((bName == "Netscape" && bVer >= 3) ||
+        (bName == "Microsoft Internet Explorer" && bVer >= 4)) br = "n3";
+    else br = "n2";
+
+    if (br== "n3") {
+
+ 	img9on = new Image();
+    	img9on.src = "pics/zsbuttonb.gif";   // Active navbar 9 about zs
+
+    img9off = new Image();
+    img9off.src = "pics/zsbutton.gif"; // Inactive navbar 9 press
+    }
+
+function imgAct(imgName) {
+    if (br== "n3") {
+    document[imgName].src = eval(imgName + "on.src");
+    }
+}
+
+function imgInact(imgName) {
+    if (br== "n3") {
+    document[imgName].src = eval(imgName + "off.src");
+    }
+}
+
+// -->
+</SCRIPT>
+
+
+<CENTER><B>The Official Prelude to Darkness Walkthrough</B><BR>
+By CP McBee</CENTER><BR>
+
+<!-- Overview -->
+<I>Overview</I><BR>
+<A TARGET="content" HREF="introductionWT.html">Introduction</A><BR>
+<A TARGET="content" HREF="charGen1.html">Creating a Party</A><BR>
+<A TARGET="content" HREF="tipsWT.html">Gameplay Tips</A><BR>
+
+
+<!-- Walkthroughs -->
+<HR BORDERCOLOR="#DFCAA2">
+<I>Quest Walkthroughs</I><BR>
+<A TARGET="menuBarWT" HREF="academyMenuWT.html">The Academy</A><BR>
+<A TARGET="menuBarWT" HREF="barrierMenuWT.html">The Barrier Fortress</A><BR>
+<A TARGET="menuBarWT" HREF="citadelMenuWT.html">The Citadel</A><BR>
+<A TARGET="menuBarWT" HREF="crossingEastMenuWT.html">Crossing East</A><BR>
+<A TARGET="menuBarWT" HREF="ironwoodMenuWT.html">Ironwood</A><BR>
+<A TARGET="menuBarWT" HREF="jerrockMenuWT.html">Jerrock</A><BR>
+<A TARGET="menuBarWT" HREF="kellenMenuWT.html">Kellen</A><BR>
+<A TARGET="menuBarWT" HREF="landsEndMenuWT.html">Land's End</A><BR>
+<A TARGET="content" HREF="mainPlot1.html">Main Plot</A><BR>
+<A TARGET="menuBarWT" HREF="monestaryMenuWT.html">The Monastery</A><BR>
+<A href="randomMenuWT.html" target="menuBarWT" onClick="top.content.location='randomEncounters.html';">Random Encounters</A><BR>
+
+
+<!-- Items and NPCs -->
+<HR BORDERCOLOR="#DFCAA2">
+<I>Items and NPCs</I><BR>
+<A TARGET="content" HREF="armor.html">Armor</A><BR>
+<A TARGET="content" HREF="creatures.html">Creatures</A><BR>
+<A TARGET="content" HREF="magicItems.html">Magic Items</A><BR>
+<A TARGET="content" HREF="potions.html">Potions</A><BR>
+<A TARGET="content" HREF="npcsWT.html">Recruitable NPCs</A><BR>
+<A TARGET="content" HREF="trainers.html">Trainers</A><BR>
+<A TARGET="content" HREF="weapons.html">Weapons and Ammunition</A><BR>
+
+<HR BORDERCOLOR="#DFCAA2">
+
+<!-- Press -->
+<I>Press</I><BR>
+<A target="_top" HREF="../press.html">Financing your independent game, the facts</A><BR><BR>
+
+<!-- Zero Sum Logo -->
+<A TARGET="_top" HREF = "http://www.zero-sum.com"
+ onMouseOver = "imgAct('img9')"
+ onMouseOut = "imgInact('img9')">
+<IMG NAME= "img9" border= 0 src= "pics/zsbutton.gif" alt = "About ZS"></A>
+
+
+
+
+</FONT>
+</BODY>
+</HTML>
