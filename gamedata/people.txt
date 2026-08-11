@@ -1703,7 +1703,7 @@
 	)
 	(addword [Are you a Guardian?])
 	(addword [Tell me about Kellen])
-	(if (flag ^SolvedJactusMurder^)
+	(if (or (flag ^SolvedJactusMurder^) (flag ^AntiusSlainSalje^))
 		(addword [Do you have any idea why Salje would have wanted to kill Jactus?])
 		(	(if (flag ^KnowsSalje^)
 				(addword [I believe Salje murdered Jactus])
