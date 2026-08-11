@@ -1396,6 +1396,18 @@ int Combat::End()
 			if(pCreature->GetData(INDEX_BATTLESIDE).Value && !PreludeParty.IsMember(pCreature))
 			{
 				pCreature->InsertAction(ACTION_DIE,NULL,NULL,NULL);
+
+				//that ACTION_DIE doesn't run until the next update, i.e. after the
+				//DoEndCombat() below.  A die override that queues work with
+				//addeventendcombat would then sit unrun until the next fight ends
+				//(Salje's letter and Nylis, for one).  Run it here instead and clear
+				//it so Die() doesn't run it a second time.
+				if(pCreature->GetData(INDEX_DIE_OVERRIDE).Value)
+				{
+					int DieOverride = pCreature->GetData(INDEX_DIE_OVERRIDE).Value;
+					pCreature->SetData(INDEX_DIE_OVERRIDE, 0);
+					PreludeEvents.RunEvent(DieOverride);
+				}
 			}
 			else
 			{
