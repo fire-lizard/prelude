@@ -33,7 +33,9 @@
 #include "area.h"
 #include "Minimap.h" //to unset when entering dungeons
 #include "zsdescribe.h"
+#include "ZSutilities.h"
 #include <ctime>
+#include <algorithm>
 #if defined(__linux__) || defined(__APPLE__)
 #include "linux_aux_wrapper.h"
 #endif
@@ -3421,55 +3423,57 @@ void World::AutoSave()
 	SaveGame(FileName,"Autosave");
 }
 
-void World::QuickSave()
+//ponytail: fixed cap, no options-screen knob. Add one if players ask for it.
+#define MAX_QUICKSAVES 5
+
+static unsigned long long QuickSaveStamp(const findFilesData & f)
 {
-	FILE *fp;
-	int n = 0;
-	char FileName[64];
-	char SaveGameName[64];
-	while(TRUE)
+	//quicksave-<epoch nanoseconds>.gam - the name is the creation time
+	const char *p = strchr(f.name, '-');
+	return p ? strtoull(p + 1, NULL, 10) : 0;
+}
+
+static bool QuickSaveIsOlder(const findFilesData & a, const findFilesData & b)
+{
+	return QuickSaveStamp(a) < QuickSaveStamp(b);
+}
+
+//QuickSave2 never reuses a file, so without this the save list grows forever
+static void PruneQuickSaves()
+{
+	std::vector<findFilesData> files;
+	char Pattern[64];
+
+#if defined(__linux__) || defined(__APPLE__)
+	strcpy(Pattern, "^quicksave-.*\\.gam$");
+#else
+	strcpy(Pattern, ".\\quicksave-*.gam");
+#endif
+
+	if(GenericFindFiles(Pattern, &files) <= MAX_QUICKSAVES) return;
+
+	std::sort(files.begin(), files.end(), QuickSaveIsOlder);
+
+	//the one we just wrote has the newest stamp, so it is never a candidate
+	for(size_t n = 0; n + MAX_QUICKSAVES < files.size(); n++)
 	{
-		n++;
-		sprintf(FileName,"save%i.gam",n);
-		fp = fopen(FileName,"rb");
-		if(fp)
-		{
-			fread(SaveGameName,sizeof(char),64,fp);
-			fclose(fp);
-			if(!strcmp(SaveGameName,"Quicksave"))
-			{
-				break;
-			}
-		}
-		else
-		{
-			break;
-		}
+		remove(files[n].name);
 	}
-	SaveGame(FileName,"Quicksave");
-	Describe("Quick Save");
 }
 
 void World::QuickSave2() {
-	FILE *fp;
-	int n = 0;
 	char FileName[128];
-	char SaveGameName[128];
 
-
-	
 	std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
-	//std::time_t t1 = std::chrono::system_clock::to_time_t(now);
 
-	sprintf(SaveGameName, "quicksave-%llu", now.time_since_epoch().count());
 	sprintf(FileName, "quicksave-%llu.gam", now.time_since_epoch().count());
-	char tmp[256];
-	sprintf(tmp, "Saving %s...", FileName);
-	Describe(tmp);
-	
-	
-	SaveGame(FileName, SaveGameName);
-	
+
+	//the save list shows the day and time in its own column, so the name only
+	//has to say what kind of save this is - same as AutoSave's "Autosave"
+	SaveGame(FileName, "Quicksave");
+	PruneQuickSaves();
+
+	Describe("Quick Save");
 }
 
 

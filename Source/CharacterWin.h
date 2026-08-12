@@ -89,6 +89,8 @@ class CharacterWin : public ZSWindow
 		void ResetStats();
 		void Show();
 		BOOL RightButtonUp(int x, int y);
+		int LeftButtonUp(int x, int y);
+		BOOL SwitchToPortraitTarget(int x, int y);
 		
 //Constructors
 //-------------------------------------------------------------------------------

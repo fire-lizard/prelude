@@ -1669,6 +1669,10 @@ if(PreludeWorld->GetGameState() != GAME_STATE_COMBAT)
 		return TRUE;
 	}
 
+}
+
+//the main menu is available in combat too - it hides its own Save button when
+//the game state is combat
 	if(PRESSED(DIK_O) || PRESSED(DIK_ESCAPE))
 	{
 		//open map screen
@@ -1680,8 +1684,9 @@ if(PreludeWorld->GetGameState() != GAME_STATE_COMBAT)
 		pOpMenu->GoModal();
 		pOpMenu->ReleaseFocus();
 		ZSWindow::GetMain()->RemoveChild(pOpMenu);
+		//pThing may have been deleted by a load from the menu
+		return TRUE;
 	}
-}
 
 	if(PreludeWorld->InCombat() && CurrentKeys[DIK_TAB] & 0x80 && !(LastKeys[DIK_TAB] & 0x80))
 	{

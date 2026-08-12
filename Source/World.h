@@ -410,7 +410,6 @@ public:
 	int Save(FILE *fp);
 	void SaveGame(const char *filename, const char *GameID = NULL);
 	void AutoSave();
-	void QuickSave();
 	void QuickSave2();
 	void SaveRegions(const char *filename);
 	void SaveDynamic(FILE *fp);

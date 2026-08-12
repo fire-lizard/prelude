@@ -227,6 +227,36 @@ void CharacterWin::ResetStats()
 	//reset the skill window
 }
 
+//SwitchToPortraitTarget
+// if x,y is over another party member's portrait, close this window and hand the
+// click to the portrait, which opens that member's screen in our place.
+// returns TRUE if we switched
+BOOL CharacterWin::SwitchToPortraitTarget(int x, int y)
+{
+	ZSWindow *pWin;
+	pWin = GetMain()->GetBottomChild(x,y);
+
+	if(!pWin || pWin->GetType() != WINDOW_PORTRAIT)
+	{
+		return FALSE;
+	}
+
+	//an empty portrait slot has nobody to switch to
+	if(!((ZSPortrait *)pWin)->GetTarget()
+		|| ((ZSPortrait *)pWin)->GetTarget() == this->GetTarget())
+	{
+		return FALSE;
+	}
+
+	this->ID = -11;
+	this->SetState(WINDOW_STATE_DONE);
+	this->Hide();
+	pWin->RightButtonDown(x,y);
+	pWin->RightButtonUp(x,y);
+
+	return TRUE;
+} // SwitchToPortraitTarget
+
 BOOL CharacterWin::RightButtonUp(int x, int y)
 {
 	//if we're moving we can stop
@@ -236,12 +266,12 @@ BOOL CharacterWin::RightButtonUp(int x, int y)
 		if(!ValidateMove(&Bounds))
 		{
 			//if we're intersecting a sibling, rebound to our start position
-			Move(OldBounds);	
+			Move(OldBounds);
 		}
 		//return to normal operations
 		State = WINDOW_STATE_NORMAL;
 	}
-	
+
 	//if our cursor is the pointing hand, raise the finger
 	if(Cursor == CURSOR_POINT)
 	{
@@ -249,26 +279,25 @@ BOOL CharacterWin::RightButtonUp(int x, int y)
 	}
 
 	ReleaseFocus();
-	
-	ZSWindow *pWin;
-	pWin = GetMain()->GetBottomChild(x,y);
-	if(pWin)
-	{
-		if(pWin->GetID() == 66666)
-		{
-			if(((ZSPortrait *)pWin)->GetTarget() != this->GetTarget())
-			{
-				this->ID = -11;
-				this->SetState(WINDOW_STATE_DONE);
-				this->Hide();
-				pWin->RightButtonDown(x,y);
-				pWin->RightButtonUp(x,y);
-			}
-		}
-	}
+
+	SwitchToPortraitTarget(x,y);
 
 	//done
-	return TRUE; 
+	return TRUE;
+} // RightButtonUp
+
+int CharacterWin::LeftButtonUp(int x, int y)
+{
+	//the base class stops any drag, resets the cursor and gives up the focus.
+	//item slots and buttons take the focus on button down, so we only get here
+	//for clicks that started on our own background or outside us entirely
+	ZSWindow::LeftButtonUp(x,y);
+
+	//clicking a party member's portrait switches to their inventory
+	SwitchToPortraitTarget(x,y);
+
+	//done
+	return TRUE;
 } // LeftButtonUp
 
 
