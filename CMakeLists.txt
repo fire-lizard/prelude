@@ -248,6 +248,43 @@ target_link_libraries(Prelude PUBLIC
 	OpenGL::GL glfw libglew_static
 	"-framework CoreFoundation" "-framework CoreAudio" "-framework AudioToolbox"
 )
+
+set_target_properties(Prelude PROPERTIES
+	MACOSX_BUNDLE TRUE
+	MACOSX_BUNDLE_BUNDLE_NAME "Prelude"
+	MACOSX_BUNDLE_GUI_IDENTIFIER "com.zerosumsoftware.prelude"
+	MACOSX_BUNDLE_BUNDLE_VERSION "1.8"
+	MACOSX_BUNDLE_SHORT_VERSION_STRING "1.8"
+	MACOSX_BUNDLE_ICON_FILE "Prelude.icns"
+	MACOSX_BUNDLE_COPYRIGHT "Zero Sum Software"
+)
+
+target_sources(Prelude PRIVATE tools/mac/Prelude.icns)
+set_source_files_properties(tools/mac/Prelude.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+
+# CFBundleExecutable has to be the launcher, so the game binary moves aside
+add_custom_command(TARGET Prelude POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E rename
+		"$<TARGET_BUNDLE_CONTENT_DIR:Prelude>/MacOS/Prelude"
+		"$<TARGET_BUNDLE_CONTENT_DIR:Prelude>/MacOS/Prelude.bin"
+	COMMAND ${CMAKE_COMMAND} -E copy
+		"${CMAKE_CURRENT_SOURCE_DIR}/tools/mac/launcher.sh"
+		"$<TARGET_BUNDLE_CONTENT_DIR:Prelude>/MacOS/Prelude"
+	COMMAND chmod +x "$<TARGET_BUNDLE_CONTENT_DIR:Prelude>/MacOS/Prelude"
+)
+
+# The game data is not in this repo. Point this at an installed copy and the
+# build fills Contents/Resources with it, giving a self contained .app.
+set(PRELUDE_GAMEDATA "" CACHE PATH "Prelude to Darkness game folder to copy into the .app bundle")
+if(PRELUDE_GAMEDATA)
+	add_custom_command(TARGET Prelude POST_BUILD
+		COMMAND rsync -a
+			--exclude=Prelude.exe --exclude=Prelude.mac --exclude=oldexe
+			--exclude=*.dll --exclude=*.psd --exclude=Thumbs.db
+			"${PRELUDE_GAMEDATA}/" "$<TARGET_BUNDLE_CONTENT_DIR:Prelude>/Resources/"
+		COMMENT "Copying game data into Prelude.app"
+	)
+endif()
 else()
 target_link_libraries(Prelude PUBLIC
 	OpenGL GLEW glfw X11

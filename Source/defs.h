@@ -43,8 +43,11 @@
 	#define GOT_HERE(message)		{ MessageBox(NULL, message, "Got Here", MB_OK); }
 	#define DEBUG_INFO(message)	{	FILE *fp; \
 												fp = fopen(DEBUG_FILE_NAME,"a+t"); \
-												fputs(message, fp); \
-												fclose(fp); }
+												if(fp) \
+												{ \
+													fputs(message, fp); \
+													fclose(fp); \
+												} }
 	#define INIT_DEBUG() {	FILE *fp; \
 									fp = fopen(DEBUG_FILE_NAME,"wt"); \
 									if(!fp) \
