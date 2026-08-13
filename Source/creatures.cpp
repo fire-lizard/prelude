@@ -6453,7 +6453,8 @@ ACTION_RESULT_T Creature::Open()
 							LockValue = pPortal->GetLock();
 							if(TinkerSkill <= LockValue)
 							{
-								Describe("No one has high enough tinker skill to pick the lock.");
+								sprintf(blarg,"No one has high enough tinker skill to pick the lock. (best tinker %d, needs %d)", TinkerSkill, LockValue + 1);
+								Describe(blarg);
 							}
 							else
 							{
@@ -6469,7 +6470,7 @@ ACTION_RESULT_T Creature::Open()
 								}
 								else
 								{
-									sprintf(blarg,"%s fails to pick the lock.", pPicker->GetData(INDEX_NAME).String);
+									snprintf(blarg,sizeof(blarg),"%s fails to pick the lock. (tinker %d vs lock %d: %d%% chance, %d never fails)", pPicker->GetData(INDEX_NAME).String, TinkerSkill, LockValue, TinkerChance, LockValue + 10);
 									Describe(blarg);
 								}
 							}
@@ -6608,7 +6609,8 @@ ACTION_RESULT_T Creature::Open()
 					LockValue = pThing->GetData();
 					if(TinkerSkill <= LockValue)
 					{
-						Describe("No one has high enough tinker skill to pick the lock.");
+						sprintf(blarg,"No one has high enough tinker skill to pick the lock. (best tinker %d, needs %d)", TinkerSkill, LockValue + 1);
+						Describe(blarg);
 						return ACTION_RESULT_FINISHED;
 					}
 					else
@@ -6620,11 +6622,11 @@ ACTION_RESULT_T Creature::Open()
 						{
 							sprintf(blarg,"%s picks the lock.", pPicker->GetData(INDEX_NAME).String);
 							Describe(blarg);
-							pThing->SetData(0);	
+							pThing->SetData(0);
 						}
 						else
 						{
-							sprintf(blarg,"%s fails to pick the lock.", pPicker->GetData(INDEX_NAME).String);
+							snprintf(blarg,sizeof(blarg),"%s fails to pick the lock. (tinker %d vs lock %d: %d%% chance, %d never fails)", pPicker->GetData(INDEX_NAME).String, TinkerSkill, LockValue, TinkerChance, LockValue + 10);
 							Describe(blarg);
 							return ACTION_RESULT_FINISHED;
 						}
