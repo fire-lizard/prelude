@@ -863,6 +863,16 @@ void World::ConvertMouseTile(int MouseX, int MouseY, float *WorldX, float *World
 
 	while(TRUE)
 	{
+		//this used to sit at the bottom of the loop, so it never saw the seed
+		//value from vLine. A mouse ray landing just off the north or west edge
+		//gives xn = -2, and -2/16 is 0, so GetChunk below hands back a real
+		//chunk and GetTile indexes Verts[] at -1. Only reachable in the
+		//monastery, the one place the party gets within 16 tiles of the origin.
+		if(xn < 0 || yn < 0 || xn >= Valley->GetWidth() || yn >= Valley->GetHeight())
+		{
+			return;
+		}
+
 		Chunk *pChunk;
 		pChunk = NULL;
 		pChunk = Valley->GetChunk(xn/CHUNK_TILE_WIDTH, yn/CHUNK_TILE_HEIGHT);
@@ -948,10 +958,6 @@ void World::ConvertMouseTile(int MouseX, int MouseY, float *WorldX, float *World
 		xn += XOffset;
 		yn += YOffset;
 		RunCount++;
-		if(yn < 0 || xn < 0 || yn >= Valley->GetHeight() || xn >= Valley->GetWidth() )
-		{
-			return;
-		}
 	}
 	memset(Engine->Graphics()->GetMouseVerts(),0,sizeof(D3DVERTEX) * 4);
 }

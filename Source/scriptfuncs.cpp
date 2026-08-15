@@ -4726,7 +4726,10 @@ ScriptArg *moveto(ScriptArg *ArgList, ScriptArg *pDestination)
 			//	Engine->Graphics()->GetD3D()->BeginScene();
 			//	Valley->GetChunk((int)SX->GetValue()/CHUNK_TILE_WIDTH,(int)SY->GetValue()/CHUNK_TILE_HEIGHT)->CreateTexture(Valley->GetBaseTexture());
 			//	Engine->Graphics()->GetD3D()->EndScene();
-				Valley->GetChunk(SX->GetIntValue()/CHUNK_TILE_WIDTH,SY->GetIntValue()/CHUNK_TILE_HEIGHT)->ConvertTerrain();
+				//LoadChunk is a no-op for a chunk outside the current area
+				Chunk *pChunk = Valley->GetChunk(SX->GetIntValue()/CHUNK_TILE_WIDTH,SY->GetIntValue()/CHUNK_TILE_HEIGHT);
+				if(pChunk)
+					pChunk->ConvertTerrain();
 			}
 			vNewPosition.z = Valley->GetTileHeight(vNewPosition.x,vNewPosition.y);
 

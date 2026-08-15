@@ -38,7 +38,18 @@ BOOL Entrance::Go()
 			}
 		}
 		
-		PreludeWorld->GotoArea(PreludeWorld->GetAreaNum(DestinationName),DestinationX,DestinationY);
+		//GetAreaNum returns -1 for an area that was never loaded, and GotoArea
+		//would index Areas[-1]. goarea in scriptfuncs.cpp already guards this.
+		int AreaNum = PreludeWorld->GetAreaNum(DestinationName);
+		if(AreaNum < 0)
+		{
+			DEBUG_INFO("Entrance to unknown area: ");
+			DEBUG_INFO(DestinationName);
+			DEBUG_INFO("\n");
+			return FALSE;
+		}
+
+		PreludeWorld->GotoArea(AreaNum,DestinationX,DestinationY);
 	}
 	else
 	{

@@ -364,6 +364,12 @@ float Area::GetZ(float x, float y)
 		pChunk = GetChunk(TileX / CHUNK_TILE_WIDTH,TileY / CHUNK_TILE_HEIGHT);
 	}
 
+	//still nothing there - out of the area, or a chunk the file has no data for
+	if(!pChunk)
+	{
+		return 0.0f;
+	}
+
 	int ChunkTileX;
 	int ChunkTileY;
 	ChunkTileX = (TileX % CHUNK_TILE_WIDTH) / 2;
@@ -3195,7 +3201,15 @@ void Area::LoadChunk(int x, int y)
 	{
 		return;
 	}
-	
+
+	//every index below is x + y * ChunkWidth into BigMap and Header.ChunkOffsets,
+	//neither of which is bounds checked - an out of area chunk read garbage and
+	//then wrote a Chunk * past the end of BigMap
+	if(x < 0 || y < 0 || x >= this->ChunkWidth || y >= this->ChunkHeight)
+	{
+		return;
+	}
+
 	if(BigMap[y * this->ChunkWidth + x])
 	{
 		return;

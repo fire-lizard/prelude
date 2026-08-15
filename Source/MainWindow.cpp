@@ -136,10 +136,12 @@ ZSMainWindow::ZSMainWindow()
 	pFPS->Hide();
 	pFPS->SetText("             ");
 
-	pDrawTime = new ZSText(124500, 0, 288,"BLARGBLARGBLARG");
+	//wide enough for "999.99  3200,3200" - the sprintf below writes into this
+	//buffer in place, and the ctor string is what sizes the drawn bounds
+	pDrawTime = new ZSText(124500, 0, 288,"WWWWWWWWWWWWWWWWWWWW");
 	AddChild(pDrawTime);
 	pDrawTime->Hide();
-	pDrawTime->SetText("             ");
+	pDrawTime->SetText("                    ");
 
 	pTargetString = new ZSText(124500, 0, 475,"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww: hp:wwwww rp:wwwww wp: wwwww");
 	AddChild(pTargetString);
@@ -1753,7 +1755,15 @@ int ZSMainWindow::GoModal()
 		if(ShowFrames && !(FrameNum % 30))
 		{
 			FrameLength =  (timeGetTime() - LastFrame) + 1;
-			sprintf(pDrawTime->GetText(),"%06.2f",(1000.0f/(float)FrameLength));
+			//party world x,y rides along with the draw time - the only coord
+			//readout in a release build, updated once every 30 frames
+			if(PreludeParty.GetLeader())
+			{
+				D3DVECTOR *pAt = PreludeParty.GetLeader()->GetPosition();
+				sprintf(pDrawTime->GetText(),"%06.2f  %d,%d",(1000.0f/(float)FrameLength),(int)pAt->x,(int)pAt->y);
+			}
+			else
+				sprintf(pDrawTime->GetText(),"%06.2f",(1000.0f/(float)FrameLength));
 		}
 
 		//get any user input

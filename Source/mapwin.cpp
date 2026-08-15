@@ -798,7 +798,12 @@ int MapWin::Command(int IDFrom, int Command, int Param)
 						for(xn = ChunkX - 1; xn <= ChunkX + 1; xn++)
 						{
 							Valley->LoadChunk(xn,yn);
-							Valley->GetChunk(xn,yn)->ConvertTerrain();
+							//Valley is the current area, so a valley scale
+							//destination can be off the end of a dungeon's
+							//grid. World::GotoArea guards the same loop.
+							Chunk *pChunk = Valley->GetChunk(xn,yn);
+							if(pChunk)
+								pChunk->ConvertTerrain();
 							//Valley->GetChunk(xn,yn)->CreateTexture(Valley->GetBaseTexture());
 						}
 						//Engine->Graphics()->GetD3D()->EndScene();
