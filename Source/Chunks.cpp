@@ -211,21 +211,16 @@ void Chunk::DrawTiles()
 }
 
 
-float Chunk::BiggestObject = 0.0f;
-
-void Chunk::DrawObjects(float MinExtent)
+void Chunk::DrawObjects()
 {
-
+	
 	Object *pObject;
 	pObject = pObjectList;
 
 	while(pObject)
 	{
-		if(MinExtent <= 0.0f || pObject->GetDrawExtent() >= MinExtent)
-		{
-			Engine->Graphics()->SetTexture(pObject->GetTexture());
-			pObject->Draw();
-		}
+		Engine->Graphics()->SetTexture(pObject->GetTexture());
+		pObject->Draw();
 		pObject = pObject->GetNext();
 	}
 }
@@ -246,14 +241,6 @@ int Chunk::AddObject(Object *pAddObject)
 	D3DVECTOR *Position;
 
 	Position = pAddObject->GetPosition();
-
-	//remember the widest thing in the world: the draw uses it to decide how far
-	//past the draw radius it has to look for objects that still reach the screen
-	float Extent;
-	Extent = pAddObject->GetDrawExtent();
-
-	if(Extent > BiggestObject)
-		BiggestObject = Extent;
 
 //	if(pAddObject->GetMesh())
 //	{

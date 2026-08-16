@@ -97,7 +97,6 @@ typedef enum {
 class Chunk
 {
 public:
-	static float BiggestObject;
 	static D3DTLVERTEX vTerrain[16*4*4*4];
 #ifdef BACKPORT_18
 	static ZSTexture *TerrainTextures[MAX_TERRAINS];
@@ -171,9 +170,7 @@ public:
 
 // Display Functions -------------------------------
 	void Draw();
-	//MinExtent skips everything smaller than that: used to sweep the ring of
-	//chunks outside the draw radius for objects still reaching into view
-	void DrawObjects(float MinExtent = 0.0f);
+	void DrawObjects();
 	void DrawTiles();
 	void DrawBacksides();
 #ifdef BACKPORT_18
@@ -191,9 +188,6 @@ public:
 #endif
 
 	float GetHeight(int x, int y);
-
-	//widest object seen in any loaded chunk, in tiles
-	static float GetBiggestObject() { return BiggestObject; }
 
 	ZSTexture *GetTexture() { return pTerrainTexture; }
 
