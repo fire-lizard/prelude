@@ -1144,6 +1144,7 @@ static const char *TintedAreas[] =
 {
 	"jerrockmines",
 	"darkpath",
+	"archives",		//the Monastery basement
 };
 
 //height inside a terrain quad.  u/v run 0..1 from the quad's NW corner.
