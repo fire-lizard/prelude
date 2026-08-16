@@ -42,8 +42,41 @@ static int NextTalkWin = IDC_TALK_START;
 	then starts parsing after the !begin! keyword to start 
 	conversation */
 
-ScriptArg *ScriptStack[128];
+#define SCRIPT_STACK_SIZE 128
+
+ScriptArg *ScriptStack[SCRIPT_STACK_SIZE];
 int StackTop = 0;
+
+//The scripts drive this stack, and some of them read it without having pushed
+//anything - (cameralookat (lookstack)) in an event that never pushed a target,
+//for one.  Out of range means "nothing there" and the caller carries on; it
+//used to index ScriptStack[-1] and take the game down with it.
+static ScriptArg *StackAt(int Depth)
+{
+	int n = StackTop - 1 - Depth;
+
+	if(n < 0 || n >= StackTop)
+	{
+		DEBUG_INFO("script read past the end of the script stack\n");
+		return NULL;
+	}
+
+	return ScriptStack[n];
+}
+
+static BOOL StackPush(ScriptArg *ToPush)
+{
+	if(StackTop >= SCRIPT_STACK_SIZE)
+	{
+		DEBUG_INFO("script stack is full\n");
+		delete ToPush;
+		return FALSE;
+	}
+
+	ScriptStack[StackTop] = ToPush;
+	StackTop++;
+	return TRUE;
+}
 ScriptArg *(*ScriptFunctions[256])(ScriptArg *ArgList, ScriptArg *pDestination);
 
 ScriptArg *talk(ScriptArg *ArgList, ScriptArg *pDestination) 
@@ -2295,72 +2328,92 @@ ScriptArg *IsMoving(ScriptArg *ArgList, ScriptArg *pDestination)
 }
 
 /*stack functions */
-ScriptArg *Push(ScriptArg *ArgList, ScriptArg *pDestination) 
-{ 
-	ScriptStack[StackTop] = new ScriptArg(ArgList[0].Evaluate());	
-	
-	*pDestination = *ScriptStack[StackTop];
+ScriptArg *Push(ScriptArg *ArgList, ScriptArg *pDestination)
+{
+	ScriptArg *ToPush;
+	ToPush = new ScriptArg(ArgList[0].Evaluate());
 
-	StackTop++;
-	
-	return pDestination; 
+	if(!StackPush(ToPush))
+		return pDestination;
+
+	*pDestination = *ScriptStack[StackTop - 1];
+
+	return pDestination;
 }
-ScriptArg *Pop(ScriptArg *ArgList, ScriptArg *pDestination) 
-{ 
-	
-	if (StackTop == 0) {
-		SafeExit("Popping the script stack to much");
+ScriptArg *Pop(ScriptArg *ArgList, ScriptArg *pDestination)
+{
+	ScriptArg *pTop;
+	pTop = StackAt(0);
+
+	if(!pTop)
+	{
+		DEBUG_INFO("script popped an empty script stack\n");
+		return pDestination;
 	}
-	
+
 	StackTop--;
-	
-	*pDestination = *ScriptStack[StackTop];
-	
-	delete ScriptStack[StackTop];
+
+	*pDestination = *pTop;
+
+	delete pTop;
 
 	ScriptStack[StackTop] = NULL;
 
-	return pDestination; 
+	return pDestination;
 }
 
-ScriptArg *Switch(ScriptArg *ArgList, ScriptArg *pDestination) 
-{ 
+ScriptArg *Switch(ScriptArg *ArgList, ScriptArg *pDestination)
+{
 	ScriptArg *Temp;
+
+	if(!StackAt(0) || !StackAt(1))
+		return pDestination;
+
 	Temp = ScriptStack[StackTop - 1];
 	ScriptStack[StackTop - 1] = ScriptStack[StackTop - 2];
 	ScriptStack[StackTop - 2] = Temp;
-	return pDestination;; 
+	return pDestination;;
 }
 
-ScriptArg *Dupe(ScriptArg *ArgList, ScriptArg *pDestination) 
-{ 
-	ScriptStack[StackTop] = new ScriptArg(ScriptStack[StackTop-1]);	
+ScriptArg *Dupe(ScriptArg *ArgList, ScriptArg *pDestination)
+{
+	ScriptArg *pTop;
+	pTop = StackAt(0);
 
-	
-	*pDestination = *ScriptStack[StackTop];
+	if(!pTop)
+		return pDestination;
 
-	StackTop++;
-	
-	return pDestination; 
+	if(!StackPush(new ScriptArg(pTop)))
+		return pDestination;
+
+	*pDestination = *ScriptStack[StackTop - 1];
+
+	return pDestination;
 }
 
-ScriptArg *LookStack(ScriptArg *ArgList, ScriptArg *pDestination) 
-{ 
-	
-	
+ScriptArg *LookStack(ScriptArg *ArgList, ScriptArg *pDestination)
+{
+	int offset;
+	ScriptArg *pAt;
+
+	offset = 0;
+
 	if(ArgList[0].GetType() != ARG_TERMINATOR)
 	{
-		int offset;
-		ScriptArg *SA;
-		SA = ArgList[0].Evaluate();
+		ArgList[0].Evaluate();
 		offset = ArgList[0].GetIntValue();
-		*pDestination = *ScriptStack[StackTop - (1 + offset)];
 	}
-	else
+
+	pAt = StackAt(offset);
+
+	//nothing pushed: leave the destination as the empty value Process cleared,
+	//which reads as "no creature" further up (LookAt falls back to the leader)
+	if(pAt)
 	{
-		*pDestination = *ScriptStack[StackTop - 1];
+		*pDestination = *pAt;
 	}
-	return pDestination; 
+
+	return pDestination;
 }
 
 /* for calling extern script files */
@@ -5673,9 +5726,7 @@ void Push(int n)
 	ToPush->SetValue((void *)(uintptr_t)n);
 	ToPush->SetType(ARG_NUMBER);
 
-	ScriptStack[StackTop] = ToPush;
-	StackTop++;
-	
+	StackPush(ToPush);
 }
 
 void Push(char *String)
@@ -5686,10 +5737,7 @@ void Push(char *String)
 	ToPush->SetValue((void *)String);
 	ToPush->SetType(ARG_STRING);
 
-	ScriptStack[StackTop] = ToPush;
-	StackTop++;
-	
-	
+	StackPush(ToPush);
 }
 
 void Push(Creature *pCreature)
@@ -5700,10 +5748,7 @@ void Push(Creature *pCreature)
 	ToPush->SetValue((void *)pCreature);
 	ToPush->SetType(ARG_CREATURE);
 
-	ScriptStack[StackTop] = ToPush;
-	StackTop++;
-	
-
+	StackPush(ToPush);
 }
 
 void Push(Item *pItem)
@@ -5714,16 +5759,23 @@ void Push(Item *pItem)
 	ToPush->SetValue((void *)pItem);
 	ToPush->SetType(ARG_ITEM);
 
-	ScriptStack[StackTop] = ToPush;
-	StackTop++;
-	
+	StackPush(ToPush);
 }
 
 ScriptArg *Pop()
 {
+	ScriptArg *pTop;
+	pTop = StackAt(0);
+
+	//every caller dereferences what it gets back, and some delete it, so an
+	//empty stack hands out a fresh empty argument rather than ScriptStack[-1]
+	if(!pTop)
+		return new ScriptArg;
+
 	StackTop--;
-	return ScriptStack[StackTop];
-	
+	ScriptStack[StackTop] = NULL;
+
+	return pTop;
 }
 
 void CallScript(const char *ScriptName, const char *FileName)
