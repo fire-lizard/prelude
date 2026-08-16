@@ -104,6 +104,9 @@ public:
 
 	inline ZSModelEx *GetMesh() { return pMesh; }
 	inline Object *GetNext() { return pNext; }
+
+	//how far the mesh reaches across the ground, in tiles
+	float GetDrawExtent();
 	int GetTextureNum();
 	ZSTexture *GetTexture();
 

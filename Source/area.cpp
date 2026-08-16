@@ -1296,6 +1296,58 @@ void Area::DrawBlockedTint()
 	Engine->Graphics()->GetD3D()->SetMaterial(Engine->Graphics()->GetMaterial(COLOR_DEFAULT));
 }
 
+//An object hangs off the single chunk its origin sits in, and the object pass
+//only walks the chunks the terrain pass drew.  Anything longer than the draw
+//radius - the bridge between the halves of Land's End - therefore blinks out
+//as soon as you walk far enough along it, while you are standing on it.
+//
+//Sweep the ring of chunks outside that radius as well, but only for objects
+//wide enough to still reach the screen.  Chunks are never unloaded once
+//visited, so the far end of a bridge you walked onto is still in memory.
+void Area::DrawWideObjects(int StartX, int StartY, int EndX, int EndY)
+{
+	int Margin;
+	int xn, yn;
+	int RingStartX, RingStartY, RingEndX, RingEndY;
+
+	//nothing here is bigger than a chunk, so the normal pass already covered it
+	if(Chunk::GetBiggestObject() < CHUNK_TILE_WIDTH)
+		return;
+
+	Margin = (int)(Chunk::GetBiggestObject() / CHUNK_TILE_WIDTH) + 1;
+
+	//one freakishly large mesh shouldn't turn this into a whole-map sweep
+	if(Margin > 4)
+		Margin = 4;
+
+	RingStartX = StartX - Margin;
+	RingStartY = StartY - Margin;
+	RingEndX = EndX + Margin;
+	RingEndY = EndY + Margin;
+
+	if(RingStartX < 0)
+		RingStartX = 0;
+	if(RingStartY < 0)
+		RingStartY = 0;
+	if(RingEndX >= this->ChunkWidth)
+		RingEndX = this->ChunkWidth - 1;
+	if(RingEndY >= this->ChunkHeight)
+		RingEndY = this->ChunkHeight - 1;
+
+	for(yn = RingStartY; yn <= RingEndY; yn++)
+	{
+		for(xn = RingStartX; xn <= RingEndX; xn++)
+		{
+			//the middle of the ring is the normal pass' business
+			if(xn >= StartX && xn <= EndX && yn >= StartY && yn <= EndY)
+				continue;
+
+			if(BigMap[xn + yn * this->ChunkWidth])
+				BigMap[xn + yn * this->ChunkWidth]->DrawObjects((float)CHUNK_TILE_WIDTH);
+		}
+	}
+}
+
 void Area::DrawTerrain()
 {
 	Engine->Graphics()->SetRenderState(D3DRENDERSTATE_CULLMODE, D3DCULL_CCW);
@@ -1717,6 +1769,8 @@ void Area::Draw() {
 					BigMap[Offset + xn]->DrawObjects();
 			}
 		}
+
+		DrawWideObjects(StartX, StartY, EndX, EndY);
 	}
 
 

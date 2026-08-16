@@ -646,6 +646,23 @@ void Object::AddToArea(Area *pArea)
 	pArea->AddToUpdate(this);
 }
 
+//an object belongs to the one chunk its origin sits in, so anything wider than
+//a chunk is still on screen long after that chunk has left the draw radius.
+//this is how far it reaches, so the draw can decide whether to bother.
+float Object::GetDrawExtent()
+{
+	float Width;
+	float Depth;
+
+	if(!pMesh)
+		return 0.0f;
+
+	Width = pMesh->GetWidth() * Scale;
+	Depth = pMesh->GetDepth() * Scale;
+
+	return Width > Depth ? Width : Depth;
+}
+
 
 
 //end: Mutators ********************************************************

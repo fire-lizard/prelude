@@ -76,6 +76,7 @@ public:
 	void Draw();
 	void DrawTerrain();
 	void DrawBlockedTint();
+	void DrawWideObjects(int StartX, int StartY, int EndX, int EndY);
 	void DrawRegions();
 	void ConvertChunks();
 
