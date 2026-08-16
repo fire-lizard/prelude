@@ -109,15 +109,22 @@ int opengl_surface::Blt(LPRECT rect, _opengl_surface * src, LPRECT srcRect, DWOR
 			area.left = 0;
 		}
 
-		if (area.right < area.left) {
-			return 0;
-		}
-
 		sw = sarea.right - sarea.left;
 		sh = sarea.bottom - sarea.top;
 
 		dw = area.right - area.left;
 		dh = area.bottom - area.top;
+
+		// Clamping only pulls the far edges in, so a rect that arrived inverted
+		// (or a surface that never got its size) still leaves a negative extent
+		// here. bmp_scale asserts all four are positive, and those asserts are
+		// gone in release: it went on to new uint32[sw*dh] and threw
+		// bad_array_new_length out of a Blt nobody catches.
+		if (sw <= 0 || sh <= 0 || dw <= 0 || dh <= 0) {
+			debug_info("Blt with an empty rect: src %ix%i dst %ix%i (%s)",
+				sw, sh, dw, dh, src ? src->filename : "no source");
+			return 0;
+		}
 
 		if (toScale) {
 			bmp_scale(src->pixels, sarea.right - sarea.left, sarea.bottom - sarea.top, sarea.left, sarea.top, src->w, src->h,

@@ -480,6 +480,13 @@ void bmp_scale(uint32 * pixels, int sw, int sh, int sx, int sy, int fsw, int fsh
 	assert(dw > 0);
 	assert(dh > 0);
 
+	// the asserts above are compiled out of release builds, where a bad extent
+	// instead reached new uint32[sw*dh] and threw bad_array_new_length
+	if (sw <= 0 || sh <= 0 || dw <= 0 || dh <= 0) {
+		debug_info("bmp_scale asked for %ix%i -> %ix%i, skipped", sw, sh, dw, dh);
+		return;
+	}
+
 	int x, y;
 	int xrsz, yrsz;
 	if (sw < dw) {

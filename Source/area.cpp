@@ -2205,10 +2205,15 @@ int Area::Load()
 	sprintf(filename,"%s.bin", Header.Name);
 
 	StaticFile = SafeFileOpen(filename,"rb");
-	
-	if(!StaticFile) 
+
+	if(!StaticFile)
+	{
+		//leaving the cwd in .\Areas makes every later relative load (portraits,
+		//parchment, meshes) miss, which surfaces much later as a broken bitmap
+		SetCurrentDirectory(Engine->GetRootDirectory());
 		return FALSE;
-	
+	}
+
 	LoadHeader(StaticFile);
 
 	if(BigMap)
