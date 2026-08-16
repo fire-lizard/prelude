@@ -75,6 +75,7 @@ public:
 // Display Functions -------------------------------
 	void Draw();
 	void DrawTerrain();
+	void DrawBlockedTint();
 	void DrawRegions();
 	void ConvertChunks();
 

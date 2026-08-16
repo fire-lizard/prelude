@@ -82,6 +82,7 @@ public:
 	static LPDIRECTDRAWSURFACE7 JournalSurface;
 
 	int Command(int IDFrom, int Command, int Param);
+	int HandleKeys(BYTE *CurrentKeys, BYTE *LastKeys);
 
 	int MatchJournalQuestArea(int current);
 
@@ -125,6 +126,7 @@ public:
 	static LPDIRECTDRAWSURFACE7 JournalSurface;
 
 	int Command(int IDFrom, int Command, int Param);
+	int HandleKeys(BYTE *CurrentKeys, BYTE *LastKeys);
 
 	int MatchJournalQuestArea(int current);
 

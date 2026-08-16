@@ -443,9 +443,22 @@ void JournalWin::SetText()
 	}
 }
 
+int JournalWin::HandleKeys(BYTE *CurrentKeys, BYTE *LastKeys)
+{
+	//escape shuts the book, same as the quit button
+	if(CurrentKeys[DIK_ESCAPE] & 0x80 && !(LastKeys[DIK_ESCAPE] & 0x80))
+	{
+		State = WINDOW_STATE_DONE;
+		return TRUE;
+	}
+
+	//everything else (F1 help, the hard exit) stays with the base window
+	return ZSWindow::HandleKeys(CurrentKeys, LastKeys);
+}
+
 int JournalWin::Command(int IDFrom, int Command, int Param)
 {
-	
+
 	if(Command == COMMAND_BUTTON_CLICKED)
 	{
 		if(IDFrom == IDC_JOURNAL_QUIT)
@@ -915,6 +928,19 @@ void JournalWin::SetText()
 			pWin->SetText(" ");
 		}
 	}
+}
+
+int JournalWin::HandleKeys(BYTE *CurrentKeys, BYTE *LastKeys)
+{
+	//escape shuts the book, same as the quit button
+	if(CurrentKeys[DIK_ESCAPE] & 0x80 && !(LastKeys[DIK_ESCAPE] & 0x80))
+	{
+		State = WINDOW_STATE_DONE;
+		return TRUE;
+	}
+
+	//everything else (F1 help, the hard exit) stays with the base window
+	return ZSWindow::HandleKeys(CurrentKeys, LastKeys);
 }
 
 int JournalWin::Command(int IDFrom, int Command, int Param)

@@ -1127,6 +1127,150 @@ void Area::DrawTiles()
 
 }
 
+//tint painted over ground you can't walk onto.  it's multiplied over the
+//terrain, so grey rock turns brown while keeping its texture and lighting.
+//knobs: the colour, and how far the tint floats above the ground.
+#define TINT_R		1.00f
+#define TINT_G		0.55f
+#define TINT_B		0.30f
+#define TINT_LIFT	0.05f
+
+//verts buffered before a flush.  6 verts to a tile.
+#define MAX_TINT_VERTS	(6 * 1024)
+
+//height inside a terrain quad.  u/v run 0..1 from the quad's NW corner.
+//blocking is stored at twice the resolution of the terrain mesh, so a tile is
+//a quarter of a quad and its corners have to be interpolated.
+static float QuadZ(float *pQuad, float u, float v)
+{
+	return (1.0f - u) * ((1.0f - v) * pQuad[tz1] + v * pQuad[tz3])
+	     +         u  * ((1.0f - v) * pQuad[tz2] + v * pQuad[tz4]);
+}
+
+static void SetTintVert(D3DVERTEX *pVert, float x, float y, float z)
+{
+	pVert->x = x;
+	pVert->y = y;
+	pVert->z = z + TINT_LIFT;
+	pVert->nx = 0.0f;
+	pVert->ny = 0.0f;
+	pVert->nz = 1.0f;
+	pVert->tu = 0.0f;
+	pVert->tv = 0.0f;
+}
+
+void Area::DrawBlockedTint()
+{
+	//static: 192k of verts has no business on the stack
+	static D3DVERTEX Verts[MAX_TINT_VERTS];
+	int NumVerts = 0;
+
+	D3DMATERIAL7 Tint = *Engine->Graphics()->GetMaterial(COLOR_WHITE);
+	Tint.diffuse.r = TINT_R;
+	Tint.diffuse.g = TINT_G;
+	Tint.diffuse.b = TINT_B;
+	Tint.diffuse.a = 1.0f;
+
+	Engine->Graphics()->SetRenderState(D3DRENDERSTATE_LIGHTING, FALSE);
+	Engine->Graphics()->SetRenderState(D3DRENDERSTATE_ALPHABLENDENABLE, TRUE);
+	//dest * tint, the same multiply the shadow pass uses
+	Engine->Graphics()->SetRenderState(D3DRENDERSTATE_SRCBLEND, D3DBLEND_DESTCOLOR);
+	Engine->Graphics()->SetRenderState(D3DRENDERSTATE_DESTBLEND, D3DBLEND_ZERO);
+	Engine->Graphics()->SetRenderState(D3DRENDERSTATE_CULLMODE, D3DCULL_NONE);
+	//it floats above the ground, so it must not stop shadows and the like landing on it
+	Engine->Graphics()->SetRenderState(D3DRENDERSTATE_ZWRITEENABLE, FALSE);
+	Engine->Graphics()->GetD3D()->SetTransform(D3DTRANSFORMSTATE_WORLD, Engine->Graphics()->GetIdentity());
+	Engine->Graphics()->ClearTexture();
+	Engine->Graphics()->GetD3D()->SetMaterial(&Tint);
+
+	int StartY;
+	int EndY;
+	int StartX;
+	int EndX;
+
+	StartY = PreludeWorld->ScreenY - PreludeWorld->DrawRadius;
+
+	if(StartY < 0)
+		StartY = 0;
+
+	StartX = PreludeWorld->ScreenX - PreludeWorld->DrawRadius;
+
+	if(StartX < 0)
+		StartX = 0;
+
+	EndX = PreludeWorld->ScreenX + PreludeWorld->DrawRadius;
+	EndY = PreludeWorld->ScreenY + PreludeWorld->DrawRadius;
+
+	if(EndX >= this->ChunkWidth)
+		EndX = this->ChunkWidth - 1;
+	if(EndY >= this->ChunkHeight)
+		EndY = this->ChunkHeight - 1;
+
+	int xn, yn;
+	int tx, ty;
+	Chunk *pChunk;
+
+	for(yn = StartY; yn <= EndY; yn++)
+	{
+		for(xn = StartX; xn <= EndX; xn++)
+		{
+			pChunk = BigMap[xn + yn * this->ChunkWidth];
+
+			if(!pChunk)
+				continue;
+
+			for(ty = 0; ty < CHUNK_TILE_HEIGHT; ty++)
+			{
+				for(tx = 0; tx < CHUNK_TILE_WIDTH; tx++)
+				{
+					if(!pChunk->GetBlocking(tx, ty))
+						continue;
+
+					if(NumVerts + 6 > MAX_TINT_VERTS)
+					{
+						Engine->Graphics()->GetD3D()->DrawPrimitive(D3DPT_TRIANGLELIST, D3DFVF_VERTEX, Verts, NumVerts, 0);
+						NumVerts = 0;
+					}
+
+					float *pQuad;
+					pQuad = pChunk->GetTile(tx / 2, ty / 2);
+
+					float u = (tx & 1) * 0.5f;
+					float v = (ty & 1) * 0.5f;
+
+					float wx = (float)(xn * CHUNK_TILE_WIDTH + tx);
+					float wy = (float)(yn * CHUNK_TILE_HEIGHT + ty);
+
+					float zNW = QuadZ(pQuad, u, v);
+					float zNE = QuadZ(pQuad, u + 0.5f, v);
+					float zSE = QuadZ(pQuad, u + 0.5f, v + 0.5f);
+					float zSW = QuadZ(pQuad, u, v + 0.5f);
+
+					SetTintVert(&Verts[NumVerts++], wx, wy, zNW);
+					SetTintVert(&Verts[NumVerts++], wx + 1.0f, wy, zNE);
+					SetTintVert(&Verts[NumVerts++], wx + 1.0f, wy + 1.0f, zSE);
+					SetTintVert(&Verts[NumVerts++], wx, wy, zNW);
+					SetTintVert(&Verts[NumVerts++], wx + 1.0f, wy + 1.0f, zSE);
+					SetTintVert(&Verts[NumVerts++], wx, wy + 1.0f, zSW);
+				}
+			}
+		}
+	}
+
+	if(NumVerts)
+	{
+		Engine->Graphics()->GetD3D()->DrawPrimitive(D3DPT_TRIANGLELIST, D3DFVF_VERTEX, Verts, NumVerts, 0);
+	}
+
+	Engine->Graphics()->SetRenderState(D3DRENDERSTATE_SRCBLEND, D3DBLEND_SRCALPHA);
+	Engine->Graphics()->SetRenderState(D3DRENDERSTATE_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	Engine->Graphics()->SetRenderState(D3DRENDERSTATE_ALPHABLENDENABLE, FALSE);
+	Engine->Graphics()->SetRenderState(D3DRENDERSTATE_CULLMODE, D3DCULL_CCW);
+	Engine->Graphics()->SetRenderState(D3DRENDERSTATE_ZWRITEENABLE, TRUE);
+	Engine->Graphics()->SetRenderState(D3DRENDERSTATE_LIGHTING, TRUE);
+	Engine->Graphics()->GetD3D()->SetMaterial(Engine->Graphics()->GetMaterial(COLOR_DEFAULT));
+}
+
 void Area::DrawTerrain()
 {
 	Engine->Graphics()->SetRenderState(D3DRENDERSTATE_CULLMODE, D3DCULL_CCW);
@@ -1313,8 +1457,11 @@ void Area::Draw()
 			}
 		}
 	}
+
+	DrawBlockedTint();
+
 	Object *pOb;
-	
+
 	//draw objects
 	if(!PreludeParty.Inside())
 	{
@@ -1530,7 +1677,9 @@ void Area::Draw() {
 		//	Engine->Graphics()->SetRenderState(D3DRENDERSTATE_ZFUNC, D3DCMP_LESSEQUAL);
 	}
 
-
+	//brown over ground you can't walk onto.  after the terrain so it covers it,
+	//before the objects so they still draw over the top of it.
+	DrawBlockedTint();
 
 	Object *pOb;
 
