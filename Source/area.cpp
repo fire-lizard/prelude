@@ -1138,6 +1138,14 @@ void Area::DrawTiles()
 //verts buffered before a flush.  6 verts to a tile.
 #define MAX_TINT_VERTS	(6 * 1024)
 
+//only where rock you can't walk into looks like rock you can - the mines and
+//the Dark Path.  Add an area name here if another cave needs the same help.
+static const char *TintedAreas[] =
+{
+	"jerrockmines",
+	"darkpath",
+};
+
 //height inside a terrain quad.  u/v run 0..1 from the quad's NW corner.
 //blocking is stored at twice the resolution of the terrain mesh, so a tile is
 //a quarter of a quad and its corners have to be interpolated.
@@ -1161,6 +1169,23 @@ static void SetTintVert(D3DVERTEX *pVert, float x, float y, float z)
 
 void Area::DrawBlockedTint()
 {
+	int n;
+	BOOL Tinted;
+
+	Tinted = FALSE;
+
+	for(n = 0; n < (int)(sizeof(TintedAreas) / sizeof(TintedAreas[0])); n++)
+	{
+		if(!strcmp(Header.Name, TintedAreas[n]))
+		{
+			Tinted = TRUE;
+			break;
+		}
+	}
+
+	if(!Tinted)
+		return;
+
 	//static: 192k of verts has no business on the stack
 	static D3DVERTEX Verts[MAX_TINT_VERTS];
 	int NumVerts = 0;
