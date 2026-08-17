@@ -1092,6 +1092,9 @@ ScriptArg *flag(ScriptArg *ArgList, ScriptArg *pDestination)
 //Copying that into the destination used to end the *enclosing* block, because
 //ScriptBlock::Process stops as soon as a statement evaluates to a terminator.
 //That is what silently truncated BlessDagger at the first empty party slot.
+//A branch that ran and then *chose* to stop still has to end the enclosing
+//block: (end) and (goto) both answer with a terminator, and that is the only
+//way either of them works.  So only a missing branch is rewritten here.
 static void TakeBranch(ScriptArg *pBranch, ScriptArg *pDestination)
 {
 	if(pBranch->GetType() == ARG_TERMINATOR)
@@ -1103,11 +1106,6 @@ static void TakeBranch(ScriptArg *pBranch, ScriptArg *pDestination)
 	}
 
 	*pDestination = *(pBranch->Evaluate());
-
-	if(pDestination->GetType() == ARG_TERMINATOR)
-	{
-		pDestination->SetType(ARG_NONE);
-	}
 }
 
 ScriptArg *iff(ScriptArg *ArgList, ScriptArg *pDestination)
@@ -1372,20 +1370,33 @@ ScriptArg *comp(ScriptArg *ArgList, ScriptArg *pDestination)
 {
 	ScriptArg *SA, *SB;
 	
+	//add/sub/mul/div all just complain and carry on when a script hands them
+	//something that isn't a number; comp was the one that took the whole game
+	//down with it.  Answer "less than" - the else branch of every (if) and the
+	//first branch of every (cond) - so a bad script line is a glitch, not a
+	//crash.
 	SA = ArgList[0].Evaluate();
 	if(SA->GetType() != ARG_NUMBER)
 	{
-		SafeExit("Comp 1st arg not number not good\n");
+		DEBUG_INFO("Comp 1st arg not number not good\n");
+		Describe("Comp 1st arg not number not good\n");
+		pDestination->SetType(ARG_NUMBER);
+		pDestination->SetValue((void *)0);
+		return pDestination;
 	}
-	
+
 	SB = ArgList[1].Evaluate();
-	
+
 	if(SB->GetType() != ARG_NUMBER)
 	{
-		SafeExit("Comp 2nd arg not number not good\n");
+		DEBUG_INFO("Comp 2nd arg not number not good\n");
+		Describe("Comp 2nd arg not number not good\n");
+		pDestination->SetType(ARG_NUMBER);
+		pDestination->SetValue((void *)0);
+		return pDestination;
 	}
-	
-	
+
+
 	pDestination->SetType(ARG_NUMBER);
 
 	if(SA->GetIntValue() < SB->GetIntValue())
