@@ -103,6 +103,7 @@ public:
 
 	void AddToCombat(Object *pToAdd);
 	void RemoveFromCombat(Object *pToRemove);
+	BOOL IsCombatant(Object *pOb);
 	Object *GetActiveCombatant();
 
 	Object *FindNearestOpponent(Object *pFrom);

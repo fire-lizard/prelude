@@ -263,8 +263,24 @@ public:
 	BOOL IsLarge() { return Large; }
 
 
-	GameItem *GetEquipment(int n) { PTD_ASSERT(n >= 0); PTD_ASSERT(n < MAX_EQUIPMENT); return Equipment[n]; };
-	GameItem *GetEquipment(const char *psLocation) { return Equipment[GetIndex(psLocation) - EquipHeadIndex]; };	
+	//the asserts go away in release builds, so both of these check for real:
+	//GetIndex returns -1 for a name that isn't a field, and the slot version
+	//used to hand that straight to Equipment[] and read past the array
+	GameItem *GetEquipment(int n)
+	{
+		PTD_ASSERT(n >= 0);
+		PTD_ASSERT(n < MAX_EQUIPMENT);
+		if(n < 0 || n >= MAX_EQUIPMENT)
+			return NULL;
+		return Equipment[n];
+	};
+	GameItem *GetEquipment(const char *psLocation)
+	{
+		int n = GetIndex(psLocation) - EquipHeadIndex;
+		if(n < 0 || n >= MAX_EQUIPMENT)
+			return NULL;
+		return Equipment[n];
+	};
 	char GetReadySpell() { return ReadySpell; }
 	void SetReadySpell(char nReady) { ReadySpell = nReady; }
 

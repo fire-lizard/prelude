@@ -1124,6 +1124,14 @@ int Combat::Update()
 
 	while(pThing && PreludeWorld->GetGameState() == GAME_STATE_COMBAT)
 	{
+		//if the chain ever crosses into the area's objects again, stop rather
+		//than read whatever sits where a Creature's members should be
+		if(pThing->GetObjectType() != OBJECT_CREATURE)
+		{
+			DEBUG_INFO("Non-creature on the combatant list, stopping the walk\n");
+			break;
+		}
+
 		pThing->SetLastResult(ACTION_RESULT_NONE);
 		do
 		{
@@ -1292,6 +1300,24 @@ void Combat::AddToCombat(Object *pToAdd)
 	CombatReferenceList[NumCombatants] = pToAdd;
 	pToAdd->SetData(NumCombatants);
 	NumCombatants++;
+}
+
+//The combat list and the area's update lists are threaded through the same
+//pNextUpdate/pPrevUpdate fields, so an object can only be in one of them.
+//Area::AddToUpdate asks this before relinking, because splicing a combatant
+//back into the area list joins the two chains: walking the combatants then
+//runs on into the area's objects, and Update reads a Portal as a Creature.
+BOOL Combat::IsCombatant(Object *pOb)
+{
+	Object *pInList;
+
+	for(pInList = Combatants; pInList; pInList = pInList->GetNextUpdate())
+	{
+		if(pInList == pOb)
+			return TRUE;
+	}
+
+	return FALSE;
 }
 
 void Combat::RemoveFromCombat(Object *pToRemove)

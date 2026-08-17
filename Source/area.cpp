@@ -2314,6 +2314,19 @@ void Area::AddToUpdate(Object *pToAdd, int xUpdate, int yUpdate)
 	int SegX;
 	int SegY;
 
+	//This has to come before the relink below.  A combatant's next/prev already
+	//belong to the combat list - the two lists share those fields - so
+	//RemoveFromUpdate would rewire combat's links as if they were this list's,
+	//and an area segment ends up pointing into the combatant chain.  Combat
+	//then walks off the end of its own list into the area's objects and reads
+	//a Portal as a Creature, which is the crash at Combat::Update.
+	if(PreludeWorld->InCombat() && PreludeWorld->GetCombat() &&
+		PreludeWorld->GetCombat()->IsCombatant(pToAdd))
+	{
+		DEBUG_INFO("Refused to put a combatant back on the update list\n");
+		return;
+	}
+
 	if(pToAdd->GetPrevUpdate() || pToAdd->GetNextUpdate())
 	{
 		DEBUG_INFO("Adding object on update to update\n");

@@ -481,8 +481,25 @@ ScriptArg *equipped(ScriptArg *ArgList, ScriptArg *pDestination)
 	pWhat = (Item *)SB->GetValue();
 
 	GameItem *pGI;
-	pGI = pWho->GetEquipment(pWhat->GetData("EQUIPLOCATION").String);
 
+	//An item's EQUIPLOCATION is not always a slot: weapons say "HAND" and rings
+	//say "RING", which Equip and UnEquip both spell out as right-then-left.
+	//Looking that up as a slot name found no such field, and the -1 it came back
+	//with used to index the equipment array from before its start.  Just ask
+	//whether the item is in any slot, the way UnEquip does.
+	pGI = NULL;
+
+	for(int EquipN = 0; EquipN < MAX_EQUIPMENT; EquipN++)
+	{
+		GameItem *pInSlot;
+		pInSlot = pWho->GetEquipment(EquipN);
+
+		if(pInSlot && pInSlot->GetItem() == pWhat)
+		{
+			pGI = pInSlot;
+			break;
+		}
+	}
 
 	if(!pGI || pGI->GetItem() != pWhat)
 	{
