@@ -114,6 +114,85 @@ FILE *SafeFileOpen(const char *filename, const char *attributestring)
 	return fp;
 }
 
+//The game owns the screen while it is stuck, so alt-tabbing out to run a dump
+//tool isn't possible - the only way out is to kill it, and then there is
+//nothing left to look at.  Flip bumps this counter; a watchdog thread writes
+//the dump itself when it stops moving.
+static volatile LONG FrameTick = 0;
+
+void PreludeFrameTick()
+{
+	InterlockedIncrement(&FrameTick);
+}
+
+#ifdef _WIN32
+static DWORD WINAPI HangWatchdog(LPVOID)
+{
+	//Long enough that loading a save or an area can never trip it, short enough
+	//to have caught it by the time anyone reaches for the task manager.
+	static const int SECONDS_TO_CALL_IT_HUNG = 20;
+
+	LONG LastSeen = FrameTick;
+	int Still = 0;
+	BOOL Dumped = FALSE;
+
+	while(TRUE)
+	{
+		Sleep(1000);
+
+		LONG Now = FrameTick;
+
+		if(Now != LastSeen)
+		{
+			LastSeen = Now;
+			Still = 0;
+			continue;
+		}
+
+		Still++;
+
+		if(Still < SECONDS_TO_CALL_IT_HUNG || Dumped)
+			continue;
+
+		//once per run: a stuck game would otherwise rewrite this every 20s
+		Dumped = TRUE;
+
+		HANDLE hFile = CreateFileA("hang.dmp", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		if(hFile == INVALID_HANDLE_VALUE)
+			continue;
+
+		//no exception to describe, so this is thread stacks and what they point
+		//at - which is the whole question for a hang
+		BOOL ok = MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), hFile,
+			(MINIDUMP_TYPE)(MiniDumpWithHandleData | MiniDumpWithIndirectlyReferencedMemory), NULL, 0, 0);
+
+		if(!ok)
+		{
+			SetFilePointer(hFile, 0, NULL, FILE_BEGIN);
+			SetEndOfFile(hFile);
+			ok = MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, MiniDumpNormal, NULL, 0, 0);
+		}
+
+		CloseHandle(hFile);
+
+		DEBUG_INFO(ok ? "no frame drawn for 20 seconds, wrote hang.dmp\n"
+					  : "no frame drawn for 20 seconds, could not write hang.dmp\n");
+	}
+
+	return 0;
+}
+#endif
+
+void StartHangWatchdog()
+{
+#ifdef _WIN32
+	DWORD ThreadId;
+	HANDLE hThread = CreateThread(NULL, 0, HangWatchdog, NULL, 0, &ThreadId);
+	if(hThread)
+		CloseHandle(hThread);
+#endif
+}
+
 #ifdef _WIN32
 void BacktraceToString(char* pBuffer, size_t bufferSize, PVOID* backTrace, size_t frameCount)
 {
@@ -155,6 +234,50 @@ void GetBacktrace(char* pBuffer, size_t bufferSize, size_t skipFrameCount = 0)
 	BacktraceToString(pBuffer, bufferSize, backTrace, capturedFrames);
 }
 
+
+//A C++ throw reaches the filter as exception 0xE06D7363 with the compiler's
+//ThrowInfo in ExceptionInformation[2].  Walking it turns the useless
+//"Exception (3765269347)" into the name of the type that was thrown, which for
+//a bad_alloc or a bad_array_new_length is most of the diagnosis.  The pointers
+//are absolute on x86 and RVAs from ExceptionInformation[3] on x64; treating
+//them as DWORDs plus a base of zero covers both.
+static void GetCxxThrowTypeName(const EXCEPTION_RECORD *pRecord, char *pBuffer, size_t bufferSize)
+{
+	pBuffer[0] = '\0';
+
+	if(pRecord->ExceptionCode != 0xE06D7363 || pRecord->NumberParameters < 3)
+		return;
+
+	uintptr_t Base = (pRecord->NumberParameters >= 4) ? (uintptr_t)pRecord->ExceptionInformation[3] : 0;
+
+	__try
+	{
+		//ThrowInfo: attributes, unwind, forward compat, catchable type array
+		const DWORD *pThrowInfo = (const DWORD *)pRecord->ExceptionInformation[2];
+		if(!pThrowInfo || !pThrowInfo[3])
+			return;
+
+		const DWORD *pCatchableArray = (const DWORD *)(Base + pThrowInfo[3]);
+		if(pCatchableArray[0] < 1 || !pCatchableArray[1])
+			return;
+
+		//CatchableType: properties, type descriptor, ...
+		const DWORD *pCatchable = (const DWORD *)(Base + pCatchableArray[1]);
+		if(!pCatchable[1])
+			return;
+
+		//TypeDescriptor: vftable, spare, then the mangled name
+		const char *pName = (const char *)(Base + pCatchable[1]) + 2 * sizeof(void *);
+
+		strncpy(pBuffer, pName, bufferSize - 1);
+		pBuffer[bufferSize - 1] = '\0';
+	}
+	__except(EXCEPTION_EXECUTE_HANDLER)
+	{
+		pBuffer[0] = '\0';
+	}
+}
+
 LONG WINAPI PreludeUnhandledExceptionFilter(struct _EXCEPTION_POINTERS* pExceptionInfo)
 {
 	static const size_t EXCEPTION_SHORT_INFO_SIZE = 256;
@@ -186,11 +309,17 @@ LONG WINAPI PreludeUnhandledExceptionFilter(struct _EXCEPTION_POINTERS* pExcepti
 		break;
 	}
 	default:
+	{
+		char thrownType[128];
+		GetCxxThrowTypeName(pExceptionInfo->ExceptionRecord, thrownType, sizeof(thrownType));
 #if _WIN64
-		snprintf(exceptionShortInfo, EXCEPTION_SHORT_INFO_SIZE, "Exception (%u) IP=0x%016" PRIx64, unsigned(pExceptionInfo->ExceptionRecord->ExceptionCode), pExceptionInfo->ContextRecord->Rip);
+		snprintf(exceptionShortInfo, EXCEPTION_SHORT_INFO_SIZE, "Exception (%u) IP=0x%016" PRIx64 " %s", unsigned(pExceptionInfo->ExceptionRecord->ExceptionCode), (uint64_t)pExceptionInfo->ContextRecord->Rip, thrownType);
 #else
-		snprintf(exceptionShortInfo, EXCEPTION_SHORT_INFO_SIZE, "Exception (%u) IP=0x%016" PRIx64, unsigned(pExceptionInfo->ExceptionRecord->ExceptionCode), pExceptionInfo->ContextRecord->Eip);
+		//Eip is 32 bits; printing it with a 64-bit conversion used to splice in
+		//whatever followed it on the stack and report an impossible address
+		snprintf(exceptionShortInfo, EXCEPTION_SHORT_INFO_SIZE, "Exception (%u) IP=0x%08" PRIx32 " %s", unsigned(pExceptionInfo->ExceptionRecord->ExceptionCode), (uint32_t)pExceptionInfo->ContextRecord->Eip, thrownType);
 #endif
+	}
 	}
 
 
@@ -200,18 +329,37 @@ LONG WINAPI PreludeUnhandledExceptionFilter(struct _EXCEPTION_POINTERS* pExcepti
 	BOOL dumped = FALSE;
 
 	HANDLE hFile = CreateFileA("core.dmp", GENERIC_READ | GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-	if (hFile)
+	if (hFile != INVALID_HANDLE_VALUE)
 	{
 		MINIDUMP_EXCEPTION_INFORMATION exceptionInfo;
 		exceptionInfo.ThreadId = GetCurrentThreadId();
 		exceptionInfo.ExceptionPointers = pExceptionInfo;
 		exceptionInfo.ClientPointers = FALSE;
 		dumped = MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, MiniDumpWithIndirectlyReferencedMemory, &exceptionInfo, 0, 0);
+		if (!dumped)
+		{
+			//that flag walks the heap for referenced memory, so it is the first
+			//thing to fail when the crash was itself an allocation failure -
+			//exactly the case where we most want a stack.  Leave a plain one.
+			SetFilePointer(hFile, 0, NULL, FILE_BEGIN);
+			SetEndOfFile(hFile);
+			dumped = MiniDumpWriteDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, MiniDumpNormal, &exceptionInfo, 0, 0);
+		}
 		CloseHandle(hFile);
 	}
 
+	//an exhausted address space is its own explanation, and this is the one
+	//moment we can still read it
+	MEMORYSTATUSEX memory;
+	memory.dwLength = sizeof(memory);
+	char memoryInfo[64];
+	if (GlobalMemoryStatusEx(&memory))
+		snprintf(memoryInfo, sizeof(memoryInfo), "VA free: %llu MB\n", (unsigned long long)(memory.ullAvailVirtual >> 20));
+	else
+		memoryInfo[0] = '\0';
+
 	char message[2048];
-	snprintf(message, sizeof(message), "%s\n\n%s%s", exceptionShortInfo, dumped ? "A core was dumped\n" : "", backtrace);
+	snprintf(message, sizeof(message), "%s\n\n%s%s%s", exceptionShortInfo, dumped ? "A core was dumped\n" : "", memoryInfo, backtrace);
 
 	MessageBoxA(NULL, message, "Exception", MB_OK);
 

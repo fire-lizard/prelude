@@ -1133,8 +1133,19 @@ int Combat::Update()
 		}
 
 		pThing->SetLastResult(ACTION_RESULT_NONE);
+
+		//Creature::Update bounds its own loop at ten steps and hands back
+		//whatever it had reached, which is often not a frame.  Nothing in the
+		//body below changes any state unless this is the active combatant, so a
+		//combatant that keeps answering NOT_POSSIBLE - one dropped on blocked
+		//ground by a random encounter, say - span here forever and the window
+		//never drew again.  Same bound and the same reasoning as Update's own.
+		int UpdateCount = 0;
+
 		do
 		{
+			UpdateCount++;
+
 			BOOL SubAction =FALSE;
 			if(pThing->GetAction())
 				SubAction = pThing->GetAction()->IsSub();
@@ -1173,8 +1184,25 @@ int Combat::Update()
 				 Result != ACTION_RESULT_OUT_OF_AP &&
 				 Result != ACTION_RESULT_FINISHED &&
 				 Result != ACTION_RESULT_NOT_POSSIBLE && */
-				 Result != ACTION_RESULT_REMOVE_FROM_GAME);
-		
+				 Result != ACTION_RESULT_REMOVE_FROM_GAME &&
+				 UpdateCount < 10);
+
+		if(UpdateCount >= 10)
+		{
+			//giving up here only costs this combatant the rest of one frame -
+			//Combat::Update runs again next frame - so say who it was and move on
+			static int Reported = 0;
+			if(Reported < 20)
+			{
+				Reported++;
+				char blarg[160];
+				sprintf(blarg,"combatant %s made no progress, last result %i%s\n",
+					pThing->GetData(INDEX_NAME).String, (int)Result,
+					(pThing == pActiveCombatant) ? " (active)" : "");
+				DEBUG_INFO(blarg);
+			}
+		}
+
 		if(Result == ACTION_RESULT_REMOVE_FROM_GAME)
 		{
 			Object *pToRemove;

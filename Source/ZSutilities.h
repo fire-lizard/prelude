@@ -48,6 +48,12 @@ typedef enum
 FILE *SafeFileOpen(const char *filename, const char *attributestring);
 void SafeExit(const char *ErrorMessage);
 
+//A hang holds the screen, so there is no way to reach a tool that would dump
+//it from outside.  Flip says a frame reached the screen; the watchdog writes
+//hang.dmp by itself once frames stop.
+void PreludeFrameTick();
+void StartHangWatchdog();
+
 int GetInt(FILE *fp);
 
 float GetFloat(FILE *fp);

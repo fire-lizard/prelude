@@ -1138,16 +1138,6 @@ void Area::DrawTiles()
 //verts buffered before a flush.  6 verts to a tile.
 #define MAX_TINT_VERTS	(6 * 1024)
 
-//only where rock you can't walk into looks like rock you can - the mines and
-//the Dark Path.  Add an area name here if another cave needs the same help.
-static const char *TintedAreas[] =
-{
-	"jerrockmines",
-	"darkpath",
-	"archives",		//the Monastery basement
-	"malpia",		//Malpia's Caves
-};
-
 //height inside a terrain quad.  u/v run 0..1 from the quad's NW corner.
 //blocking is stored at twice the resolution of the terrain mesh, so a tile is
 //a quarter of a quad and its corners have to be interpolated.
@@ -1171,21 +1161,12 @@ static void SetTintVert(D3DVERTEX *pVert, float x, float y, float z)
 
 void Area::DrawBlockedTint()
 {
-	int n;
-	BOOL Tinted;
-
-	Tinted = FALSE;
-
-	for(n = 0; n < (int)(sizeof(TintedAreas) / sizeof(TintedAreas[0])); n++)
-	{
-		if(!strcmp(Header.Name, TintedAreas[n]))
-		{
-			Tinted = TRUE;
-			break;
-		}
-	}
-
-	if(!Tinted)
+	//This was a list of cave names that grew by one every time another cave
+	//turned out to need it.  Area 0 is the valley - the only one outdoors, and
+	//the only one World::LoadAreas gives the "terrain" texture instead of
+	//"caveterrain".  So the engine already draws exactly this line, and rock you
+	//can't walk into now reads as rock everywhere underground.
+	if(GetID() == 0)
 		return;
 
 	//static: 192k of verts has no business on the stack

@@ -296,7 +296,10 @@ int main(int argc, char * argv[]) {
 #ifdef _WIN32
 	BOOL ok = SymInitialize(GetCurrentProcess(), NULL, TRUE);
 	if (!IsDebuggerPresent())
+	{
 		SetUnhandledExceptionFilter(&PreludeUnhandledExceptionFilter);
+		StartHangWatchdog();
+	}
 #endif
 	
 	INIT_DEBUG();

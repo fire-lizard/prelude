@@ -354,6 +354,9 @@ void ZSGraphicsSystem::DrawBox(LPDIRECTDRAWSURFACE7 Target, LPRECT rBox, DWORD C
 
 void ZSGraphicsSystem::Flip()
 {
+	//proof that the game is still alive, for the hang watchdog
+	PreludeFrameTick();
+
 	// Flip pages
 	if (!Windowed) 
 	{
