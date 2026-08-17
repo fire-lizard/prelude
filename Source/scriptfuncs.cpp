@@ -1058,12 +1058,35 @@ ScriptArg *flag(ScriptArg *ArgList, ScriptArg *pDestination)
 /* iff:  if checks the next argument which must resolve to a 
 	0,1,2 then acts on the appropriate response, acting on 0 if 
 	anything other that a 0,1,2 is given */
-ScriptArg *iff(ScriptArg *ArgList, ScriptArg *pDestination) 
-{ 
+//Take one branch of an (if ...).  A two-argument (if X A) is ordinary script -
+//the else is simply left out - and ArgList[2] is then the block's terminator.
+//Copying that into the destination used to end the *enclosing* block, because
+//ScriptBlock::Process stops as soon as a statement evaluates to a terminator.
+//That is what silently truncated BlessDagger at the first empty party slot.
+static void TakeBranch(ScriptArg *pBranch, ScriptArg *pDestination)
+{
+	if(pBranch->GetType() == ARG_TERMINATOR)
+	{
+		//no branch to take: the statement simply does nothing
+		pDestination->SetValue(NULL);
+		pDestination->SetType(ARG_NONE);
+		return;
+	}
+
+	*pDestination = *(pBranch->Evaluate());
+
+	if(pDestination->GetType() == ARG_TERMINATOR)
+	{
+		pDestination->SetType(ARG_NONE);
+	}
+}
+
+ScriptArg *iff(ScriptArg *ArgList, ScriptArg *pDestination)
+{
 	ScriptArg *pCondition;
 
 	pCondition = ArgList[0].Evaluate();
-	
+
 	if(pCondition->GetType() == ARG_PARTYONE ||
 		pCondition->GetType() == ARG_PARTYTWO ||
 		pCondition->GetType() == ARG_PARTYTHREE ||
@@ -1073,26 +1096,26 @@ ScriptArg *iff(ScriptArg *ArgList, ScriptArg *pDestination)
 	{
 		if(pCondition->GetCreature())
 		{
-			*pDestination = *(ArgList[1].Evaluate());
+			TakeBranch(&ArgList[1], pDestination);
 		}
 		else
 		{
-			*pDestination = *(ArgList[2].Evaluate());
+			TakeBranch(&ArgList[2], pDestination);
 		}
-	
+
 		return pDestination;
 
 	}
 	if(pCondition->GetIntValue())
 	{
-		*pDestination = *(ArgList[1].Evaluate());
+		TakeBranch(&ArgList[1], pDestination);
 	}
 	else
 	{
-		*pDestination = *(ArgList[2].Evaluate());
+		TakeBranch(&ArgList[2], pDestination);
 	}
 
-	return pDestination; 
+	return pDestination;
 }
 
 ScriptArg *cond(ScriptArg *ArgList, ScriptArg *pDestination) 
@@ -1114,9 +1137,11 @@ ScriptArg *cond(ScriptArg *ArgList, ScriptArg *pDestination)
 		}
 	}
 
-	*pDestination = *(ArgList[ResultNum].Evaluate());
-	
-	return pDestination; 
+	//same trap as iff: a cond with fewer branches than the condition can return
+	//lands on the terminator, and copying it would end the enclosing block
+	TakeBranch(&ArgList[ResultNum], pDestination);
+
+	return pDestination;
 }
 
 /* basic math functions */
@@ -5304,34 +5329,46 @@ ScriptArg *CallFunc(int FuncNum, ScriptArg *ArgList, ScriptArg *pDestination)
 
 	ScriptArg *SA;
 
-#ifdef SHOW_SCRIPT_DEBUG
+	//The trace below used to need a special build (SHOW_SCRIPT_DEBUG).  Set
+	//PTD_SCRIPTLOG=1 instead and every script call lands in scriptlog.txt with
+	//its arguments and result, which is how you find where a script stopped
+	//doing what it reads like it should.  Off by default and checked once.
+	static int LogCalls = -1;
+
+	if(LogCalls < 0)
+		LogCalls = getenv("PTD_SCRIPTLOG") ? 1 : 0;
+
 	FILE *fp;
 	char FuncName[32];
-	fp = SafeFileOpen("scriptlog.txt","a+t");
-	GetFuncName(FuncNum,FuncName);
-	fprintf(fp,"Calling: %s with: ",FuncName);
-	int n = 0;
-	while(ArgList[n].GetType() != ARG_TERMINATOR)
+
+	if(LogCalls)
 	{
-		ArgList[n].Print(fp);
-		n++;
+		fp = SafeFileOpen("scriptlog.txt","a+t");
+		GetFuncName(FuncNum,FuncName);
+		fprintf(fp,"Calling: %s with: ",FuncName);
+		int n = 0;
+		while(ArgList[n].GetType() != ARG_TERMINATOR)
+		{
+			ArgList[n].Print(fp);
+			n++;
+		}
+		fprintf(fp,"\n");
+		fclose(fp);
 	}
-	fprintf(fp,"\n");
-	fclose(fp);
-#endif
-	
+
 	SA = ScriptFunctions[FuncNum](ArgList,pDestination);
 
-#ifdef SHOW_SCRIPT_DEBUG
-	fp = SafeFileOpen("Scriptlog.txt","a+t");
-	fprintf(fp,"Result of %s:",FuncName);
-	if(SA)
-		SA->Print(fp);
-	else
-		fprintf(fp, "NULL");
-	fprintf(fp,"\n");
-	fclose(fp);
-#endif
+	if(LogCalls)
+	{
+		fp = SafeFileOpen("scriptlog.txt","a+t");
+		fprintf(fp,"Result of %s:",FuncName);
+		if(SA)
+			SA->Print(fp);
+		else
+			fprintf(fp, "NULL");
+		fprintf(fp,"\n");
+		fclose(fp);
+	}
 
 	return pDestination;
 }
