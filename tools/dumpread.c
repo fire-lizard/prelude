@@ -179,25 +179,29 @@ int main(int argc, char **argv)
 	void *stream;
 	ULONG size;
 
+	/* A crash dump has an exception stream. A dump taken of a *hung* process
+	   (Task Manager, "Create dump file") has none: there is no faulting thread,
+	   so every thread gets walked instead - the one sitting in a loop is the
+	   answer. */
 	MINIDUMP_EXCEPTION_STREAM *ex = NULL;
 	if (MiniDumpReadDumpStream(base, ExceptionStream, &dir, &stream, &size))
 		ex = (MINIDUMP_EXCEPTION_STREAM *)stream;
-	if (!ex) {
-		printf("no exception stream - not a crash dump?\n");
-		return 1;
-	}
 
-	CONTEXT *ctx = (CONTEXT *)((char *)base + ex->ThreadContext.Rva);
+	CONTEXT *ctx = ex ? (CONTEXT *)((char *)base + ex->ThreadContext.Rva) : NULL;
 
 	if (MiniDumpReadDumpStream(base, MemoryListStream, &dir, &stream, &size)) {
 		gMem = (MINIDUMP_MEMORY_LIST *)stream;
 		gDumpBase = base;
 	}
 
+	if (!ex)
+		printf("no exception stream: reading this as a hang dump\n");
+
+	if (ex)
 	printf("exception 0x%08lX  at 0x%08llX\n",
 		ex->ExceptionRecord.ExceptionCode, ex->ExceptionRecord.ExceptionAddress);
 
-	if (ex->ExceptionRecord.ExceptionCode == EXCEPTION_ACCESS_VIOLATION &&
+	if (ex && ex->ExceptionRecord.ExceptionCode == EXCEPTION_ACCESS_VIOLATION &&
 	    ex->ExceptionRecord.NumberParameters >= 2) {
 		static const char *how[] = { "read", "wrote", "?", "?", "?", "?", "?", "?", "executed" };
 		printf("  %s address 0x%08llX\n",
@@ -205,10 +209,11 @@ int main(int argc, char **argv)
 			ex->ExceptionRecord.ExceptionInformation[1]);
 	}
 
-	printf("  EIP=0x%08lX ESP=0x%08lX EBP=0x%08lX EAX=0x%08lX EBX=0x%08lX ECX=0x%08lX EDX=0x%08lX ESI=0x%08lX EDI=0x%08lX\n",
-		ctx->Eip, ctx->Esp, ctx->Ebp, ctx->Eax, ctx->Ebx, ctx->Ecx, ctx->Edx, ctx->Esi, ctx->Edi);
+	if (ctx)
+		printf("  EIP=0x%08lX ESP=0x%08lX EBP=0x%08lX EAX=0x%08lX EBX=0x%08lX ECX=0x%08lX EDX=0x%08lX ESI=0x%08lX EDI=0x%08lX\n",
+			ctx->Eip, ctx->Esp, ctx->Ebp, ctx->Eax, ctx->Ebx, ctx->Ecx, ctx->Edx, ctx->Esi, ctx->Edi);
 
-	for (ULONG32 p = 0; p < ex->ExceptionRecord.NumberParameters && p < 15; p++)
+	for (ULONG32 p = 0; ex && p < ex->ExceptionRecord.NumberParameters && p < 15; p++)
 		printf("  param[%lu] = 0x%08llX\n", p, ex->ExceptionRecord.ExceptionInformation[p]);
 
 	/* the exe is loaded wherever ASLR put it: everything else is relative to that */
@@ -222,8 +227,11 @@ int main(int argc, char **argv)
 		if (wcsstr(ms->Buffer, L"Prelude.exe")) {
 			modBase = m->BaseOfImage;
 			modSize = m->SizeOfImage;
-			printf("  Prelude.exe base=0x%08llX size=0x%llX  (fault RVA 0x%llX)\n",
-				modBase, modSize, ex->ExceptionRecord.ExceptionAddress - modBase);
+			if (ex)
+				printf("  Prelude.exe base=0x%08llX size=0x%llX  (fault RVA 0x%llX)\n",
+					modBase, modSize, ex->ExceptionRecord.ExceptionAddress - modBase);
+			else
+				printf("  Prelude.exe base=0x%08llX size=0x%llX\n", modBase, modSize);
 		}
 	}
 
@@ -244,10 +252,12 @@ int main(int argc, char **argv)
 	if (!SymLoadModuleEx(hProc, NULL, exePath, NULL, modBase, (DWORD)modSize, NULL, 0))
 		printf("  (no symbols: %lu - is the .pdb next to the exe?)\n", GetLastError());
 
-	printf("\nfaulting instruction:\n");
-	Symbolize(ctx->Eip, "  ");
+	if (ctx) {
+		printf("\nfaulting instruction:\n");
+		Symbolize(ctx->Eip, "  ");
+	}
 
-	if (ex->ExceptionRecord.ExceptionCode == 0xE06D7363 && ex->ExceptionRecord.NumberParameters >= 3)
+	if (ex && ex->ExceptionRecord.ExceptionCode == 0xE06D7363 && ex->ExceptionRecord.NumberParameters >= 3)
 		DescribeThrow(&ex->ExceptionRecord);
 
 	/* address given: dump memory there instead of the stack */
@@ -272,39 +282,52 @@ int main(int argc, char **argv)
 		return 0;
 	}
 
-	printf("\ncall stack (ebp chain, stops where frame pointers were optimized away):\n");
-	{
-		DWORD ebp = ctx->Ebp, ret = 0, next = 0;
-		int depth = 0;
-
-		while (depth++ < 32 && ebp) {
-			DWORD got = 0;
-			if (!ReadMem(NULL, ebp, &next, 4, &got) || got != 4) break;
-			if (!ReadMem(NULL, ebp + 4, &ret, 4, &got) || got != 4) break;
-			if (ret < modBase || ret >= modBase + modSize) break;
-			Symbolize(ret, "  ");
-			if (next <= ebp) break;
-			ebp = next;
-		}
-	}
-
 	MINIDUMP_THREAD_LIST *threads = NULL;
 	if (MiniDumpReadDumpStream(base, ThreadListStream, &dir, &stream, &size))
 		threads = (MINIDUMP_THREAD_LIST *)stream;
 
+	/* crash dump: only the faulting thread is interesting.
+	   hang dump: no faulting thread, so walk them all and read the one that is
+	   sitting in our code. */
 	for (ULONG32 i = 0; threads && i < threads->NumberOfThreads; i++) {
 		MINIDUMP_THREAD *t = &threads->Threads[i];
-		if (t->ThreadId != ex->ThreadId) continue;
+
+		if (ex && t->ThreadId != ex->ThreadId) continue;
+
+		CONTEXT *tctx = (CONTEXT *)((char *)base + t->ThreadContext.Rva);
+		if (ctx) tctx = ctx;
+
+		printf("\n--- thread %lu  EIP=0x%08lX ESP=0x%08lX EBP=0x%08lX ---\n",
+			t->ThreadId, tctx->Eip, tctx->Esp, tctx->Ebp);
+
+		printf("stopped in:\n");
+		Symbolize(tctx->Eip, "  ");
+
+		printf("call stack (ebp chain, stops where frame pointers were optimized away):\n");
+		{
+			DWORD ebp = tctx->Ebp, ret = 0, next = 0;
+			int depth = 0;
+
+			while (depth++ < 32 && ebp) {
+				DWORD got = 0;
+				if (!ReadMem(NULL, ebp, &next, 4, &got) || got != 4) break;
+				if (!ReadMem(NULL, ebp + 4, &ret, 4, &got) || got != 4) break;
+				if (ret < modBase || ret >= modBase + modSize) break;
+				Symbolize(ret, "  ");
+				if (next <= ebp) break;
+				ebp = next;
+			}
+		}
 
 		DWORD64 stackStart = t->Stack.StartOfMemoryRange;
 		DWORD *mem = (DWORD *)((char *)base + t->Stack.Memory.Rva);
 		ULONG32 words = t->Stack.Memory.DataSize / 4;
 		ULONG32 skip = 0;
 
-		if (ctx->Esp > stackStart && ctx->Esp < stackStart + t->Stack.Memory.DataSize)
-			skip = (ULONG32)((ctx->Esp - stackStart) / 4);
+		if (tctx->Esp > stackStart && tctx->Esp < stackStart + t->Stack.Memory.DataSize)
+			skip = (ULONG32)((tctx->Esp - stackStart) / 4);
 
-		printf("\ncandidate callers (a call instruction ends at each; may include stale frames):\n");
+		printf("candidate callers (a call instruction ends at each; may include stale frames):\n");
 		for (ULONG32 w = skip; w < words; w++) {
 			DWORD v = mem[w];
 			if (v >= modBase && v < modBase + modSize && IsReturnAddress(v))
