@@ -865,21 +865,50 @@ ScriptArg *ask(ScriptArg *ArgList, ScriptArg *pDestination)
 	AskRect.top = 240;
 	AskRect.bottom = 380;
 
-	if(ScriptContextWindow)
+	//Only borrow the conversation's reply area while that conversation is still
+	//on screen.  closetalk hides the talk window but the script keeps running,
+	//and a later ask would then open at the hidden window's bounds, parented to
+	//the main window - a modal box with no visible place to click.  Falling back
+	//to the default rect above puts it in the middle of the screen instead.
+	if(ScriptContextWindow && ScriptContextWindow->IsVisible())
 	{
-		ScriptContextWindow->GetChild(IDC_REPLY)->GetBounds(&AskRect);
+		ZSWindow *pReply;
+		pReply = ScriptContextWindow->GetChild(IDC_REPLY);
+
+		if(pReply)
+			pReply->GetBounds(&AskRect);
 	}
 
 	pWin = new ZSAskWin(IDC_ASK, XYWH(AskRect), ArgList);
 
-	if(ScriptContextWindow && ScriptContextWindow->IsVisible())
+	//An ask builds its options from the argument list, so an empty list gives a
+	//window with nothing to click.  Going modal on that hangs the game outright,
+	//so answer it here instead of waiting for a click that can't happen.
+	if(!((ZSAskWin *)pWin)->HasOptions())
 	{
-		ScriptContextWindow->AddTopChild(pWin);
+		DEBUG_INFO("ask with no options to pick, skipped\n");
+		delete pWin;
+		pDestination->SetType(ARG_NUMBER);
+		pDestination->SetValue((void *)0);
+		return pDestination;
 	}
-	else
+
 	{
-		ZSWindow::GetMain()->AddTopChild(pWin);
+		//an ask that opens where you can't see it looks exactly like a hang, so
+		//say where it went and how many options it has
+		char blarg[160];
+		sprintf(blarg, "ask: %i options at %i,%i-%i,%i talk=%s\n",
+			((ZSAskWin *)pWin)->OptionCount(),
+			(int)AskRect.left, (int)AskRect.top, (int)AskRect.right, (int)AskRect.bottom,
+			(ScriptContextWindow && ScriptContextWindow->IsVisible()) ? "visible" : "hidden");
+		DEBUG_INFO(blarg);
 	}
+
+	//Always hang it off the main window.  AskRect is in screen coordinates
+	//either way, so it draws in the same place - but as a child of the talk
+	//window it vanished the moment closetalk hid that window, while its GoModal
+	//kept holding the game.  That is the invisible modal you can only escape.
+	ZSWindow::GetMain()->AddTopChild(pWin);
 
 	pWin->Show();
 

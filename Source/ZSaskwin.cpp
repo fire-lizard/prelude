@@ -6,6 +6,44 @@
 LPDIRECTDRAWSURFACE7 ZSAskWin::AskSurface = NULL;
 
 
+//This window is modal and its only way out was clicking one of its options, so
+//an ask that ends up with nothing to click - or one you can't see - froze the
+//game with the world still drawing behind it.  Escape now answers with the
+//first option, the same as clicking it.
+int ZSAskWin::HandleKeys(BYTE *CurrentKeys, BYTE *LastKeys)
+{
+	if(CurrentKeys[DIK_ESCAPE] & 0x80 && !(LastKeys[DIK_ESCAPE] & 0x80))
+	{
+		ReturnCode = 0;
+		State = WINDOW_STATE_DONE;
+		return TRUE;
+	}
+
+	return ZSWindow::HandleKeys(CurrentKeys, LastKeys);
+}
+
+int ZSAskWin::OptionCount()
+{
+	ZSList *pList;
+	pList = (ZSList *)GetChild(IDC_ASK_LIST);
+
+	if(!pList)
+		return 0;
+
+	return pList->GetNumItems();
+}
+
+BOOL ZSAskWin::HasOptions()
+{
+	ZSList *pList;
+	pList = (ZSList *)GetChild(IDC_ASK_LIST);
+
+	if(!pList)
+		return FALSE;
+
+	return pList->GetNumItems() > 0;
+}
+
 int ZSAskWin::Command(int IDFrom, int Command, int Param)
 {
 
