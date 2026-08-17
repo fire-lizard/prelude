@@ -2182,6 +2182,24 @@ int Creature::TakeDamage(Thing *pDamageSource, int DamageAmount, DAMAGE_T Damage
 		return TRUE;
 	}
 
+	//Creature::Think documents AICODE 0 as "do nothing, unless attacked as
+	//handled in take damage" - but nothing ever raised it, so a bystander only
+	//ever queued ACTION_DEFEND and stood there being killed.  Every townsperson
+	//in the game is AICODE 0, which is why a monastery full of monks watches the
+	//monsters work.  Getting hit by the other side is what makes one a
+	//combatant; the party is player-driven and doesn't want an AI attached.
+	if(!GetData(INDEX_AICODE).Value &&
+		!PreludeParty.IsMember(this) &&
+		pDamageSource && pDamageSource->GetObjectType() == OBJECT_CREATURE &&
+		((Creature *)pDamageSource)->GetData(INDEX_BATTLESIDE).Value != GetData(INDEX_BATTLESIDE).Value)
+	{
+		SetData(INDEX_AICODE, 1);
+
+		char blarg[128];
+		sprintf(blarg,"%s fights back\n",GetData(INDEX_NAME).String);
+		DEBUG_INFO(blarg);
+	}
+
 	//subtract any resistances the creature has from the damage amount
 	switch(DamageType)
 	{
