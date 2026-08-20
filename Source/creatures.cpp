@@ -9205,16 +9205,7 @@ ACTION_RESULT_T Creature::GameCommand()
 		}
 		break;
 	case ACTION_GAME_COMMAND_CHARACTER:
-		CharacterWin *pCWin;
-		pCWin = new CharacterWin(CHARACTER_WINDOW_ID,100,100,600,400, (Creature *)pCurAction->GetData());
-		pCWin->Show();
-		ZSWindow::GetMain()->AddTopChild(pCWin);
-
-		pCWin->SetFocus(pCWin);
-		pCWin->GoModal();
-		pCWin->ReleaseFocus();
-
-		ZSWindow::GetMain()->RemoveChild(pCWin);
+		RunCharacterWin((Creature *)pCurAction->GetData());
 		break;
 	case ACTION_GAME_COMMAND_SET_LEADER:
 		PreludeParty.SetLeader((Creature *)pCurAction->GetData());

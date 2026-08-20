@@ -251,8 +251,11 @@ BOOL CharacterWin::SwitchToPortraitTarget(int x, int y)
 	this->ID = -11;
 	this->SetState(WINDOW_STATE_DONE);
 	this->Hide();
-	pWin->RightButtonDown(x,y);
-	pWin->RightButtonUp(x,y);
+	
+	//hand the target back to RunCharacterWin rather than opening the window
+	//from here: that ran the next GoModal inside ours, so every switch cost a
+	//nested modal loop and a focus stack slot that only pops on the way out
+	pSwitchTo = (Creature *)((ZSPortrait *)pWin)->GetTarget();
 
 	return TRUE;
 } // SwitchToPortraitTarget
@@ -403,6 +406,7 @@ CharacterWin::CharacterWin(int NewID, int x, int y, int width, int height, Creat
 	Moveable = FALSE;
 	Visible = FALSE;
 	pTarget = pNewTarget;
+	pSwitchTo = NULL;
 
 	FILE *fp;
 	ZSText *pText;
@@ -665,3 +669,28 @@ CharacterWin::CharacterWin(int NewID, int x, int y, int width, int height, Creat
 	//buttons to switch between stats and inventory
 }
 
+//RunCharacterWin
+//
+void RunCharacterWin(Creature *pWho)
+{
+	while(pWho)
+	{
+		CharacterWin *pCWin = new CharacterWin(CHARACTER_WINDOW_ID,100,100,600,400,pWho);
+		pCWin->Show();
+		ZSWindow::GetMain()->AddTopChild(pCWin);
+
+		pCWin->SetFocus(pCWin);
+		pCWin->GoModal();
+
+		//RemoveChild deletes it, so ask for the next target first
+		pWho = pCWin->GetSwitchTarget();
+
+		//a window that closed to hand us its replacement gave up the focus in its
+		//own button handler already - releasing twice would walk the stack down
+		if(!pWho)
+		{
+			pCWin->ReleaseFocus();
+		}
+		ZSWindow::GetMain()->RemoveChild(pCWin);
+	}
+} //RunCharacterWin

@@ -68,6 +68,11 @@ class CharacterWin : public ZSWindow
 		Creature *pTarget;
 		int StartingValues[100];
 		
+		//party member the player picked on the way out, if any. Set instead of
+		//opening their screen from in here, which used to re-enter
+		//ZSPortrait::RightButtonUp from inside our own modal loop.
+		Creature *pSwitchTo;
+		
 	public:
 
 //********************METHODS***************************************************
@@ -79,6 +84,7 @@ class CharacterWin : public ZSWindow
 //Accessors		
 //------------------------------------------------------------------------------	
 		Creature *GetTarget() { return pTarget; }
+		Creature *GetSwitchTarget() { return pSwitchTo; }
 		
 
 //Mutators
@@ -103,5 +109,9 @@ class CharacterWin : public ZSWindow
 //-------------------------------------------------------------------------------
 
 };
+
+//opens pWho's character screen, and keeps opening the next one for as long as
+//the player keeps clicking party portraits. Flat: one window alive at a time.
+void RunCharacterWin(Creature *pWho);
 
 #endif

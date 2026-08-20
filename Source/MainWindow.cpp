@@ -1519,15 +1519,7 @@ if(PreludeWorld->IsEdittingEnabled())
 	
 	if(PRESSED(DIK_I))
 	{
-		CharacterWin *pCWin = new CharacterWin(CHARACTER_WINDOW_ID,100,100,600,400, PreludeParty.GetLeader());
-		pCWin->Show();
-		this->AddTopChild(pCWin);
-
-		SetFocus(pCWin);
-		pCWin->GoModal();
-		ReleaseFocus();
-
-		this->RemoveChild(pCWin);
+		RunCharacterWin(PreludeParty.GetLeader());
 		return TRUE;
 	}
 
@@ -1573,15 +1565,7 @@ if(PreludeWorld->GetGameState() != GAME_STATE_COMBAT)
 	{
 		if(PreludeParty.GetNumMembers() >= 1)
 		{
-			CharacterWin *pCWin = new CharacterWin(CHARACTER_WINDOW_ID,100,100,600,400, PreludeParty.GetMember(0));
-			pCWin->Show();
-			this->AddTopChild(pCWin);
-
-			SetFocus(pCWin);
-			pCWin->GoModal();
-			ReleaseFocus();
-
-			this->RemoveChild(pCWin);
+			RunCharacterWin(PreludeParty.GetMember(0));
 		}
 		return TRUE;
 	}
@@ -1591,15 +1575,7 @@ if(PreludeWorld->GetGameState() != GAME_STATE_COMBAT)
 	{
 		if(PreludeParty.GetNumMembers() >= 2)
 		{
-			CharacterWin *pCWin = new CharacterWin(CHARACTER_WINDOW_ID,100,100,600,400, PreludeParty.GetMember(1));
-			pCWin->Show();
-			this->AddTopChild(pCWin);
-
-			SetFocus(pCWin);
-			pCWin->GoModal();
-			ReleaseFocus();
-
-			this->RemoveChild(pCWin);
+			RunCharacterWin(PreludeParty.GetMember(1));
 		}
 		return TRUE;
 	}
@@ -1607,15 +1583,7 @@ if(PreludeWorld->GetGameState() != GAME_STATE_COMBAT)
 	{
 		if(PreludeParty.GetNumMembers() >= 3)
 		{
-			CharacterWin *pCWin = new CharacterWin(CHARACTER_WINDOW_ID,100,100,600,400, PreludeParty.GetMember(2));
-			pCWin->Show();
-			this->AddTopChild(pCWin);
-
-			SetFocus(pCWin);
-			pCWin->GoModal();
-			ReleaseFocus();
-
-			this->RemoveChild(pCWin);
+			RunCharacterWin(PreludeParty.GetMember(2));
 		}
 		return TRUE;
 	}
@@ -1624,15 +1592,7 @@ if(PreludeWorld->GetGameState() != GAME_STATE_COMBAT)
 	{
 		if(PreludeParty.GetNumMembers() >= 4)
 		{
-			CharacterWin *pCWin = new CharacterWin(CHARACTER_WINDOW_ID,100,100,600,400, PreludeParty.GetMember(3));
-			pCWin->Show();
-			this->AddTopChild(pCWin);
-
-			SetFocus(pCWin);
-			pCWin->GoModal();
-			ReleaseFocus();
-
-			this->RemoveChild(pCWin);
+			RunCharacterWin(PreludeParty.GetMember(3));
 		}
 		return TRUE;
 	}
@@ -1641,15 +1601,7 @@ if(PreludeWorld->GetGameState() != GAME_STATE_COMBAT)
 	{
 		if(PreludeParty.GetNumMembers() >= 5)
 		{
-			CharacterWin *pCWin = new CharacterWin(CHARACTER_WINDOW_ID,100,100,600,400, PreludeParty.GetMember(4));
-			pCWin->Show();
-			this->AddTopChild(pCWin);
-
-			SetFocus(pCWin);
-			pCWin->GoModal();
-			ReleaseFocus();
-
-			this->RemoveChild(pCWin);
+			RunCharacterWin(PreludeParty.GetMember(4));
 		}
 		return TRUE;
 	}
@@ -1658,15 +1610,7 @@ if(PreludeWorld->GetGameState() != GAME_STATE_COMBAT)
 	{
 		if(PreludeParty.GetNumMembers() >= 6)
 		{
-			CharacterWin *pCWin = new CharacterWin(CHARACTER_WINDOW_ID,100,100,600,400, PreludeParty.GetMember(5));
-			pCWin->Show();
-			this->AddTopChild(pCWin);
-
-			SetFocus(pCWin);
-			pCWin->GoModal();
-			ReleaseFocus();
-
-			this->RemoveChild(pCWin);
+			RunCharacterWin(PreludeParty.GetMember(5));
 		}
 		return TRUE;
 	}

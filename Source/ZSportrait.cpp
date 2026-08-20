@@ -220,15 +220,7 @@ int ZSPortrait::RightButtonUp(int x, int y)
 		(pTarget->GetData(INDEX_BATTLESTATUS).Value != CREATURE_STATE_UNCONSCIOUS 
 		 && pTarget->GetData(INDEX_BATTLESTATUS).Value != CREATURE_STATE_DEAD)))
 	{
-		CharacterWin *pCWin = new CharacterWin(CHARACTER_WINDOW_ID,100,100,600,400, (Creature *)pTarget);
-		pCWin->Show();
-		GetMain()->AddTopChild(pCWin);
-
-		SetFocus(pCWin);
-		pCWin->GoModal();
-		ReleaseFocus();
-
-		GetMain()->RemoveChild(pCWin);
+		RunCharacterWin((Creature *)pTarget);
 	}
 	else
 	{

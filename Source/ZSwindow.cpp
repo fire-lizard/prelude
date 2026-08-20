@@ -670,6 +670,13 @@ ZSWindow::~ZSWindow()
 		}
 	}
 
+	//the stack scrub above has always been here, but the focus itself was left
+	//pointing at a window that is about to stop existing
+	if(pInputFocus == this)
+	{
+		pInputFocus = pMainWindow;
+	}
+
 	//delete all child windows
 	ZSWindow *pWin;
 	ZSWindow *pOldWin;
@@ -769,6 +776,19 @@ void ZSWindow::SetFocus(ZSWindow *pToFocus)
 	}
 	else
 	{
+		//The statics that follow this array in memory are the shared surfaces:
+		//OldFocusStack[64] IS lpddsParchment. Overflowing here writes a window
+		//pointer into it, and the next CreatePortrait blits from that "surface"
+		//- w and h come out as pParent and pChild, and bmp_scale throws
+		//bad_array_new_length. Drop the oldest entry instead, so every later
+		//pop still lands inside the array.
+		if(OldFocusStackTop >= MAX_FOCUS_STACK_DEPTH)
+		{
+			debug_info("focus stack full at %i, dropping the oldest entry", OldFocusStackTop);
+			memmove(OldFocusStack, &OldFocusStack[1], sizeof(OldFocusStack) - sizeof(OldFocusStack[0]));
+			OldFocusStackTop = MAX_FOCUS_STACK_DEPTH - 1;
+		}
+		
 		//put the current focus on to of the old focal stack
 		OldFocusStack[OldFocusStackTop] = pInputFocus;
 		OldFocusStackTop++;
@@ -815,6 +835,14 @@ void ZSWindow::ReleaseFocus()
 	}
 #endif
 
+	//releases outnumber the sets in a few places, and popping an empty stack
+	//reads OldFocusStack[-1] - the mouse timer - and calls GainFocus() on it
+	if(OldFocusStackTop <= 0)
+	{
+		debug_info("focus released without a matching SetFocus, keeping it");
+		return;
+	}
+	
 	pInputFocus->LoseFocus();
 	
 	OldFocusStackTop--;
