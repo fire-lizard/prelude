@@ -222,7 +222,12 @@ void ZSMainWindow::GetTarget()
 	}
 
 
-	if((int)MouseX == LastX && (int)MouseY == LastY)
+	//MoveMouse drops pTarget as soon as the tile under the pointer changes but
+	//leaves LastX/LastY alone.  Sweeping off an NPC and back before a pick could
+	//finish - it wants the mouse still for three frames - lands back on the tile
+	//the last pick ran on with nothing selected, and this memo then refused to
+	//pick it again: no talk cursor, and a click walks there instead of talking.
+	if(pTarget && (int)MouseX == LastX && (int)MouseY == LastY)
 		return;
 
 	LastX = (int)MouseX;
@@ -505,7 +510,7 @@ int ZSMainWindow::LeftButtonUp(int x, int y)
 						pActive->InsertAction(ACTION_CLOSE,(void *)this->pTarget,NULL);
 						break;
 					case ACTION_TALK:
-						if(((Creature *)this->pTarget)->GetRegionIn() == PreludeParty.GetLeader()->GetRegionIn()
+						if(RegionInView(((Creature *)this->pTarget)->GetRegionIn())
 							&&
 							GetDistance((Creature *)this->pTarget, PreludeParty.GetLeader()) < 12.0f)
 						{

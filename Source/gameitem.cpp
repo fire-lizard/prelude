@@ -223,19 +223,9 @@ void GameItem::SetItem(Item *pNewItem, int NewQuantity)
 
 void GameItem::Draw()
 {
-	if(pRegionIn)
+	if(!RegionInView(pRegionIn))
 	{
-		if(!pRegionIn->IsOccupied())
-		{
-			return;
-		}
-	}
-	else
-	{
-		if(PreludeParty.Inside())
-		{
-			return;
-		}
+		return;
 	}
 
 
@@ -468,7 +458,7 @@ BOOL GameItem::RayIntersect(D3DVECTOR *vRayStart, D3DVECTOR *vRayEnd)
 	{
 		pIntersectMesh = Engine->GetMesh("selectbox");
 	}
-	if(this->pRegionIn != PreludeParty.GetLeader()->GetRegionIn())
+	if(!RegionInView(this->pRegionIn))
 	{
 		return FALSE;
 	}

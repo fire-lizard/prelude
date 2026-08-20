@@ -218,6 +218,14 @@ public:
 	BOOL LineIntersect(D3DVECTOR *vLineStart, D3DVECTOR *vLineEnd);
 };
 
+//Is the party looking at this region right now?  Creature::Draw and
+//GameItem::Draw put a thing on the screen exactly when this is true, so the
+//picking and interaction checks ask the same question: what you can see is
+//what you can point at.  They used to demand the target stand in the leader's
+//own region, which refused an NPC standing in the next room of the same house
+//- a room your own party members were standing in.
+BOOL RegionInView(Region *pRegionIn);
+
 
 
 

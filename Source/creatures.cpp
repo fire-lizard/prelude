@@ -510,7 +510,7 @@ void Creature::GetValidFriendNonCombatActions(Object *pActor, ActionMenu *pAMenu
 	{
 		if(pCreature->GetData(INDEX_BATTLESTATUS).Value != CREATURE_STATE_UNCONSCIOUS &&
 				pCreature->GetData(INDEX_BATTLESTATUS).Value != CREATURE_STATE_DEAD &&
-				pCreature->GetRegionIn() == this->GetRegionIn() &&
+				RegionInView(this->GetRegionIn()) &&
 				GetDistance(pCreature, this) < 12.0f)
 		{
 			pAMenu->AddAction(ACTION_TALK,(void *)pActor,NULL,"Talk");
@@ -913,7 +913,7 @@ int Creature::GetValidActions(Object *pActor, ActionMenu *pAMenu)
 		GameItem *pGI;
 		pGI = (GameItem *)pActor;
 
-		if(pGI->GetRegionIn() == this->GetRegionIn() &&
+		if(RegionInView(pGI->GetRegionIn()) &&
 				GetDistance(pGI->GetPosition(), this->GetPosition()) < 12.0f)
 		{
 			if(pGI->GetItem()->GetData("CONTAINERSIZE").Value)
@@ -1117,7 +1117,7 @@ int Creature::GetDefaultAction(Object *pActor)
 		if(pActor->GetObjectType() == OBJECT_CREATURE)
 		{
 			pCreature = (Creature *)pActor;
-			if(pCreature->GetRegionIn() != this->GetRegionIn())
+			if(!RegionInView(this->GetRegionIn()))
 			{
 				return ACTION_NONE;
 			}
@@ -8089,19 +8089,9 @@ void Creature::DrawEquipment()
 
 void Creature::Draw()
 {
-	if(pRegionIn)
+	if(!RegionInView(pRegionIn))
 	{
-		if(!pRegionIn->IsOccupied())
-		{
-			return;
-		}
-	}
-	else
-	{
-		if(PreludeParty.Inside())
-		{
-			return;
-		}
+		return;
 	}
 
 	//get a pointer to the mesh indicated by the things mesh field
@@ -10011,7 +10001,7 @@ BOOL Creature::RayIntersect(D3DVECTOR *vRayStart, D3DVECTOR *vRayEnd)
 	if(!pMesh) 
 		return FALSE;
 
-	if(this->pRegionIn != ((Creature *)PreludeWorld->GetActive())->GetRegionIn())
+	if(!RegionInView(this->pRegionIn))
 	{
 		return FALSE;
 	}

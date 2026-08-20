@@ -5,6 +5,17 @@
 #include "EditRegion.h"
 #include "party.h"
 
+BOOL RegionInView(Region *pRegionIn)
+{
+	if(!pRegionIn)
+	{
+		//no region at all is out of doors: in view unless the party is indoors
+		return !PreludeParty.Inside();
+	}
+
+	return pRegionIn->IsOccupied() != REGION_UNSEEN;
+}
+
 void Region::ReBlock()
 {
 	D3DVECTOR vStart;
