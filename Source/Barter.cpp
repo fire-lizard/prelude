@@ -14,6 +14,7 @@
 #include "script.h"
 #include "gameitem.h"
 #include "ZSHelpWin.h"
+#include "ZSportrait.h"
 
 typedef enum
 {
@@ -146,6 +147,65 @@ int BarterWin::AddPlayerItem(GameItem *ToAdd)
 
 
 
+
+//SetPlayer
+// puts a different party member on the player side of the table. Whatever the
+// last one staged goes back to them first: the table only knows who is showing
+// now, so clearing it later would hand their goods to somebody else.
+void BarterWin::SetPlayer(Creature *pNewTarget)
+{
+	if(!pNewTarget || pNewTarget == pTarget)
+	{
+		return;
+	}
+
+	ZSItemSlot *pISlot;
+	Thing *pItem;
+
+	for(int n = 0; n < 4; n++)
+	{
+		pISlot = (ZSItemSlot *)GetChild(IDC_BARTER_PLAYER_ITEM1 + n);
+		if(pISlot->Look())
+		{
+			pItem = pISlot->Look()->GetItem();
+			if(pItem)
+			{
+				pTarget->Give(pItem,pISlot->Look()->GetQuantity());
+				pISlot->Take();
+			}
+		}
+	}
+
+	pTarget = pNewTarget;
+
+	((InventoryWin *)GetChild(IDC_BARTER_PLAYER_INVENTORY))->SetOwner(pTarget);
+	GetChild(IDC_BARTER_PLAYER)->SetText(pTarget->GetData(INDEX_NAME).String);
+	CalculateValues();
+} //SetPlayer
+
+//LeftButtonUp
+// we hold the input focus while bartering, so clicks on the party portraits
+// arrive here instead of at the portrait. Take one as a request to trade out of
+// that member's pack, the same gesture the character screen switches with.
+int BarterWin::LeftButtonUp(int x, int y)
+{
+	ZSWindow *pWin = GetMain()->GetBottomChild(x,y);
+
+	//the base class ends any drag and hands back the focus the button press
+	//took - skipping it would strand a focus stack slot per switch
+	ZSWindow::LeftButtonUp(x,y);
+
+	if(pWin && pWin->GetType() == WINDOW_PORTRAIT)
+	{
+		Creature *pWho = (Creature *)((ZSPortrait *)pWin)->GetTarget();
+		if(pWho && PreludeParty.IsMember(pWho))
+		{
+			SetPlayer(pWho);
+		}
+	}
+
+	return TRUE;
+} //LeftButtonUp
 
 void BarterWin::Transact()
 {
@@ -323,8 +383,6 @@ void BarterWin::CalculateValues()
 int BarterWin::Command(int IDFrom, int Command, int Param)
 {
 	int PlayerNum;
-	InventoryWin *pIWin;
-	ZSWindow *pWin;
 	if(Command == COMMAND_BUTTON_CLICKED)
 	{
 		switch (IDFrom)
@@ -341,35 +399,15 @@ int BarterWin::Command(int IDFrom, int Command, int Param)
 			Transact();
 			break;
 		case IDC_NEXT_PLAYER:
-			PlayerNum = PreludeParty.GetMemberNum(pTarget);
-			pTarget = NULL;
-			while(!pTarget)
-			{
-				PlayerNum++;
-				if(PlayerNum >= MAX_PARTY_MEMBERS)
-					PlayerNum = 0;
-				pTarget = PreludeParty.GetMember(PlayerNum);
-			}
-			pIWin = (InventoryWin *)GetChild(IDC_BARTER_PLAYER_INVENTORY);
-			pIWin->SetOwner(pTarget);
-			pWin = GetChild(IDC_BARTER_PLAYER);
-			pWin->SetText(pTarget->GetData(INDEX_NAME).String);
-
-			break;
 		case IDC_PREVIOUS_PLAYER:
 			PlayerNum = PreludeParty.GetMemberNum(pTarget);
-			pTarget = NULL;
-			while(!pTarget)
+			PlayerNum += (IDFrom == IDC_NEXT_PLAYER) ? 1 : -1;
+			if(PreludeParty.GetNumMembers() > 0)
 			{
-				PlayerNum--;
-				if(PlayerNum < 0)
-					PlayerNum = MAX_PARTY_MEMBERS - 1;
-				pTarget = PreludeParty.GetMember(PlayerNum);
+				if(PlayerNum >= PreludeParty.GetNumMembers()) PlayerNum = 0;
+				if(PlayerNum < 0) PlayerNum = PreludeParty.GetNumMembers() - 1;
+				SetPlayer(PreludeParty.GetMember(PlayerNum));
 			}
-			pIWin = (InventoryWin *)GetChild(IDC_BARTER_PLAYER_INVENTORY);
-			pIWin->SetOwner(pTarget);
-			pWin = GetChild(IDC_BARTER_PLAYER);
-			pWin->SetText(pTarget->GetData(INDEX_NAME).String);
 			break;
 		}
 

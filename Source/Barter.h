@@ -28,6 +28,9 @@ class BarterWin : public ZSWindow
 		void SetBargainer(Creature *pCreature) { pBargainer = pCreature; }
 		void SetTarget(Creature *pCreature) { pTarget = pCreature; }
 
+		//puts a different party member on the player side of the table
+		void SetPlayer(Creature *pNewTarget);
+
 		int AddMerchantItem(GameItem *ToAdd);
 		int AddPlayerItem(GameItem *ToAdd);
 
@@ -40,6 +43,8 @@ class BarterWin : public ZSWindow
 		BOOL ReceiveItem(Object *pToReceive, ZSWindow *pWinFrom, int x, int y);
 
 		int Command(int IDFrom, int Command, int Param);
+
+		int LeftButtonUp(int x, int y);
 
 		int HandleKeys(BYTE *CurrentKeys, BYTE *LastKeys);
 
