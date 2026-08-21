@@ -56,10 +56,7 @@ int opengl_dbg_key(int key) {
 	}
 	if (debug_mode_on)
 	{
-		if (key == GLFW_KEY_ESCAPE) {
-			opengl_exit();
-		}
-		else if (key == GLFW_KEY_F1) {
+		if (key == GLFW_KEY_F1) {
 			debug_dump_transform = 1;
 			return 1;
 		}
