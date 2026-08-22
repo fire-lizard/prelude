@@ -4930,6 +4930,16 @@ ScriptArg *addlocation(ScriptArg *ArgList, ScriptArg *pDestination)
 	pSAMapY = NULL;
 
 	pSATag = ArgList[0].Evaluate();
+
+	//the tag has to be a [string].  events.txt once passed ^Hana^, whose value
+	//is a Creature, and the raw object bytes were copied in as the name.
+	if(pSATag->GetType() != ARG_STRING)
+	{
+		DEBUG_INFO("addlocation: tag is not a string, ignoring");
+		Describe("addlocation: tag is not a string.");
+		return pDestination;
+	}
+
 	pSAX = ArgList[1].Evaluate();
 	pSAY = ArgList[2].Evaluate();
 	pSATele = ArgList[3].Evaluate();

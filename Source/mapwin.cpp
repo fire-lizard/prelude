@@ -208,7 +208,8 @@ int MapWin::Draw()
 
 		if(pCurLoc)
 		{
-			Engine->Graphics()->DrawText(TagX,TagY,pCurLoc->GetTag());
+			//white on a tan map is all but invisible; parchment text is dark
+			Engine->Graphics()->DrawText(TagX,TagY,pCurLoc->GetTag(),TEXT_DARK_GREY_PARCHMENT);
 		}
 
 

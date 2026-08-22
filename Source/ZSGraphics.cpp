@@ -1212,9 +1212,9 @@ void ZSGraphicsSystem::DrawCursor(RECT *rDrawAt)
 	BBuffer->Blt(&rDrawTo, MouseSurface, &MouseCursor[(Cursor*MAX_CURSOR_FRAMES)+CursorFrame], DDBLT_KEYSRC, NULL);
 }
 
-HRESULT ZSGraphicsSystem::DrawText(int x, int y, const char *Text)
+HRESULT ZSGraphicsSystem::DrawText(int x, int y, const char *Text, int Color)
 {
-	return pZSFont->DrawText(BBuffer, x, y, Text);
+	return pZSFont->DrawText(BBuffer, x, y, Text, Color);
 }
 
 HRESULT ZSGraphicsSystem::DrawText(D3DVECTOR *pVector, const char *Text)

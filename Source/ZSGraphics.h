@@ -251,7 +251,7 @@ public:
 	BOOL SetTexture(ZSTexture *ToSet);
 	BOOL ClearTexture();
 
-	HRESULT DrawText(int x, int y, const char *Text);
+	HRESULT DrawText(int x, int y, const char *Text, int Color = 0);
 
 	HRESULT DrawText(D3DVECTOR *pVector, const char *Text);
 
