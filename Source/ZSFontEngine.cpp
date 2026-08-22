@@ -196,6 +196,7 @@ try
 	lpFontSurf[7] = Engine->Graphics()->CreateSurfaceFromFile("fontpainted.bmp", FONT_FILE_WIDTH, FONT_FILE_HEIGHT, NULL,NULL);
 	lpFontSurf[8] = Engine->Graphics()->CreateSurfaceFromFile("fontpainteddark.bmp", FONT_FILE_WIDTH, FONT_FILE_HEIGHT, NULL,NULL);
 	lpFontSurf[9] = Engine->Graphics()->CreateSurfaceFromFile("fontblueparch.bmp", FONT_FILE_WIDTH, FONT_FILE_HEIGHT, NULL,NULL);
+	lpFontSurf[10] = Engine->Graphics()->CreateSurfaceFromFile("fontpurpleparch.bmp", FONT_FILE_WIDTH, FONT_FILE_HEIGHT, NULL,NULL);
 
 	DWORD Mask;
 	DWORD* SurfPtr;  

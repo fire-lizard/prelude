@@ -10,6 +10,9 @@
 #include "ZSHelpWin.h"
 #include "events.h"
 #include "script.h"
+
+//breathing room between the tag text and the edge of its plaque
+#define TAG_PAD 3
 #include "Flags.h"
 
 #define MAP_FACTOR (512.0f/3200.0f)
@@ -209,7 +212,46 @@ int MapWin::Draw()
 		if(pCurLoc)
 		{
 			//white on a tan map is all but invisible; parchment text is dark
-			Engine->Graphics()->DrawText(TagX,TagY,pCurLoc->GetTag(),TEXT_DARK_GREY_PARCHMENT);
+			ZSFontEngine *pFont = Engine->Graphics()->GetFontEngine();
+			int TagW = pFont->GetTextWidth(pCurLoc->GetTag());
+			int TagH = pFont->GetTextHeight();
+
+			//TagX is the marker's centre, so the tag no longer starts on the
+			//marker and runs right across its neighbours
+			RECT rTag;
+			rTag.left = TagX - TagW / 2 - TAG_PAD;
+			rTag.top = TagY;
+			rTag.right = rTag.left + TagW + TAG_PAD * 2;
+			rTag.bottom = rTag.top + TagH;
+
+			//a tag on a marker near the edge used to be cut off by the map border
+			if(rTag.right > rMapArea.right)
+			{
+				rTag.left -= rTag.right - rMapArea.right;
+				rTag.right = rMapArea.right;
+			}
+			if(rTag.left < rMapArea.left)
+			{
+				rTag.right += rMapArea.left - rTag.left;
+				rTag.left = rMapArea.left;
+			}
+			if(rTag.top < rMapArea.top)
+			{
+				rTag.top = rMapArea.top;
+				rTag.bottom = rTag.top + TagH;
+			}
+
+			//the glyphs are a thin script face that is over half anti-aliased and
+			//carries no outline, so on the map's hatching, roads and location
+			//squares the text needs a ground of its own to be legible at all.
+			//FillSurface writes dwFillColor verbatim and RGB() leaves the top byte
+			//clear, so the alpha has to be set here or the fill is transparent -
+			//the same trap DrawBox documents.
+			Engine->Graphics()->FillSurface(Engine->Graphics()->GetBBuffer(),
+				RGB(249,228,175) | 0xFF000000, &rTag);
+			Engine->Graphics()->DrawBox(Engine->Graphics()->GetBBuffer(), &rTag, RGB(120,95,70));
+			Engine->Graphics()->DrawText(rTag.left + TAG_PAD, rTag.top,
+				pCurLoc->GetTag(), TEXT_DARK_GREY_PARCHMENT);
 		}
 
 
@@ -925,7 +967,8 @@ int MapWin::MoveMouse(long *x, long *y, long *z)
 		
 		RECT rChild;
 		pWin->GetBounds(&rChild);
-		TagX = rChild.left;
+		//centre of the marker; Draw() centres the tag on it and clamps it
+		TagX = (rChild.left + rChild.right) / 2;
 		TagY = rChild.top - Engine->Graphics()->GetFontEngine()->GetTextHeight();
 	}
 	else 
