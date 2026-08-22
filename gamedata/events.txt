@@ -10143,7 +10143,7 @@
 	(saychar ^Hana^ 300 300 [In the distance you can see a small head poking above the water.  A small girl cautiously climbs to the shore.])
 	(place ^Hana^ 1150 2312)
 	(schedule ^Hana^ 1150 2312 1151 2313 0 23 ^E^ 1)
-	(addlocation ^Hana^ 1150 2312)
+	(addlocation [Hana] 1150 2312)
 	(cameralookat ^Hana^)
 	(talk ^Hana^)
 	(push 1)
