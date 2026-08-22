@@ -20,7 +20,8 @@ typedef enum
 	IDC_JOURNAL_LEFT_TEXT,
 	IDC_JOURNAL_RIGHT_TEXT,
 	IDC_JOURNAL_QUEST_LIST,
-	IDC_JOURNAL_AREA_LIST
+	IDC_JOURNAL_AREA_LIST,
+	IDC_JOURNAL_HIDEDONE
 } JOURNAL_CONTROLS;
 
 LPDIRECTDRAWSURFACE7 JournalWin::JournalSurface = NULL;
@@ -31,6 +32,8 @@ char Journal::QuestNames[MAX_QUESTS][128];
 int Journal::QuestAreas[MAX_QUESTS];
 int Journal::NumAreas = 0;
 char Journal::AreaNames[MAX_AREAS][128];
+int Journal::QuestEndings[MAX_QUESTS][MAX_QUEST_ENDINGS];
+int Journal::NumQuestEndings[MAX_QUESTS];
 
 void Journal::GetEntry(int num, char *Dest)
 {
@@ -51,39 +54,56 @@ int Journal::GetEntryQuest(int num)
 	fp = SafeFileOpen("journal.txt","rt");
 
 	SeekToSkip(fp,IDNum);
-	char *JournalString;
+
+	//an entry reads "<id> [Quest] [Area]".  Both tags have to be read before
+	//the quest can be named, because the area is what tells the Generals apart.
+	char *First;
+	char *Second;
+
 	SeekTo(fp,"[");
-	JournalString = GetString(fp,']');
-	int QuestNum = 0;
-	QuestNum = GetQuestNum(JournalString);
-	if(QuestNum == -1)
+	First = GetString(fp,']');
+	SeekTo(fp,"[");
+	Second = GetString(fp,']');
+
+	fclose(fp);
+
+	int QuestNum = -1;
+	int AreaNum;
+	char *QuestTag = NULL;
+
+	AreaNum = GetAreaNum(Second);
+	if(AreaNum != -1)
 	{
-		if(GetAreaNum(JournalString) != -1)
-		{
-			delete[] JournalString;
-			SeekTo(fp,"[");
-			JournalString = GetString(fp,']');
-		}
-		else
-		{
-			delete[] JournalString;
-			return -1;
-		}
+		QuestTag = First;
 	}
 	else
 	{
-		fclose(fp);
-		delete[] JournalString;
-		return QuestNum;
+		//tolerate the tags the other way round
+		AreaNum = GetAreaNum(First);
+		if(AreaNum != -1)
+		{
+			QuestTag = Second;
+		}
 	}
-	
-	QuestNum = GetQuestNum(JournalString);
-	fclose(fp);
-	
-	delete[] JournalString;
+
+	if(QuestTag)
+	{
+		QuestNum = GetQuestNum(QuestTag, AreaNum);
+		if(QuestNum == -1)
+		{
+			//journal.txt 609 files River Pilgrim under Ironwood while
+			//journalquests.txt files it under the Monastery.  Fall back to the
+			//name so entries like that stay reachable - a General always
+			//resolves on the pair, so this cannot reintroduce the collapse.
+			QuestNum = GetQuestNum(QuestTag);
+		}
+	}
+
+	delete[] First;
+	delete[] Second;
+
 	return QuestNum;
 }
-
 
 int Journal::GetEntryArea(int num)
 {
@@ -343,23 +363,72 @@ int Journal::GetQuestNum(char *QuestName)
 	return -1;
 }
 
+//journalquests.txt gives every area its own [General], so a quest is only
+//unique as (name, area).  Matching on the name alone lands all ten Generals
+//on the first one, the Watcher's Quest.
+int Journal::GetQuestNum(char *QuestName, int AreaNum)
+{
+	int n;
+	for(n = 0; n < NumQuests; n++)
+	{
+		if(QuestAreas[n] == AreaNum && !strcmp(QuestNames[n],QuestName))
+		{
+			return n;
+		}
+	}
+
+	return -1;
+}
+
 int Journal::GetQuestArea(int QuestNum)
 {
 	return QuestAreas[QuestNum];
 
 }
 
+//pulls the Which'th [bracketed] field out of one line, NULL if it has none
+static char *GetBracketField(const char *Line, int Which, char *Dest, int Size)
+{
+	const char *pAt = Line;
+	int n;
+
+	for(n = 0; n <= Which; n++)
+	{
+		pAt = strchr(pAt, '[');
+		if(!pAt)
+			return NULL;
+		pAt++;
+	}
+
+	const char *pEnd = strchr(pAt, ']');
+	if(!pEnd)
+		return NULL;
+
+	int Length;
+	Length = pEnd - pAt;
+	if(Length > Size - 1)
+		Length = Size - 1;
+
+	strncpy(Dest, pAt, Length);
+	Dest[Length] = '\0';
+
+	return Dest;
+}
+
+//journalquests.txt is "[Quest] [Area]" per line, plus an optional third
+//field listing the entries that finish the quest: "[933 935]".  Read a line
+//at a time - SeekTo would happily wander onto the next line looking for the
+//third field and swallow the next quest's name.
 void Journal::Init()
 {
 	if(IsSetup)
 		return;
 
-	char AreaName[128];
 	int n;
-
 	for (n = 0; n < MAX_QUESTS; n++)
 	{
 		ZeroMemory(QuestNames[n], 128 * sizeof(char));
+		NumQuestEndings[n] = 0;
 	}
 
 	for (n = 0; n < MAX_AREAS; n++)
@@ -367,41 +436,57 @@ void Journal::Init()
 		ZeroMemory(AreaNames[n], 128 * sizeof(char));
 	}
 
-	int IDNum = 0;	
-	//open journal
 	FILE *fp;
 	fp = SafeFileOpen("journalquests.txt","rt");
 
-	BOOL Continue = TRUE;
-
 	NumQuests = 0;
 	NumAreas = 0;
-	while(Continue)
-	{
-		if(SeekTo(fp,"["))
-		{
-			GetString(fp, &QuestNames[NumQuests][0],']'); 
 
-			SeekTo(fp,"[");
-			
-			GetString(fp, &AreaName[0],']'); 
-			int AreaNum;
-			AreaNum = GetAreaNum(AreaName);
-			if(AreaNum != -1)
-			{
-				QuestAreas[NumQuests] = AreaNum;
-			}
-			else
-			{
-				strcpy(AreaNames[NumAreas],AreaName);
-				QuestAreas[NumQuests] = NumAreas;
-				NumAreas++;
-			}
-						
-		}
-		else
+	char Line[512];
+	char QuestName[128];
+	char AreaName[128];
+	char Endings[128];
+
+	while(fgets(Line, sizeof(Line), fp) && NumQuests < MAX_QUESTS)
+	{
+		if(!GetBracketField(Line, 0, QuestName, sizeof(QuestName))
+			|| !GetBracketField(Line, 1, AreaName, sizeof(AreaName)))
 		{
-			Continue = FALSE;	
+			continue;	//the blank line between two areas
+		}
+
+		strcpy(QuestNames[NumQuests], QuestName);
+
+		int AreaNum;
+		AreaNum = GetAreaNum(AreaName);
+		if(AreaNum == -1)
+		{
+			if(NumAreas >= MAX_AREAS)
+				break;
+
+			AreaNum = NumAreas;
+			strcpy(AreaNames[NumAreas], AreaName);
+			NumAreas++;
+		}
+		QuestAreas[NumQuests] = AreaNum;
+
+		if(GetBracketField(Line, 2, Endings, sizeof(Endings)))
+		{
+			char *pAt = Endings;
+			while(NumQuestEndings[NumQuests] < MAX_QUEST_ENDINGS)
+			{
+				while(*pAt == ' ' || *pAt == '	' || *pAt == ',')
+					pAt++;
+
+				if(*pAt < '0' || *pAt > '9')
+					break;
+
+				QuestEndings[NumQuests][NumQuestEndings[NumQuests]] = atoi(pAt);
+				NumQuestEndings[NumQuests]++;
+
+				while(*pAt >= '0' && *pAt <= '9')
+					pAt++;
+			}
 		}
 
 		NumQuests++;
@@ -410,6 +495,23 @@ void Journal::Init()
 	fclose(fp);
 
 	IsSetup = TRUE;
+}
+
+//a quest counts as finished once the party holds one of the entries that
+//journalquests.txt names as an ending.  Branching quests name all of them.
+BOOL Journal::IsQuestEnding(int QuestNum, int EntryNum)
+{
+	if(QuestNum < 0 || QuestNum >= MAX_QUESTS)
+		return FALSE;
+
+	int n;
+	for(n = 0; n < NumQuestEndings[QuestNum]; n++)
+	{
+		if(QuestEndings[QuestNum][n] == EntryNum)
+			return TRUE;
+	}
+
+	return FALSE;
 }
 
 void JournalWin::SetText()
@@ -466,6 +568,19 @@ int JournalWin::Command(int IDFrom, int Command, int Param)
 			State = WINDOW_STATE_DONE;
 		}
 		else
+		if(IDFrom == IDC_JOURNAL_HIDEDONE)
+		{
+			HideDone = !HideDone;
+			((ZSButton *)GetChild(IDC_JOURNAL_HIDEDONE))->SetText(
+				HideDone ? "Show finished" : "Hide finished");
+
+			//the rows move, so whichever quest was picked is not that row now
+			ShowQuestNum = -1;
+			BuildQuestList();
+			SortQuests();
+			Sort();
+		}
+		else
 		if(IDFrom == IDC_JOURNAL_PAGEUP)
 		{
 			PageLeft();
@@ -503,7 +618,7 @@ int JournalWin::Command(int IDFrom, int Command, int Param)
 		{
 			pList->GetText(pList->GetSelection(),(char *)ListText);
 			pList->SetText((char *)ListText);
-			NewNum = pJournal->GetQuestNum((char *)ListText);
+			NewNum = QuestFromList(pList->GetSelection());
 			if(NewNum != ShowQuestNum)
 			{
 				ShowQuestNum = NewNum;
@@ -515,17 +630,29 @@ int JournalWin::Command(int IDFrom, int Command, int Param)
 	return TRUE;
 }
 
+//an entry has to clear both filters; "All" is -1 and matches everything.
 int JournalWin::MatchJournalQuestArea(int current) {
-	if (ShowAreaNum >= 0 && (pJournal->GetEntryArea(current) == ShowAreaNum)) {
-		return TRUE;		
+	if (ShowAreaNum >= 0 && (pJournal->GetEntryArea(current) != ShowAreaNum)) {
+		return FALSE;
 	}
 
-	if (ShowQuestNum >= 0 && (pJournal->GetEntryQuest(current) == ShowQuestNum)) {
-		return TRUE;
+	if (ShowQuestNum >= 0 && (pJournal->GetEntryQuest(current) != ShowQuestNum)) {
+		return FALSE;
 	}
 
-	return FALSE;
+	return TRUE;
+}
 
+//Each row keeps its insertion index as its ID, and the list only holds the
+//quests the party has written about, so the row -> quest mapping is recorded
+//while the list is built.  Going back through the row's text would collapse
+//every General onto one quest.  -1 is the "All Quests" row.
+int JournalWin::QuestFromList(int ItemID)
+{
+	if(ItemID < 0 || ItemID >= MAX_QUESTS)
+		return -1;
+
+	return ListQuest[ItemID];
 }
 
 void JournalWin::PageLeft()
@@ -564,8 +691,7 @@ void JournalWin::PageLeft()
 	if(ShowAreaNum != -1 || ShowQuestNum != -1)
 	{
 			while(JournalRight < pJournal->NumEntries 
-				&& ((pJournal->GetEntryArea(JournalRight) != ShowAreaNum && ShowAreaNum == -1)
-				|| (pJournal->GetEntryQuest(JournalRight) != ShowQuestNum && ShowQuestNum == -1)))
+				&& !MatchJournalQuestArea(JournalRight))
 			{
 				JournalRight++;
 			}
@@ -582,8 +708,7 @@ void JournalWin::PageRight()
 		if(ShowAreaNum != -1 || ShowQuestNum != -1)
 		{
 			while(pJournal->Current < pJournal->NumEntries 
-					&& ((pJournal->GetEntryArea(pJournal->Current) != ShowAreaNum && ShowAreaNum == -1)
-					|| (pJournal->GetEntryQuest(pJournal->Current) != ShowQuestNum && ShowQuestNum == -1)))
+					&& !MatchJournalQuestArea(pJournal->Current))
 				{
 					pJournal->Current++;
 				}
@@ -596,8 +721,7 @@ void JournalWin::PageRight()
 		if(ShowAreaNum != -1 || ShowQuestNum != -1)
 		{
 				while(JournalRight < pJournal->NumEntries 
-					&& ((pJournal->GetEntryArea(JournalRight) != ShowAreaNum && ShowAreaNum == -1)
-					|| (pJournal->GetEntryQuest(JournalRight) != ShowQuestNum && ShowQuestNum == -1)))
+					&& !MatchJournalQuestArea(JournalRight))
 				{
 					JournalRight++;
 				}
@@ -607,35 +731,94 @@ void JournalWin::PageRight()
 	}
 }
 
+//Which quests the party has actually written anything about.  GetEntryQuest
+//re-reads journal.txt for every entry, so this is done once when the book is
+//opened rather than on every click.  A fresh JournalWin is built per open, so
+//the answer cannot go stale while it is up.
+void JournalWin::FindQuestsWithEntries()
+{
+	ZeroMemory(QuestHasEntries, sizeof(QuestHasEntries));
+	ZeroMemory(QuestDone, sizeof(QuestDone));
+
+	int n;
+	for(n = 0; n < pJournal->NumEntries; n++)
+	{
+		int QuestNum;
+		QuestNum = pJournal->GetEntryQuest(n);
+		if(QuestNum >= 0 && QuestNum < MAX_QUESTS)
+		{
+			QuestHasEntries[QuestNum] = TRUE;
+
+			if(pJournal->IsQuestEnding(QuestNum, pJournal->Entry[n*2]))
+			{
+				QuestDone[QuestNum] = TRUE;
+			}
+		}
+	}
+
+	ZeroMemory(AreaHasEntries, sizeof(AreaHasEntries));
+	for(n = 0; n < pJournal->NumQuests; n++)
+	{
+		if(QuestHasEntries[n])
+		{
+			AreaHasEntries[pJournal->GetQuestArea(n)] = TRUE;
+		}
+	}
+}
+
+//a diary has no page for a quest the party never heard of, so only the ones
+//they have written about are listed - and finished ones can be put away too.
+//AddItem stamps each row with its insertion index, which is what ListQuest is
+//keyed on, so the mapping has to be recorded as the list is filled.
+void JournalWin::BuildQuestList()
+{
+	ZSList *pList = (ZSList *)GetChild(IDC_JOURNAL_QUEST_LIST);
+
+	pList->Clear();
+
+	int n;
+	int NextRow = 0;
+	for(n = pJournal->NumQuests; n > 0; n--)
+	{
+		if(!QuestHasEntries[n-1])
+			continue;
+
+		if(HideDone && QuestDone[n-1])
+			continue;
+
+		ListQuest[NextRow] = n-1;
+		NextRow++;
+		pList->AddItem(pJournal->QuestNames[n-1]);
+	}
+
+	ListQuest[NextRow] = -1;
+	pList->AddItem("All Quests");
+	pList->SetText("All Quests");
+}
+
 void JournalWin::SortQuests()
 {
 	ZSList *pList = (ZSList *)GetChild(IDC_JOURNAL_QUEST_LIST);
 
 	int NumItems;
 	NumItems = pList->GetNumItems();
-	char ListText[128];
 	int n;
 
-	if(ShowAreaNum != -1)
+	for(n = 0; n < NumItems - 1; n++)
 	{
-		for(n = 0; n < NumItems - 1; n++)
+		int QuestNum;
+		QuestNum = QuestFromList(n);
+
+		if(ShowAreaNum != -1 && pJournal->GetQuestArea(QuestNum) != ShowAreaNum)
 		{
-			pList->GetText(n, ListText);
-			if(pJournal->GetQuestArea((char *)ListText) != ShowAreaNum)
-			{
-				pList->DisableItem(n);
-			}
-			else
-			{
-				pList->EnableItem(n);
-			}
+			pList->DisableItem(n);
 		}
-	}
-	else
-	{
-		for(n = 0; n < NumItems - 1; n++)
+		else
 		{
 			pList->EnableItem(n);
+
+			//finished reads red on the parchment, still running stays default
+			pList->SetItemColor(n, QuestDone[QuestNum] ? TEXT_RED_PARCHMENT : -1);
 		}
 	}
 }
@@ -660,6 +843,7 @@ JournalWin::JournalWin(int NewID, int x, int y, int width, int height)
 	Bounds.bottom = y + height;
 	ShowAreaNum = -1;
 	ShowQuestNum = -1;
+	HideDone = FALSE;
 
 	FILE *fp;
 	RECT rBounds;
@@ -697,6 +881,15 @@ JournalWin::JournalWin(int NewID, int x, int y, int width, int height)
 	pButton->SetText("Close");
 	AddChild(pButton);
 
+	//the free strip between the page-back arrow (226..277) and Close (450..),
+	//and above the left page (starts at 125).  GetChild(x,y) hands the click to
+	//the first child whose bounds contain it, so overlapping any of them would
+	//quietly turn the page instead.
+	pButton = new ZSButton(BUTTON_NONE, IDC_JOURNAL_HIDEDONE, 290, 100, 155, 24);
+	pButton->Show();
+	pButton->SetText("Hide finished");
+	AddChild(pButton);
+
 	SeekTo(fp,"PAGEUP");
 	LoadRect(&rBounds,fp);
 
@@ -732,6 +925,8 @@ JournalWin::JournalWin(int NewID, int x, int y, int width, int height)
 
 	pJournal = PreludeParty.GetJournal();
 
+	FindQuestsWithEntries();
+
 	SeekTo(fp,"QUESTLIST");
 	LoadRect(&rBounds,fp);
 	pList = new ZSList(IDC_JOURNAL_QUEST_LIST, XYWH(rBounds),1);	
@@ -741,12 +936,7 @@ JournalWin::JournalWin(int NewID, int x, int y, int width, int height)
 
 	int n = 0;
 
-	for(n = pJournal->NumQuests; n > 0; n--)
-	{
-		pList->AddItem(pJournal->QuestNames[n-1]);
-	}
-	pList->AddItem("All Quests");
-	pList->SetText("All Quests");
+	BuildQuestList();
 
 	
 	SeekTo(fp,"AREALIST");
@@ -758,7 +948,8 @@ JournalWin::JournalWin(int NewID, int x, int y, int width, int height)
 
 	for(n = pJournal->NumAreas; n > 0; n--)
 	{
-		pList->AddItem(pJournal->AreaNames[n-1]);
+		if(AreaHasEntries[n-1])
+			pList->AddItem(pJournal->AreaNames[n-1]);
 	}
 	pList->AddItem("All Areas");
 	pList->SetText("All Areas");
@@ -767,6 +958,8 @@ JournalWin::JournalWin(int NewID, int x, int y, int width, int height)
 
 	JournalLeft = pJournal->Current;
 	JournalRight = JournalLeft + 1;
+
+	SortQuests();
 
 	SetText();
 

@@ -12,6 +12,8 @@
 
 #define MAX_AREAS 32
 #define MAX_QUESTS 128
+//how many different entries may be tagged as finishing one quest
+#define MAX_QUEST_ENDINGS 8
 
 static const size_t MAX_JOURNAL_ENTRY_COUNT = 1048;
 class Journal
@@ -30,11 +32,14 @@ public:
 	static int QuestAreas[MAX_QUESTS];
 	static int NumAreas;
 	static char AreaNames[MAX_AREAS][128];
+	static int QuestEndings[MAX_QUESTS][MAX_QUEST_ENDINGS];
+	static int NumQuestEndings[MAX_QUESTS];
 
 	int GetAreaNum(char *AreaName);
 	int GetQuestNum(char *QuestName);
+	int GetQuestNum(char *QuestName, int AreaNum);
 	int GetQuestArea(int QuestNum);
-	int GetQuestArea(char *QuestName) { return GetQuestArea(GetQuestNum(QuestName)); }
+	BOOL IsQuestEnding(int QuestNum, int EntryNum);
 
 	int Current;
 
@@ -72,6 +77,17 @@ private:
 	int JournalLeft;
 	int JournalRight;
 
+	BOOL QuestHasEntries[MAX_QUESTS];
+	BOOL QuestDone[MAX_QUESTS];
+	BOOL AreaHasEntries[MAX_AREAS];
+	//which quest each row of the quest list stands for
+	int ListQuest[MAX_QUESTS];
+
+	BOOL HideDone;
+
+	void FindQuestsWithEntries();
+	void BuildQuestList();
+	int QuestFromList(int ItemID);
 	void Sort();
 	void SortQuests();
 	void SetText();

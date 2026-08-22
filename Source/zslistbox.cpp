@@ -19,6 +19,7 @@ ListItem::ListItem(char *NewText, int NewID)
 
 	Selected = FALSE;
 	Enabled = TRUE;
+	Color = -1;
 }
 
 ListItem::~ListItem()
@@ -121,6 +122,32 @@ void ZSList::SetSelection(int NewSelection)
 		pLI = pLI->pNext;
 	}
 
+}
+
+//a row can carry its own text colour; the journal marks finished quests.
+void ZSList::SetItemColor(int ColorID, int NewColor)
+{
+	ListItem *pLI;
+
+	pLI = pCurTop;
+	if(!pLI)
+	{
+		return;
+	}
+
+	while(pLI->pPrev)
+	{
+		pLI = pLI->pPrev;
+	}
+
+	while(pLI)
+	{
+		if(pLI->ID == ColorID)
+		{
+			pLI->Color = NewColor;
+		}
+		pLI = pLI->pNext;
+	}
 }
 
 void ZSList::EnableItem(int EnableID)
@@ -435,6 +462,18 @@ void ZSList::Clear()
 	}
 	NumItems = 0;
 	SelectID = 0;
+
+	//NumSelectors counts drawn lines, not items, and AddItem sizes the
+	//scrollbar from it.  Leaving it set made every refill scroll further.
+	NumSelectors = 0;
+
+	ZSVScroll *pScroll;
+	pScroll = (ZSVScroll *)GetChild(IDC_LIST_SCROLL);
+	if(pScroll)
+	{
+		pScroll->SetUpper(0);
+		pScroll->Hide();
+	}
 }
 
 void ZSList::ClearExcept(const char *ExceptText)
@@ -578,6 +617,9 @@ int ZSList::Draw()
 				if(pLI->Selected)
 					Engine->Graphics()->GetFontEngine()->DrawText(Engine->Graphics()->GetBBuffer(), x, y, pLI->Text, TEXT_GREEN_PARCHMENT);
 				else
+				if(pLI->Color >= 0)
+					Engine->Graphics()->GetFontEngine()->DrawText(Engine->Graphics()->GetBBuffer(), x, y, pLI->Text, pLI->Color);
+				else
 					Engine->Graphics()->GetFontEngine()->DrawText(Engine->Graphics()->GetBBuffer(), x, y, pLI->Text, TEXT_DARK_GREY_PARCHMENT);
 			}
 			else
@@ -587,6 +629,9 @@ int ZSList::Draw()
 				else
 				if(pLI->Selected)
 					Engine->Graphics()->GetFontEngine()->DrawText(Engine->Graphics()->GetBBuffer(), x, y, pLI->Text, TextColor);
+				else
+				if(pLI->Color >= 0)
+					Engine->Graphics()->GetFontEngine()->DrawText(Engine->Graphics()->GetBBuffer(), x, y, pLI->Text, pLI->Color);
 				else
 					Engine->Graphics()->GetFontEngine()->DrawText(Engine->Graphics()->GetBBuffer(), x, y, pLI->Text, TextColor + 1);
 			}	

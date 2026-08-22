@@ -12,6 +12,9 @@ public:
 	
 	BOOL Selected;
 	
+	//-1 to use the list's own colour for this row
+	int Color;
+	
 	char *Text;
 	
 	ListItem *pNext;
@@ -52,6 +55,7 @@ public:
 
 	void DisableItem(int ID);
 	void EnableItem(int ID);
+	void SetItemColor(int ID, int NewColor);
 		
 	void AddItem(const char *Text);
 	char *GetText(int Number, char *Dest);
