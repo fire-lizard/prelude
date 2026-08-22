@@ -372,12 +372,7 @@ Creature::~Creature()
 		}
 	}
 
-	if(pTexture && Engine->GetTextureNum(pTexture) == -1)
-	{
-		PeopleTextures.FreeTexture(pTexture);
-	}
-
-	pTexture = NULL;
+	ReleaseTexture();
 	
 	if(!NumCreatures)
 	{
@@ -1625,8 +1620,7 @@ void Creature::UpdateOffScreen()
 				this->GetPosition()->x > rUpdate.right ||
 				this->GetPosition()->y > rUpdate.bottom)
 			{
-				PeopleTextures.FreeTexture(pTexture);
-				pTexture = NULL;
+				ReleaseTexture();
 			}
 		}
 	}
@@ -7913,6 +7907,17 @@ Creature *Creature::FindCreature(int UID)
 //	GOT_HERE("unable to find creature with ID %i",UID);
 
 	return FALSE;
+}
+
+void Creature::ReleaseTexture()
+{
+	//a shared engine texture is not the group's to recycle
+	if(pTexture && Engine->GetTextureNum(pTexture) == -1)
+	{
+		PeopleTextures.FreeTexture(pTexture);
+	}
+
+	pTexture = NULL;
 }
 
 void Creature::InitTextures()

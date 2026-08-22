@@ -240,6 +240,11 @@ private:
 
 public:
 
+	//hands this creature's sheet back to Creature::PeopleTextures.  Deleting it
+	//instead leaves the freed node linked in that group's used list, which
+	//~TextureGroup walks at exit and which any reuse of the block corrupts.
+	void ReleaseTexture();
+
 // Display Functions --------------------------------
 	void Draw();
 	void DrawEquipment();

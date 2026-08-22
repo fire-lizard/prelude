@@ -3218,11 +3218,7 @@ void World::UpdateOffScreenCreatures()
 	{
 		if(pCreature->GetData(INDEX_TYPE).Value == 0)
 		{
-			if(pCreature->GetTexture())
-			{
-				delete pCreature->GetTexture();
-				pCreature->SetTexture(NULL);
-			}
+			pCreature->ReleaseTexture();
 		}
 	}
 
