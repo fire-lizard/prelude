@@ -788,7 +788,41 @@ void JournalWin::BuildQuestList()
 
 		ListQuest[NextRow] = n-1;
 		NextRow++;
-		pList->AddItem(pJournal->QuestNames[n-1]);
+
+		//journalquests.txt gives every area its own [Rumors], so the bare name
+		//puts ten identical rows in this list.  Name the area for any quest that
+		//shares its name with another shown row - the area list below only
+		//greys the others out, and this list is not rebuilt when it changes.
+		BOOL Ambiguous = FALSE;
+		for(int q = 0; q < pJournal->NumQuests; q++)
+		{
+			if(q == n-1 || !QuestHasEntries[q])
+				continue;
+			if(HideDone && QuestDone[q])
+				continue;
+			if(!strcmp(pJournal->QuestNames[q], pJournal->QuestNames[n-1]))
+			{
+				Ambiguous = TRUE;
+				break;
+			}
+		}
+
+		int AreaNum = pJournal->GetQuestArea(n-1);
+		if(Ambiguous && AreaNum >= 0 && AreaNum < pJournal->NumAreas)
+		{
+			const char *Area = pJournal->AreaNames[AreaNum];
+			//a leading "The " costs a fifth of the 200px list for nothing
+			if(!strncmp(Area, "The ", 4))
+				Area += 4;
+
+			char Label[192];
+			snprintf(Label, sizeof(Label), "%s - %s", pJournal->QuestNames[n-1], Area);
+			pList->AddItem(Label);
+		}
+		else
+		{
+			pList->AddItem(pJournal->QuestNames[n-1]);
+		}
 	}
 
 	ListQuest[NextRow] = -1;

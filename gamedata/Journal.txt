@@ -1,0 +1,2045 @@
+;Journal Entries;
+
+;Journal Entries
+ 
+0-99 Barrier
+ 
+100-199 Kellen
+ 
+200-299 Land's End
+ 
+300-399 Academy
+ 
+400-499 BLANK
+ 
+500-599 Ironwood
+ 
+600-699 Monastery + Main Plot
+ 
+700-799 Crossing East
+ 
+800-899 Jerrock
+ 
+900-1024 Citadel
+;
+;The Barrier;
+;1-99;
+1
+[]
+
+;Nina Warning Smart;
+2 [Masseque] [The Barrier Fortress]
+[Nina is quite convinced that Marta will have her killed if the Guardians are told about Marta's involvement in the break in.  This puts us in quite a bind.  My sense is that we must in the end turn to the Guardians, but only once we've obtained sufficient evidence to have Marta arrested.  We must step carefully for it is not only are our lives that are in jeopardy.]
+
+;Nina gives you a staff and leaves;
+3 [Masseque] [The Barrier Fortress]
+[It seems the recent events in the Barrier have been too much for Nina.  She departs today for Land's End to stay with her family there.  She left us with her thanks and the gift of a gnarled druid's staff.  We can only hope she manages to avoid troubles of the kind that found her here.]
+
+;Nina Robbed;
+4 [Rumors] [The Barrier Fortress]
+[Nina, the official in charge of the Barrier's economy recently had her house broken into.]
+
+;NinaCoinQuest;
+5 [Rumors] [The Barrier Fortress]
+[The only item of value that was stolen from Nina's house was a set of antique coins given to her by her grandfather.  She is offering a substantial reward for their recovery.]
+
+;NinaReturnedCoins;
+6 [Rumors] [The Barrier Fortress]
+[Nina was overjoyed when we returned her grandfather's coins.  The expression on her face was priceless, and if that wasn't reward enough, she gave us a ring given to her by an easterner.]
+
+;NinaWarning not Smart;
+7 [Masseque] [The Barrier Fortress]
+[Nina is convinced that Marta will have her killed if the Guardians are told about Marta's involvement in the break in.  This puts us in quite a bind.  One which I have no idea how to escape from.]
+
+;got threat letter from Nina not Smart;
+8 [Masseque] [The Barrier Fortress]
+[Nina gave us the threatening letter.  It reads as follows, "Repeal your tax woman.  This was a warning.  Speak with the Guardians and I will rend your head from its shoulders and keep it as a plaything.  Do not doubt my sincerity if you wish to live."  The letter is unsigned.]
+
+;Rolo not arrested;
+9 [Gems] [The Barrier Fortress]
+[It seems our discovery of Rolo's gem smuggling was all for naught.  Rolo was not arrested and the Guardians have been instructed to let the matter drop.  It looks as though Rolo must have some powerful friends.]
+
+;Massequename;
+10 [Masseque] [The Barrier Fortress]
+[The prisoner in the northside barracks is known as Masseque.  He apparently killed a man.]
+
+;GemsSolved;
+11 [Gems] [The Barrier Fortress]
+[We have told the northside Guardians about Rolo and Zito's involvement in gem smuggling.  I have little doubt that they will both be spending some time in the jail.]
+
+;Told Derrack whores NOT SMART;
+12 [Rumors] [The Barrier Fortress]
+[We confronted Derrack about his patronage of The Lusty Strumpet.  He told me that we could make an arrangement for my silence, but only when the other guards are not around.]
+
+;NinaDead;
+13 [Masseque] [The Barrier Fortress]
+[Nina has been murdered.  Perhaps we should have heeded her warning about approaching the Guardians.  Marta is clearly more bold and deadly than we imagined.  Now more than ever it is clear that Marta is mad must be stopped.]
+
+;NinaOnlyNote;
+14 [Masseque] [The Barrier Fortress]
+[Vortia said that without a handwriting sample to compare the note to, there is nothing linking the threat to Marta.  But where can we find such a sample?]
+
+;AkwasiArrest;
+15 [The Fever] [The Barrier Fortress]
+[We reported what we learned about Akwasi and he was promptly arrested.  The Barrier should have no more cases of the "fever" anytime soon.]
+
+;Derrack reward Masseque;
+16 [Masseque] [The Barrier Fortress]
+[For not talking to Damrush about Derrack's visits to the Lusty, he let us speak with Masseque.]
+
+;GotCorinKey;
+17 [Masseque] [The Barrier Fortress]
+[Krista gave us a copy of the key to Corin's house.  She says his house is in the northeast corner of the Barrier, not exactly the most pleasant part of town.  She also told us that he spent much time at The Barrier Arms and that we might want to ask about him there.]
+
+;ToldKrista;
+18 [Masseque] [The Barrier Fortress]
+[We gave Krista the message that Corin bid us to.  She was not pleased, but perhaps Corin was right and it is for the best.]
+
+;Cheat Krista;
+19 [Masseque] [The Barrier Fortress]
+[By telling Krista a little fib we were able to earn a quick 30 drachs.  Not bad for a couple of minutes work, and poor Corin will never know the difference.]
+
+;Corin needs to summon;
+20 [Masseque] [The Barrier Fortress]
+[The madwoman Chernan says a voice cries out for us from beyond the grave.  She told us she can summon the spirit if we bring her one of the man's possessions and 30 drachs.  A steep price, but an interesting offer.]
+
+;Summoned Corin;
+21 [Masseque] [The Barrier Fortress]
+[The madwoman Chernan summoned the spirit of a man named Corin.  He told us a harrowing story of betrayal and murder.  He claims that he was hired along with Gram and Nills to break into Nina's house.  Marta also had Corin deliver a note to Nina telling her to repeal her tax.  Nills grew unhappy with Marta's payment and decided to forcibly renegotiate.  Marta responded by viciously slaying him in front of Gram and Corin.  Gram and Corin fled, Corin was caught by Marta and killed.  Corin's spirit asked that we find his lover Krista and tell her that he ran away with another woman and that he never loved her.  He seems to think this will make it easier for her.]
+
+;Igboi Akwasi;
+22 [The Fever] [The Barrier Fortress]
+[Our waiter Sentle slipped and called Akwasi's Special "Igboi."  When we asked about this she explained that Akwasi calls the dish Igboi while preparing it, but she insists that no one calls it anything other than Akwasi's special in public.]
+
+;LearnedDarienSick;
+23 [The Fever] [The Barrier Fortress]
+[Saspina's husband Darien is suffering from an illness which his doctors are calling "the fever." ]
+
+;TalkedFever;
+24 [The Fever] [The Barrier Fortress]
+[The symptoms of "the fever" begin with headaches, loss of appetite, and stomachaches.  Then the victim starts having blackouts and dizzy spells.  Soon the victim is incoherent, bedridden and coming in and out of consciousness.  They begin lashing out violently and usually must be restrained.  From here the victim's mind degenerates further until their death.]
+
+;DiscoveredAkwasi;
+25 [The Fever] [The Barrier Fortress]
+[We have learned the cause of the fever.  It seems that Akwasi's special is actually a dish known as Igboi from the Fon'ash settlement far to the east.  Apparently this dish can be made poisonous if a spice is radically overused.  The effects of this poison are identical to the symptoms of the fever.  Roh says that this is not a mistake than a chef could make accidentally.  It appears that Akwasi has been poisoning patrons with his most famous dish.]
+
+;WilesCure;
+26 [The Fever] [The Barrier Fortress]
+[Using a sample of Akwasi's special, Dr. Wiles has been able to concoct a remedy for the fever.  Darien is cured.  Dr. Wiles has left to bring his antidote to Linton.  Before departing he urged us to inform the authorities about Akwasi.]
+
+;Told Wiles needs sample;
+27 [The Fever] [The Barrier Fortress]
+[We have told Dr. Wiles what is causing the fever.  He was interested, but says that he is unable to confirm our story, or concoct a remedy without a sample of Akwasi's Special.]
+
+;Local doc vexed;
+28 [The Fever] [The Barrier Fortress]
+[After making a deal with Argus to tell him what we learned about the poisonings, we reported our findings to someone else first.  Argus is less than pleased about this.  It looks as though we may have to look elsewhere to procure medical supplies.]
+
+;Deal LocalDoc;
+29 [The Fever] [The Barrier Fortress]
+[We have made a deal with the local doctor Argus to help find the cause of the fever.  He will pay us 100 drachs if we are able to discover the cause of the fever, on the condition that he gets to take all the credit for this discovery.  He also gave us a clue that could be helpful.  He believes that the fever is a reaction to a poison, probably one that is eaten.]
+
+;local doc cured;
+30 [Spear of Tius] [The Barrier Fortress]
+[In exchange for returning the legendary artifact, Menanius taught us the flame ritual 'Spear of Tius.']
+
+;local doc cured;
+31 [The Fever] [The Barrier Fortress]
+[We told Argus how the fever is caused by Akwasi's Special.  Using the sample of Akwasi's Special that we provided, he was able to quickly come up with an antidote.  He gave us the agreed upon 100 drachs, and left to try to cure the afflicted men.  He also said he would give us a discount on purchases in the future.  Argus will claim all credit for the discovery and cure, but he paid us handsomely for this privilege.]
+
+;Damrush told;
+32 [Rumors] [The Barrier Fortress]
+[We told Damrush that Derrack has been spending time at the whorehouse.  Damrush was furious and said that there would be consequences for this insubordination.]
+
+;Learned about Cyril;
+33 [Rumors] [The Barrier Fortress]
+[Cyril is supposed to be an incredible pastry chef from the Citadel.  Cyril is said to only sell his pastries to regulars, but is known to also sell them to people who seek him out based on his reputation.]
+
+;crime increase;
+34 [Rumors] [The Barrier Fortress]
+[Damrush told us that crime has been on a steady climb in the Barrier.  He attributed this increase to the crop failures and the desperation they have produced.]
+
+;knows poison akwasi;
+35 [The Fever] [The Barrier Fortress]
+[Roh told us about her friend was made ill by Igboi.  The illness first manifested itself in headaches and stomachaches, but soon her friend was totally incoherent.  They tied him to a bed to prevent him from hurting himself or others.  In time her friend died from the poison.]
+
+;met chef roh;
+36 [The Fever] [The Barrier Fortress]
+[According Roh, Igboi is harmless if served correctly and it is only by massively overusing certain spices that one may make the dish deadly.  She believes that any poisonings resulting from Igboi would have to be intentional.]
+
+;Roh Fon'ash;
+37 [The Fever] [The Barrier Fortress]
+[According to the Vangorii spice dealer, Mayaa, Igboi is a dish that comes from someplace called Fon'ash, a settlement in the far east.  She also mentioned that someone from Fon'ash has recently begun working at whorehouse.]
+
+;Friend Front of Line;
+38 [The Fever] [The Barrier Fortress]
+[Tristian is desperately trying to woo Erynne.  So desperately in fact that he is willing to let us cut the line into Akwasi's just because Erynne looks kindly upon us.  Though it seems doubtful that this would have any impact, good luck to him all the same.  All because we were willing to fetch Erynne some milk.  We've always heard that virtue is its own reward, but here it seems to have other perks as well.]
+
+;lied front of line;
+39 [The Fever] [The Barrier Fortress]
+[Tristian is in love with Erynne, the schoolteacher.  By exploiting this fact and saying we were friends with Erynne we were able to gain entrance to the restaurant.]
+
+;missing spear of Tius;
+40 [Spear of Tius] [The Barrier Fortress]
+[Someone has stolen the spear from the statue of Tius in the Barrier Marketplace.  We promised the local priest that we would return it to him.]
+
+;Heard Akwasi;
+41 [Rumors] [The Barrier Fortress]
+[Apparently the chef Akwasi is renowned for his culinary creations.]
+
+;talkedRemedy;
+42 [Rumors] [The Barrier Fortress]
+[Sarenti, the head of the Mendos Inn, says he has a secret hangover remedy.  It is a family secret that he does not seem keen on revealing.]
+
+;Mendos Quest;
+43 [Rumors] [The Barrier Fortress]
+[Sarenti has asked us to find and return two family heirlooms, a gold plated hairbrush and mirror, which were stolen from the Mendos Inn.  He implied that there would be some sort of reward.]
+
+;Hangover cure;
+44 [Rumors] [The Barrier Fortress]
+[After returning the stolen items to Sarenti he gave us a bottle of his hangover remedy.]
+
+;Solved Mendos;
+45 [Rumors] [The Barrier Fortress]
+[We returned the stolen hairbrush and mirror set to Sarenti at the Mendos Inn.  He was most grateful for their return.]
+
+;Learn Nina Tax;
+46 [Rumors] [The Barrier Fortress]
+[The Barrier official Nina, instituted a tax increase which targeted the three major landowners in the Barrier.  They were all very upset about this change.]
+
+;ErynneFamily;
+47 [Rumors] [The Barrier Fortress]
+[Erynne left her wealthy family in the Citadel on bad terms.  It is unclear what caused their falling out.]
+
+;Crush info Erynne Tristian;
+48 [Rumors] [The Barrier Fortress]
+[Tristian, the host of the Akwasi's restaurant is said to be enamored of the local schoolteacher, Erynne.]
+
+;Degral Fetch;
+49 [Rumors] [The Barrier Fortress]
+[The schoolteacher Erynne has asked us to fetch her some milk for a snack for the children.]
+
+;Find Gram;
+50 [Masseque] [The Barrier Fortress]
+[We convinced Delina to tell us where we can find her brother Gram.  He is hiding in the caves north of the barrier.  She says to enter the second cave, go left and then straight through one intersection.  If we then take a left and then a right we should find him there.  She gave us some food to deliver to him.]
+
+;Corin Southside Girlfriend;
+51 [Masseque] [The Barrier Fortress]
+[There are rumors that Nills's friend Corin was involved with a woman from the southside.  Danton seemed to think her brother might be found at Tarsh's Tavern.]
+
+;gram's home;
+52 [Masseque] [The Barrier Fortress]
+[According to Danton, Nills's friend hasn't seen for a while, but he lives with his parents and sister somewhere east of the Kaliyan Inn.]
+
+;Caenia Whore;
+53 [Rumors] [The Barrier Fortress]
+[Senzo, the patrol leader of the northside guards is engaged to Caenia, a prostitute at The Lusty Strumpet.]
+
+;Masseque Crime;
+54 [Masseque] [The Barrier Fortress]
+[The Guardians believe that Masseque stabbed a man named Nills to death.  It looks to be an open and shut case.]
+
+;Southside insult;
+55 [Rumors] [The Barrier Fortress]
+[The northside guard Guidian insulted the southside Guardians, calling them "a bunch of snotty, blue-blooded, incompetent wretches."   He welcomed us to tell the southsider Guardians what he said of them.]
+
+;Insulted Caenia;
+56 [Rumors] [The Barrier Fortress]
+[We passed Guidian's harsh words on to the southside Guardian Estabon.  In retaliation he angrily remarked that "it must be mortifying to have your patrol leader marry a common whore."]
+
+;Missing info;
+57 [Masseque] [The Barrier Fortress]
+[Guidian told us that Nills's friends Gram and Corin have been nowhere to be found since his death.]
+
+;Refused Find Gram Marta;
+58 [Rumors] [The Barrier Fortress]
+[An old woman named Marta tried to hire us to find a missing friend of hers.  When we refused, she told us that the offer stands if we have a change of heart.]
+
+;Gram quest for Marta;
+59 [Rumors] [The Barrier Fortress]
+[We have agreed to help Marta find a friend of hers who has gone missing.  Her friend is a northsider named Gram.  We are to find out where he is and then report the information back to Marta.  Worried that we might scare him away, she told us specifically not to go find him ourselves.  The first place to look is at the Kaliyan Inn where he spent much of his time.]
+
+;Gram quest kill for Marta;
+60 [Rumors] [The Barrier Fortress]
+[A woman named Marta hired us to seek out and kill a thief named Gram.  We are to kill him and return with his head to claim our reward.  We've been told to start our search at the Kaliyan Inn where he is known to spend much of his time.]
+
+;Marta's love story with Aurens;
+61 [Rumors] [The Barrier Fortress]
+[The landowner Marta had a ten-year love affair with a man named Aurens.  It ended suddenly a couple of years ago.]
+
+;Refused to kill Gram;
+62 [Rumors] [The Barrier Fortress]
+[An old woman named Marta tried to hire us to kill someone.  When we refused, she told us that the offer stands if we have a change of heart.]
+
+;Adrius's wife was attacked;
+63 [Rumors] [The Barrier Fortress]
+[Larsinia said that she had been attacked and robbed recently.  She swears that her husband Adrius is a mighty warrior and will avenge these wrongs when he returns from the east.]
+
+;Talked to Masseque;
+64 [Masseque] [The Barrier Fortress]
+[Masseque has begged for our help in proving his innocence.  He said that if we inquired about him at the Kaliyan Inn we would learn that he is not capable of the deed he has been imprisoned for.]
+
+;Talked to Syr;
+65 [Gems] [The Barrier Fortress]
+[Syr told us that her son Dell found the gem that she wears around her neck.  She claims he found it sticking out of the dirt.]
+
+;Talked to Gavin;
+66 [Lucky Charm] [The Barrier Fortress]
+[Gavin borrowed and proceeded to lose his friend Aldrich's lucky charm, a Vangesh medallion on a chain.  The last time he remembers seeing it was on the night he spent with a young woman named Daphne, who he met at the Kaliyan Inn.]
+
+;Haste from Aldrich;
+67 [Lucky Charm] [The Barrier Fortress]
+[For returning the charm that Gavin lost, Aldrich taught us a spell called 'Haste'.]
+
+;Solved Gavin Aldrich SQ;
+68 [Lucky Charm] [The Barrier Fortress]
+[By returning the charm I've been able to restore Gavin and Aldrich's friendship.  I am sure that they'll stay friends for a long time now, at least until Gavin loses something else.]
+
+;Talked to Ardian;
+69 [Rumors] [The Barrier Fortress]
+[We found a troubled young man in the pub today.  After buying him a few drinks to ease his mind, he let slip that his sister Krista is upset because her lover, a northsider named Corin, has disappeared.  Undoubtedly this relationship was meant to be kept secret.  The old saying, "discretion and drunkenness are rarely friends" has proven itself once again.]
+
+;Derrack reward armory;
+70 [Rumors] [The Barrier Fortress]
+[For not talking to Damrush about Derrack's visits to the Lusty, he allowed us an item from the northside barracks's armory.]
+
+;Derrack reward axe;
+71 [Rumors] [The Barrier Fortress]
+[For not talking to Damrush about Derrack's visits to the Lusty, he gave us his axe.  It is a very nice axe.  His price for secrecy was high indeed.]
+
+;Kaliyan name;
+72 [The Kaliyan Inn] [The Barrier Fortress]
+[No one seems to know where the name of the Kaliyan Inn came from.]
+
+;Learned Aurens Letters;
+73 [Rumors] [The Barrier Fortress]
+[Aurens told us that he has saved a good number of love letters from his affair with Marta.]
+
+;Aurens Permission;
+74 [Rumors] [The Barrier Fortress]
+[We were able to persuade Aurens to let us take the letters from his estate north of the Barrier.  He is sending word to his guard to allow us in the house.]
+
+;got threat letter from Nina Smart;
+75 [Masseque] [The Barrier Fortress]
+[We now have in our possession the threatening note.  It reads as follows "Repeal your tax woman.  This was a warning.  Speak with the Guardians and I will rend your head from its shoulders and keep it for a plaything.  Do not doubt my sincerity if you wish to live."  Strong words indeed.  The letter is, of course, unsigned, so there is nothing but our word and the words of a dead man that links Marta to this crime or either murder.  But if we we're able to find a signed matching sample of her handwriting I imagine we would have enough evidence to warrant a serious investigation on the part of the Guardians.  The question is where would we find such a document?]
+
+;Telen has a hangover;
+76 [The Kaliyan Inn] [The Barrier Fortress]
+[Telen appears to be in the midst of very bad hangover.]
+
+;Told Derrack whores-- need to get the other guards to leave SMART;
+77 [Rumors] [The Barrier Fortress]
+[I confronted Derrack about his whoring.  He told me that we could make an arrangement for my silence, but only when the other guards are not around.  Unfortunately for us the guards don't seem to be going anywhere anytime soon.  We may have to figure out a way to get them to leave.]
+
+;Tell Dinali Meila waits;
+78 [Rumors] [The Barrier Fortress]
+[Meila is waiting for her fiancee Dinali in the town square.  If we see him we should remind him of this.]
+
+;Guidian tells about Derrack's Axe;
+79 [Rumors] [The Barrier Fortress]
+[Derrack comes from a line of fierce warriors but has a weakness for the ladies at the Lusty.  To this day Derrack holds a beautifully crafted axe that he guards at very close proximity.]
+
+;Gram Talked;
+80 [Masseque] [The Barrier Fortress]
+[We found Gram hiding in the caves.  With little prompting he told us the story of what actually happened to Nills.  He claims that he was hired along with Corin and the also now deceased Nills to break into Nina's house.  Nills grew unhappy with Marta's payment and decided to forcibly renegotiate.  Marta responded by viciously slaying him in front of Gram and Corin.  Gram and Corin fled, and he was able to escape.  He does not know what became of his friend Corin.]
+
+;Linton has the fever;
+81 [The Fever] [The Barrier Fortress]
+[Linton, a wealthy southsider, is suffering from an illness the which the doctors are calling "the fever."]
+
+;Derrack went and attacked Marta;
+82 [Masseque] [The Barrier Fortress]
+[After hearing Gram's story Derrack took some Guardians to confront Marta.  The Guardians returned an hour later, beaten and bruised, and told us that they were attacked by Marta.  They claim Marta possessed inhuman strength and harnessed some kind of horrible magic.  In the end they were able kill her but not before she slew Gareth.]
+
+;Senzo went and attacked Marta;
+83 [Masseque] [The Barrier Fortress]
+[After hearing Gram's story, Senzo took some Guardians to confront Marta.  The Guardians returned an hour later, beaten and bruised, and told us that they were attacked by Marta.  They claim Marta possessed inhuman strength and harnessed some kind of horrible magic.  In the end they were able kill her but not before she slew Gareth.]
+
+;Vortia went and attacked Marta;
+84 [Masseque] [The Barrier Fortress]
+[After she saw our evidence, Vortia took some Guardians to confront Marta.  The Guardians returned an hour later, beaten and bruised, and told us that they were attacked by Marta.  They claim Marta possessed inhuman strength and harnessed some kind of horrible magic.  In the end they were able kill her but not before she slew Tia.]
+
+;Derrack Arrested;
+85 [Rumors] [The Barrier Fortress]
+[As we walked into the northside barracks, Derrack was arrested by two Guardians under the authority of Damrush for behavior unbecoming of a Guardian.  As he was dragged out he was shouting that whoever ratted him out would pay dearly for it.  Let us hope that he never learns who is responsible.]
+
+;Solved Kaliyan;
+86 [The Kaliyan Inn] [The Barrier Fortress]
+[Telen told us the root of the name "Kaliyan".  Her father Ermis named it after his Vangesh lover who disappeared inexplicably 15 years ago.  Her name was Yali.  Ermis added the end "kan" which is Vangesh for beloved and rearranged the letters to come up with Kaliyan.]
+
+;Learned Gem info from Dell;
+87 [Gems] [The Barrier Fortress]
+[Dell says he found the gem at around 6 in the morning in front of the north barrier gate near a large tree.  He also said that every time he goes there at that time, the street sweeper Zito is there.]
+
+
+;Went with Derrack to Attack Marta;
+88 [Masseque] [The Barrier Fortress]
+[After escorting Gram to the barracks, we accompanied Derrack and three Guardians to confront Marta.  Marta was a force to be reckoned with.  She attacked us with some kind of dark magic, black tendrils which shot out from her body.  Together with the guardians we were able to defeat her, but not without paying a heavy price.  A guardian named Gareth was killed.]
+
+;Went with Senzo to Attack Marta;
+89 [Masseque] [The Barrier Fortress]
+[After escorting Gram to the barracks, we accompanied Senzo and two Guardians to confront Marta.  Marta was a force to be reckoned with.  She attacked us with some kind of dark magic, black tendrils which shot out from her body.  Together with the guardians we were able to defeat her, but not without paying a heavy price.  A guardian named Gareth was killed.]
+
+;Went with Vortia to attack Marta;
+90 [Masseque] [The Barrier Fortress]
+[After showing the evidence to Vortia, we accompanied her and two Guardians to confront Marta.  Marta was a force to be reckoned with.  She attacked us with some kind of dark magic, black tendrils which shot out from her body.  Together with the guardians we were able to defeat her, but not without paying a heavy price.  A guardian named Tia was killed.]
+
+;Gram escort;
+91 [Masseque] [The Barrier Fortress]
+[We have agreed to escort Gram to the northside barracks so he may tell his tale to the Guardians.  He is in fear for his life.]
+
+;Zito seen reaching into tree;
+92 [Gems] [The Barrier Fortress]
+[Hiding in a grove of trees we witnessed the street sweeper pull a bag from a hole in the large tree and walk away.]
+
+;Zito Followed Sucessfully NOT SMART;
+93 [Gems] [The Barrier Fortress]
+[One of our party was able follow the street sweeper Zito and see him deliver a bag to Rolo in the Lusty Strumpet.]
+
+;Zito followed sucessfully AND talked to Dell AND SMART;
+94 [Gems] [The Barrier Fortress]
+[One of our party was able follow the street sweeper Zito and see him deliver a bag to Rolo in the Lusty Strumpet.  Rolo is obviously using Zito in some kind of gem smuggling operation.  The local authorities would undoubtedly be interested this information.]
+
+;Gram killed in ambush;
+95 [Masseque] [The Barrier Fortress]
+[We were not able to deliver on our promise to bring Gram safely to the barracks.  He was killed in an ambush when left the cave he was hiding in.]
+
+;Told Dinali Meila waits;
+96 [Rumors] [The Barrier Fortress]
+[We told Dinali that his fiancee was waiting and he rushed out the door to meet her.  He was so grateful he offered to repay us somehow when we next saw him.]
+
+;Talk to Alec;
+97 [Rumors] [The Barrier Fortress]
+[Nader says we should talk to Alec, the local gossip.  He recommends that before we talk to him we be wearing a fashionable headpiece which can be purchased at Barrier Wears.]
+
+;dinre and talos;
+98 [Rumors] [The Barrier Fortress]
+[Alec feels that something's changed about Dinre since she came to the Barrier to wed Talos.]
+
+;Told Dinali Meila waits;
+99 [Rumors] [The Barrier Fortress]
+[We told Dinali that his fiancee was waiting and he rushed out the door to meet her.  He was so grateful he offered to repay us somehow when we next saw him.]
+
+
+
+;Kellen;
+;100-199;
+
+100 [Rumors] [The Watcher's Quest]
+[The Watcher has asked us to investigate the rebellion and endeavor to uncover its leader.  We are to begin our search by speaking to Jactus, the Watcher's agent in Kellen.  In addition the Watcher has provided us with a list of all his agents throughout the Valley.  He strongly advised us to seek these agents out wherever our travels take us.  They should be the source of much valuable local information.]
+
+101 [Crazy Inventor] [Kellen]
+[A very strange man named Verugi has mistaken me for his apprentice.  He fancies himself to be some kind of inventor and claims to be working on a device called The Ultimate Power Source.  After making me suffer the indignity of kissing his feet, he sent me on my first task, fetching him milk from Land's End.]
+
+102 [Crazy Inventor] [Kellen]
+[We brought Verugi the milk, and he sent us out to fetch him a Vangesh Bow from The Barrier.]
+
+103 [Masseque] [The Barrier Fortress]
+[Dinea's thirsty.  If we bring her some milk she might give us more information about Masseque.]
+
+104 [Crazy Inventor] [Kellen]
+[After bringing Verugi a Vangesh Bow he has asked for a bannane.  Bannanes are native to the Ironwood region.]
+
+105 [Masseque] [The Barrier Fortress]
+[Dinea told us before Nills was killed, he and a few of his 'buddies' beat Masseque up.  She said that Danton might have more information on what transpired that night.]
+
+106 [Crazy Inventor] [Kellen]
+[Verugi took the bannane we brought him, ate it in front of us, and then acted as though we had not brought him one at all.  He is still insisting that we bring him a bannane.]
+
+107 [Crazy Inventor] [Kellen]
+[We have upset the madman Verugi.  He no longer seems to want anything to do with us.]
+
+108 [Crazy Inventor] [Kellen]
+[We fetched another bannane for Verugi, who then sent us out again, this time to fetch a black gem from The Barrier.]
+
+110 [Crazy Inventor] [Kellen]
+[We brought the black gem to Verugi who is now growing quite excited.  He told us to bring him twine, which he claims is the final piece he needs to construct The Ultimate Power source.]
+
+112 [Crazy Inventor] [Kellen]
+[We just witnessed Verugi construct his Ultimate Power Source.  He tied the black gem to the front of the bow with the twine.  He then took the bannane and stuck it onto one end of the bow.  Lastly he fit the bow around his temple and poured the milk over his head.  It can hardly be surprising that such a device, despite Verugi's insistence to the contrary, does nothing except make its wearer look like a fool.]
+
+113 [Rumors] [Kellen]
+[A traveler named Hyric told us to say hello to her friend Louisa if we ever are in Jerrock.]
+
+114 [Eino] [Kellen]
+[We learned that a young boy named Eino is missing.  His parents are desperate for his return.]
+
+116 [Eino] [Kellen]
+[We found a young child in the woods to the north of Kellen.  He seemed very upset about something.]  
+
+118 [Eino] [Kellen]
+[We were able to grab Eino and drag him back to his much-relieved parents.  They gave us 100 drachs to reward our efforts.]
+
+120 [Eino] [Kellen]
+[We told Eino's parents where he was hiding and they promptly fetched him.  As angry as they are at him for running away, they are clearly very relieved to have him back.  They gave us 100 drachs to reward our efforts.]
+
+121 [Eino] [Kellen]
+[As a reward for convincing Eino to return home, Eino's parents gave us 100 drachs.]
+
+122 [Eino] [Kellen]
+[Eino told us that the reason he is hiding is that he accidentally wounded a sylkie when throwing rocks into the river.  He is worried that he will be punished if he goes home.]
+
+124 [Eino] [Kellen]
+[According to Eino, the sylkie he wounded is by the river, and to the east of where he is hiding.]
+
+125 [Rumors] [Kellen]
+[We found a wounded sylkie by the river.  We were able to heal it.]
+
+126 [Eino] [Kellen]
+[Eino was delighted when we told him that we had healed the sylkie.  He thanked us and then ran home.]
+
+127 [Rumors] [Kellen]
+[We found a wounded sylkie by the river.  We were able to heal it.  For our kind deed, the Goddess gifted us with a spell to Slow our enemies.]
+
+128 [Shepherd's Flock] [Kellen]
+[A bakki herder named Dirming told us that his flock is being decimated by lupin attacks.]
+
+130 [Rumors] [Kellen]
+[The hunter Hjor told us that he hunts topi in a small clearing north of Kellen, to the west of the road.  He said that he has seen a number of lupins in the area.]
+
+132 [Rumors] [Kellen]
+[We found a lupin den and managed to dispatch of all of them.]
+
+134 [Rumors] [Kellen]
+[We found the entrance to a den of lupins.  There are many topi skeletons in the area, the remains of past lupin meals.  Interestingly none of the skeletons looked like recent kills.  It looks like the lupins are experiencing a prey shortage.]
+
+136 [Shepherd's Flock] [Kellen]
+[We were able to convince Hjor to find a new hunting spot.  Hopefully this means the lupins will be able to go back to hunting topi and leave Dirming's bakki alone.]
+
+138 [Shepherd's Flock] [Kellen]
+[Dirming was much relieved when we told him that we eliminated the den of lupins that had been plaguing his flock. He gave us a herder's crook in thanks.]
+
+140 [Shepherd's Flock] [Kellen]
+[We told Dirmimg that we convinced Hjor to leave the topi around the lupin den.  He gave us his herder's crook in thanks.]
+
+142 [Rumors] [Kellen]
+[A small child named Kauro told us that a man named Cranos threw stones at him that made lightning strike.]
+
+144 [Rumors] [Kellen]
+[Cranos has told us he will teach us how to make lightning lodestones if we find out how the children are sneaking into his yard, and put a stop to it.]
+
+146 [Thaumaturgist's Fence] [Kellen]
+[We noticed a small hole in Cranos's fence, it looks big enough for a child to fit through.]
+
+148 [Thaumaturgist's Fence] [Kellen]
+[We successfully repaired Cranos's fence.]
+
+150 [Thaumaturgist's Fence] [Kellen]
+[We hired Arvild to fix the hole in Cranos's fence.]
+
+152 [Thaumaturgist's Fence] [Kellen]
+[We told Cranos that we fixed the hole in his fence.  As a reward he taught us to make lightning lodestones.]
+
+154 [Rumors] [The Watcher's Quest]
+[Jactus told us about his strange encounter with the hooded figure.  He left to meet this man in an abandoned hut south of town.  He told us to meet him back at his shop in an hour.  It has now been well over an hour, and he has not returned.]
+
+155 [Rumors] [The Watcher's Quest]
+[Golod and Joore were arguing about whether to take Mena to Joore's sister Heira.  Apparently Heira is quite a healer.]
+
+156 [Rumors] [The Watcher's Quest]
+[Jactus has been murdered.  We found his corpse in the abandoned hut where he met the stranger.]
+
+157 [Rumors] [The Watcher's Quest]
+[We overheard an argument between Golod and Joore.  Golod thinks they should take their daughter to see some woman.  But Joore has some kind of grudge against this woman, and refuses.]
+
+158 [Rumors] [The Watcher's Quest]
+[Young Mena has fallen prey to a strange ailment.  She is bedridden, trembles with fear, and is not able to speak.]
+
+159 [Rumors] [The Watcher's Quest]
+[Mena did see who killed Jactus, but can't speak or write the name of the attacker.  Perhaps if we brought her implements she could draw him for us.]
+
+160 [Rumors] [The Watcher's Quest]
+[Heira told us that Mena's condition is probably the result of witnessing a traumatic event.  She gave us a potion that should calm Mena's nerves.]
+
+162 [Rumors] [The Watcher's Quest]
+[Heira's potion worked like a charm.  Mena is now able to speak again.]
+
+164 [Rumors] [The Watcher's Quest]
+[Mena told us that she saw Salje the butcher murder Jactus.]
+
+166 [Rumors] [The Watcher's Quest]
+[After we brought her a pencil and piece of paper, Mena drew and gave us a picture of the Jactus's murderer.]
+
+168 [Rumors] [The Watcher's Quest]
+[After we brought her a pencil and piece of paper, Mena drew and gave us a picture of the Jactus's murderer.  It appears to be Salje, the butcher.]
+
+169 [Rumors] [The Watcher's Quest]
+[It seems that Mena's picture is of Salje the butcher.]
+
+170 [Rumors] [The Watcher's Quest]
+[We confronted Salje and he attacked us.  He put up a substantial fight, but in the end he was no match for our numbers.]
+
+171 [Rumors] [The Watcher's Quest]
+[On Salje's body we found a mysterious letter instructing him to meet "P" at the Treefort Inn in Land's End for his reward.]
+
+172 [Vauni's Child] [Kellen]
+[The farmer Salmor is offering a 250 drach reward to whoever can tell him who fathered his daughter Vauni's child.]
+
+173 [Rumors] [The Watcher's Quest]
+[Our victory against Salje was not without heavy cost.  Antius's wounds proved fatal.]
+
+174 [Vauni's Child] [Kellen]
+[We told Salmor that Antius was the father of Vauni's child.  Salmor left in a huff to confront Antius, and we followed close behind.  Antius denied the claim and called Vauni a whore.  Salmor then challenged Antius to a duel, an offer that the retired guardian readily accepted.  During the duel Antius threw himself onto Salmor's blade and was slain.]
+
+175 [Rumors] [Kellen]
+[If we bring Alves iron ore, he says that he can make weapons of 'Cold Steel'.  He claims it's the best steel in the Valley.]
+
+176 [Vauni's Child] [Kellen]
+[Vauni was thrown out of her father's house when he learned she was pregnant.  She is now working in Olvar's Inn in town.]
+
+178 [Vauni's Child] [Kellen]
+[We found a tree in the woods with "Antius and Vauni" carved inside a heart.]
+
+180 [Vauni's Child] [Kellen]
+[We discovered some love letters from Antius to Vauni.  It appears he is the father of her child.]
+
+182 [Vauni's Child] [Kellen]
+[Antius admits to having been Vauni's lover, but does not believe he is the father.  He caught Vauni sneaking into Rameri's shop late at night, and now believes they were having an affair.]
+
+184 [Vauni's Child] [Kellen]
+[Antius paid us for our silence in the Vauni matter.]
+
+186 [Vauni's Child] [Kellen]
+[Thanks to our efforts Vauni and Antius were reconciled and married.  In thanks Antius gave us his longsword, a kite shield and some drachs.]
+
+188 [Vauni's Child] [Kellen]
+[Vauni admitted that Antius is the father of her child.  They were lovers until Antius suddenly turned on her.  Vauni has no idea what made Antius so mad at her.]
+
+190 [Vauni's Child] [Kellen]
+[Vauni said that she was going to see Rasmeri to order a ring as a gift to Antius.]
+
+192 [Vauni's Child] [Kellen]
+[Rasmeri's apprentice Eidir has admitted to losing Vauni's ring.  He begged us not to tell his employer.]
+
+194 [Vauni's Child] [Kellen]
+[It sounds as though Eidir lost the ring by the stone circle southwest of town.]
+
+196 [Vauni's Child] [Kellen]
+[When we told Rasmeri that Eidir had lost the ring, he sent him packing and carved us a replacement.]
+
+198 [The Fever] [The Barrier Fortress]
+[Our waiter Sentle slipped and called Akwasi's Special "Igboi."  When we asked about this she explained that Akwasi calls the dish Igboi while preparing it, but she insists that no one calls it anything other than Akwasi's special in public.  Perhaps local Vangorii would know more about Igboi.]
+
+;journal for Academy 201 to 300;
+
+200 [Malpia] [Land's End]
+[Janni's daughter Malpia has been touched by the Goddess.  She is not harmed by animals, and can speak with them.]
+
+201 [Catch a Thief] [Land's End]
+[Tinema told us that she was threatened by an assassin named Mirilich.  She said he stole materials that are sensitive to the Watcher.]
+
+202 [Sylkie Girl] [Land's End]
+[Igrodi told us of the tragedy of Kero's family.  He also mentioned that Kero's daughter, Hana might still be alive, having been raised by the sylkies and there having learned to swim.  She has been seen north of Lands End.]
+
+203 [Catch a Thief] [Land's End]
+[Mirilich escaped into the caves underneath Lands End.  She requested we kill him, or report more specific particulars about his location. Her agents wear red caps if we need any help.  Tinema wanted to know the other agent in Land's End's name.]
+
+204 [Sylkie Girl] [Land's End]
+[Hana does indeed live but can only communicate through the barks and whistles of a sylkie.]
+
+205 [Catch a Thief] [Land's End]
+[Tinema accounted for the discrepancy stories by reminding us that Mirilich was a very smooth liar.]
+
+206 [Sylkie Girl] [Land's End]
+[As Hana was a child when she was saved by the Sylkies there's a reasonable chance that she doesn't know how to actually speak.  Unless of course the Sylkies taught her how to.  With Malpia's aid we might be able to communicate.]
+
+207 [Rumors] [The Watcher's Quest]
+[After speaking cryptically about the hero Zoralla, and the Betrayer Nyflan, Tinema told us that she received information from one of her agents at the Watcher's Lee, a series of ruins by the bluffs north of the city. She said he might have information that we would find useful.]
+
+208 [Sylkie Girl] [Land's End]
+[Janni agreed to let us borrow Malpia for our attempts to communicate with Hana.]
+
+209 [Catch a Thief] [Land's End]
+[Mirilich can be found in the caves beneath Lands End. He made comments about stealing something from the Academy for the Rebellion and being betrayed.  More information about this item might illuminate the Rebellion's plans.]
+
+210 [Rumors] [The Watcher's Quest]
+[Mirilich didn't seem to know that much about the Watcher.]
+
+211 [Sylkie Girl] [Land's End]
+[Janni agreed to let us borrow Malpia for our attempts to communicate with Hana on the condition that she come along as well.]
+
+212 [Catch a Thief] [Land's End]
+[There is a considerable discrepancy between Mirilich's story and Tinema's story.]
+
+213 [Sylkie Girl] [Land's End]
+[Malpia can communicate with Hana.  After much giggling and yipping Hana asked if she could join us.]
+
+214 [Catch a Thief] [Land's End]
+[I invited Mirilich to join us. He mentioned getting on the road to Kellen, which is probably guarded by those who seek his death.]
+
+215 [Rumors] [Land's End]
+[Olsi told us of her greatest triumph as an ironwood worker.  It was a spear that the Goddess helped create.  It was stolen but the thief's raft capsized and the spear was  lost in the river's currents north of Lands End, near the ruins.]
+
+216 [Rumors] [The Watcher's Quest]
+[Lond was nowhere to be seen. Erju relayed a story of recent visitors and the sound of a fight. There was a red cap on the floor.]
+
+217 [Sylkie Girl] [Land's End]
+[Malpia asked Hana if she would get the spear.  Hana was all to happy to oblige.] 
+
+218 [Rumors] [The Watcher's Quest]
+[Mirilich stole a dagger from the Academy. When he went to collect his Drachs he was ambushed by people with red caps.  More information about the dagger may be available at the Academy and is worth investigating.  Someone certainly seems very concerned with it.]
+
+219 [Sylkie Girl] [Land's End]
+[Olsi was gladdened to see the spear again.  She requested that we take it with us.]
+
+220 [Catch a Thief] [Land's End]
+[After the ambush, Tinema explained that she was supposed to have gone to the summons, and that we had foiled an attempt on her life.]
+
+221 [Rumors] [Land's End]
+[We've agreed to a job helping Arginir steal some iron ore.]
+
+222 [Rumors] [The Watcher's Quest]
+[When confronted with the coincidence of Lond's death and the recent revelation of who he was, Tinema expressed sorrow that she was not able to warn him in time.]
+
+223 [Rumors] [Land's End]
+[We have succeeded in getting the iron ore.]
+
+224 [Catch a Thief] [Land's End]
+[Mirilich followed us to Tinema's house.  Violence was the only result.]
+
+225 [Rebellion V] [Land's End]
+[For our next mission we're to speak with someone named Bargilof who can be found in the Glade during the day, and at his home after dark in Land's End West, southwest of the Temple, overlooking the Stairs.  Apparently it's difficult to speak with him while he's in the glade.]
+
+226 [Rumors] [The Watcher's Quest]
+[Mirilich was able to get into the Academy Museum through a secret passage from the tunnels.]
+
+227 [Rumors] [The Watcher's Quest]
+[The 'P' in the note directing us to the Treefort Inn turned out to be Pylmi.]
+
+228 [Rumors] [Land's End]
+[Aslof is in debt to a man named Broemas who lives in Land's End West somewhere northwest of the Treefort Inn.]
+
+229 [Rebellion VI] [Land's End]
+[Bargilof has sent us to see Zephyros -- the head of House Baern in Jerrock.  Although a Child of the Flame it seems he is allied with the Rebellion in some manner.]
+
+230 [Broken Family] [Land's End]
+[Almost twenty years ago Broemas's wife left him, taking their son with her.  He's looked, but has never found either of them.]
+
+231 [Rebellion I] [Land's End]
+[Pylmi requested a token of good measure. She suggested stealing something from the Academy. She also seemed to suggest there were other options.]
+
+232 [Catch a Thief] [Land's End]
+[We informed Tinema that Mirilich is dead.]
+
+233 [Rebellion I] [Land's End]
+[Another viable option for getting in the good graces of the Rebellion was to provide some iron ore, a shipment of which is rumored to be traveling through Lands End.]
+
+234 [Catch a Thief] [Land's End]
+[We told Tinema where to find Mirilich.  She's going to send someone to take care of him.]
+
+235 [Rumors] [The Watcher's Quest]
+[The Rebellion is interested in the activities of the Watcher. They are aware that Tinema is involved, although not much more was said about that.  Pylmi wanted to know of the other agents in Lands End.]
+
+236 [Rumors] [Land's End]
+[Arginir in Land's End told us that he likes our style and could use us for something, but that we're still 'fledgling' and we should come back when we have more 'meat on our bones'.]
+
+237 [Rebellion I] [Land's End]
+[Pylmi gave us the password and told us to speak with Genwen.  Genwen's house is north of the Treefort Inn.]
+
+238 [Rumors] [The Watcher's Quest]
+[Hrold offered a list of names of people who had purchased rings from him for 50 Drachs.]
+
+;Reb II Courier Duty;
+239 [Rebellion II] [Land's End]
+[Genwen gave us a sealed letter to give to Deba at the Citadel.]
+
+240 [Rumors] [The Watcher's Quest]
+[Three ladies bought rings from Hrold.  Tyrhi lives in Lands End East, north of the Ironwood Sisters' cottages.  Melite lives along the river banks of Lands End West, south of the Glade.  Aave lives in Lands End West, south of the Treefort, very close to the cliff-side.]
+
+241 [Rebellion II] [Land's End]
+[Genwen's letter was blank.]
+
+242 [Rebellion II] [Land's End]
+[Deba told us to return immediately to Genwen upon reading the contents of the letter, which to the best of our knowledge was blank.]
+
+243 [Rebellion II] [Land's End]
+[Deba sent us to Telus in the Barrier Fortress to pickup a commissioned necklace.]
+
+244 [Rumors] [The Watcher's Quest]
+[Tyrhi's ring didn't match the description in the tale.]
+
+245 [Rebellion II] [Land's End]
+[Telus wants 50 Drachs for the necklace.  Instead of paying or demanding it as agents of the Watcher, we might check with either Deba or Genwen.]
+
+246 [Rumors] [The Watcher's Quest]
+[Melite's ring didn't match the description in the tale.]
+
+247 [Rebellion II] [Land's End]
+[Genwen's eyes glowed with fervor when she saw the necklace.  She mentioned there might be other things we could do for the Rebellion.]
+
+248 [Rumors] [The Watcher's Quest]
+[Aave's ring didn't match the description in the tale.]
+
+;Reb III;
+249 [Rebellion III] [Land's End]
+[We are to switch the orders on the courier Lykomedes without him noticing.  Genwen says that Lykomedes can be found at the Treefort Inn.]
+
+250 [Rumors] [The Watcher's Quest]
+[Hrold said that Eep had taken the last batch of shinnies and suspended them in a chest over a pit.  Maybe this elusive ring is there.]
+
+251 [Rebellion III] [Land's End]
+[Genwen mentioned that Odgrolf can be found at the Treefort Inn.  He is supposed to be nimble with his fingers and sympathetic to the Rebellion.]
+
+252 [Rumors] [The Watcher's Quest]
+[Hrold gave us the etched ivy ring.  When placed on Eirora's finger she came back to life and had a small conversation with us.  She didn't know who the children of the flame where.  She must have been waiting a very long time indeed.  One can wonder.  Is it better to know the answers for which you wait, even if they are no what you want to hear, or is it better to wait for them, ignorant of the passage of time and immune from its ravages?]
+
+253 [Rebellion III] [Land's End]
+[Genwen complimented the cunning plan of engineering a brigand attack.  Some truths best lay unearthed.  She mentioned that our next task would be to "fight fire with fire."]
+
+254  [Rebellion III] [Land's End]
+[Genwen cackled with glee when he heard the plans were switched.  She mentioned that our next assignment was going to end in a bang.]
+
+255 [Rebellion III] [Land's End]
+[Tinema's blood thirsty advice was to deliver Lykomedes's head on a platter.]
+
+256 [Rebellion III] [Land's End]
+[Lond mentioned Lykomedes can never turn down a free drink.]
+
+;Reb IV;
+257 [Rebellion IV] [Land's End]
+[Genwen handed us a bomb with instructions to throw it into the flame at the Temple of the Flame in Lands End to cause an explosion.  She said this would only be successful if the Priestess was not capable of controlling the flames.]
+
+258 [Rebellion V] [Land's End]
+[Aslof has agreed to retire.]
+
+259 [Rumors] [Land's End]
+[At the ironwood workers houses, Fowyr babbled about crystal blades and banderwillow. Banderwillow is a leaf that when mixed with food makes people sleep.]
+
+260 [Rebellion V] [Land's End]
+[Aslof is dead.]
+
+261 [Rumors] [Land's End]
+[The Treefort Inn has a deal to cater food for the Temple of the Flame.] 
+
+262 [Broken Family] [Land's End]
+[We've reunited Broemas with his son Vilmi, and Broemas has agreed to cancel Aslof's debt.]
+
+263 [Rumors] [Land's End]
+[Mairo, of the Treefort Inn, is injured and cannot deliver the meal to the Temple.]
+
+264 [Rebellion IV] [Land's End]
+[When ingested banderwillow causes a deep sleep. The priestess Kalliope gets her food delivered from the Treefort Inn.  Ergo, we can doctor the Priestess's food in order to prevent her from interfering with the temple bombing.]
+
+265 [Rebellion IV] [Land's End]
+[With the bombing complete Genwen said to go and speak with Bargilof.  During the day he can be found in the Glade, but it was advised to speak with him at night at his house in Lands End West, southwest of the Temple overlooking the cliff side.]
+
+266 [Rebellion V] [Land's End]
+[Aslof, the Mayor to Lands End West is unsympathetic to the Rebellion cause.  His position needs to be vacated so a more amenable replacement can be placed.]
+
+267 [Rebellion V] [Land's End]
+[Lond mentioned that Aslof may be ready to retire.]
+
+268 [Rebellion V] [Land's End]
+[Tinema said that Aslof is a hunter, and suggested that a hunting accident could occur.]
+
+269 [Rumors] [Land's End]
+[Aslof is an avid hunter.]
+
+270 [Rumors] [Land's End]
+[Aslof agreed to go hunting in secret with us.  Apparently his wife is not so keen on him going out.]
+
+271 [Rebellion VI] [Land's End]
+[Bargilof has explained that for our next mission we are to kill the druid Cindwir.  The Glade is protected by an enchantment that keeps weapons out, but Bargilof has discovered that common items could be brought into the Glade and assembled into a make-shift weapon.  Our task is to gather weapon components from Ursto, one of the Ironwood Sisters, and Senssi, a fisherman at the docks, and meet Cindwir at the Glade.]
+	
+272 [Rebellion VI] [Land's End]
+[Lond refused to even discuss how this might be rationalized into our mission that the Watcher had sent us on.]
+
+273 [Rebellion VI] [Land's End]
+[Tinema was quite happy when she heard about our mission to kill Cidwir.]
+
+274 [Rumors] [The Barrier Fortress]
+[We found Vilmi's locket, and returned it to him.]
+
+275 [Rebellion VI] [Land's End]
+[We collected the materials Bargilof wants from Senssi the fisherman.]
+
+276 [Rumors] [The Barrier Fortress]
+[We met a man named Vilmi in the Citadel who is missing his parents, and his locket.]
+
+277 [Rebellion VI] [Land's End]
+[We killed Bargilof instead of Ciwdwr.  The chances of continuing in the Rebellion seem slim, but Ciwdwr extended an invitation from the Goddess to go to her on Goddess Isle and try to learn more of what was transpiring.  It seems that something else more nefarious than disenchanted River People has made its way to the Valley.]
+
+278 [Rebellion VI] [Land's End]
+[Ciwdwr died to the crossbow that was fashioned from the components.  There flashed in our minds the Goddesses displeasure at our doings.  The druid Gworyn's image also came to us.  She is near a mediation pool close to Lands End.  It is clear that we've lost all support from the Goddess.] 
+
+281 [Rebellion VII] [Land's End]
+[Caryn complimented us on a job well done. He said to speak with Gwyd in the backroom and that afterwards we would get the caldus ore.]
+
+283 [Rebellion VII] [Land's End]
+[Gwyd offered the solution to all our problems.  The result of refusing the offer was a messy fight.  In other good news the Watcher should be pleased to discover the name of the Rebellion leader.]
+
+280 [Stolen Book] [Land's End]
+[We've offered to finish the manuscript Sirian and Kastor have been working on.]
+
+282 [Stolen Book] [Land's End]
+[We returned the unfinished tome to Sirian, who accused us of being thieves and collaborating with Kastor.  She definitely doesn't want any more help from us.]
+
+284 [Stolen Book] [Land's End]
+[We returned the completed manuscript to Sirian who is going to take it back to the Academy.]
+
+285 [Stolen Book] [Land's End]
+[Kastor, a young student at the Academy, is working on compiling the spoken lore of the River People into a single tome.  His partner Sirian has taken all of the work and refuses to share the credit.]
+
+286 [Stolen Book] [Land's End]
+[We returned the completed manuscript to Sirian, who didn't seem convinced by our story that she wrote it in her sleep.  At any rate she's going to take it back to the Academy.]
+
+287 [Stolen Book] [Land's End]
+[Sirian, a young student at the Academy, is creating the first written book of the legends of the River People.  She is almost done but can't seem to find the motivation to complete the manuscript.]
+
+289 [Stolen Book] [Land's End]
+[Sirian believed the story that she completed the manuscript in her sleep, and is going to return to the Academy with it.]
+
+293 [Stolen Book] [Land's End]
+[We returned the completed manuscript to Sirian, but she didn't seem pleased that we had it in the first place.  At any rate she's going to return to the Academy and turn in the completed manuscript.]
+
+294 [Rebellion III] [Land's End]
+[We switched the fake orders for Lykomedes' real orders.]
+
+296 [Stolen Book] [Land's End]
+[Sirian claims that Kastor is lying about his involvement in the unfinished manuscript.]
+
+297 [Stolen Book] [Land's End]
+[With a song Sirian is now inspired to complete the manuscript, which she will return with to the Academy.]
+
+290 [Stolen Book] [Land's End]
+[Kastor was pleased to obtain the completed book.  He confided that he had not actually been responsible for much of the work that had already gone into the project.]
+
+291 [Stolen Book] [Land's End]
+[Kastor seemed disappointed to get the manuscript after he found out it was still incomplete.]
+
+292 [Rumors] [The Watcher's Quest]
+[Leafing through the tome, unearthed the tale of young love between Eirora and Jalehar.  He had her ivy etched ring and ran down the misty stairs. She swore to wait for him.  The Goddess heard the promise and decided to help her along, by turning her into a living stone.  She waits even now for his return and will know him by her ring.]
+
+295 [Rumors] [The Watcher's Quest]
+[Lond is suspicious of Tinema.  He requested that we not tell her that he is the other watcher's agent.]
+
+
+;The Academy;
+;301 to 400;
+
+301 [Tuition] [The Academy]
+[In order to learn Thaumaturgy at the Academy we must pay 200 drachs.]
+
+302 [Tuition] [The Academy]
+[The price for learning rituals is 50 Drachs.]
+
+303 [Prodigy] [Land's End]
+[Everybody is pleased that Ansel is studying at the Academy.  With Ansel gone Rokika will have to work harder around the house, but it will pay off in the end.]
+
+304 [Tuition] [The Academy]
+[There is a test of intelligence that can be taken in lieu of paying for rituals at the Academy.]
+
+306 [Tuition] [The Academy]
+[The test of intelligence was difficult.  But in passing it, 50 Drachs are not coming out of our coffers.]
+
+307 [Tuition] [The Academy]
+[The test of intelligence was difficult.  It appears that we need to find 50 Drachs.]
+
+308 [Tuition] [The Academy]
+[Glauke taught us the Sharpen Weapon ritual.  Girian will teach us all other rituals that can be learned at the Academy.  He can be found in the main lecture hall.]
+
+310 [Prodigy] [Land's End]
+[A young lad named Ansel is being courted by the Academy.  His mother is against the idea.  The family lives in Lands End.]
+
+312 [Prodigy] [Land's End]
+[A young lad named Ansel is being courted by the Academy.  His mother is against the idea. The family lives in Lands End.  Glauke will waive the fee for tuition.]
+
+313 [Prodigy] [Land's End]
+[Rokika took some convincing but Ansel can now attend the Academy.]
+
+314 [Prodigy] [Land's End]
+[It comes as no surprise that some children of the Flame might still harbor ill feelings to the Thaumaturgists, what with the betrayal of Nyflan, but Rokika is born of the river.  It would appear that the river people also have picked up a distaste for those that study the science of magic.]
+
+316 [Prodigy] [Land's End]
+[Rokika is finding reasons to keep Ansel close to home.  The well is broken and needs to be fixed.]
+
+318 [Prodigy] [Land's End]
+[The well is fixed and Rokika now claims that her daughter needs help preparing for a music recital.]
+
+324 [Harden Armor] [The Academy]
+[We must bring Girian a neblii-mantis carapace for him to teach us our first incantation.]
+
+326 [Harden Armor] [The Academy]
+[Girian does not know much about the neblii-mantis but said that there was a nest southwest of the Academy.  He suggested that we talk to Kleio if we wanted to learn more about the mantids.  She can be found in her room.]
+
+328 [Harden Armor] [The Academy]
+[Girian lectured for a long time before the ritual finally made sense, but it does now.  Mantis Oil, the component required for the Harden Armor ritual can be bought from Sallio.  Sallio is located just inside the campus, off of the road leading from Lands End.]
+
+330 [Harden Armor] [The Academy]
+[Kleio has spent more time studying animals than she has singing. She pointed me towards Kenso, a musician who can be found on the road between Lands End and the Academy.]
+
+332 [Harden Armor] [The Academy]
+[Kenso is a musician who can be found on the road between Lands End and the Academy.  He sells Swaramandalas, the instrument used to emulate the distress call of the neblii-mantis.]
+
+334 [Harden Armor] [The Academy]
+[Kenso hummed the tune of the neblii-mantis distress call.  He also continued the string of warnings about when to play the tune.]
+
+336 [Harden Armor] [The Academy]
+[The Mantis shed their carapaces and they come running when the distress call is given.  Maybe if we lure them away from their lair, we won't have to deal with fighting them.]
+
+338 [Swift Weapon] [The Academy]
+[Ludenius, another pupil of Girian, needs help collecting the components.  He can be found in the courtyard of the Academy.]
+
+339 [Swift Weapon] [The Academy]
+[Ludenius said that something from his room may help jog his memory.]
+
+340 [Swift Weapon] [The Academy]
+[Ludenius misspoke an incantation and has erased his memory.  He asked me not to tell the teachers of his condition.]
+
+341 [Swift Weapon] [The Academy]
+[Ludenius said that something from his room may help jog his memory.  Since he's a student, his room can probably be found in the dormitory.]
+
+342 [Swift Weapon] [The Academy]
+[Ludenius believes that his memory will return if he is given things from his past.  A good place to start looking might be his dorm room.]
+
+344 [Swift Weapon] [The Academy]
+[Time was pressing so I told Girian of Ludenius's condition. His instructions were to 'Retrieve a spore. They can be found in caves all around the Valley.']
+
+346 [Swift Weapon] [The Academy]
+[The locked cabinet in Ludenius's room contained his personal diary.]
+
+348 [Swift Weapon] [The Academy]
+[Ludenius's desk had a cookbook with a recipe for 'his favorite' cake in it.  The ingredients are doir fruit, milk, sugar, flour, and eggs.]
+
+350 [Swift Weapon] [The Academy]
+[The ingredients combined to make a cake.  It sure smells good.]
+
+351 [Swift Weapon] [The Academy]
+[Our first attempt to restore Ludenius's memory failed.  Perhaps there's something else we can do.]
+
+352 [Swift Weapon] [The Academy]
+[Inside Ludenius's diary we found a note from someone named Leris which said, 'The trip to Lands End is not that far, you should visit us more often my son.']
+
+354 [Swift Weapon] [The Academy]
+[Leris agreed to come to the Academy to see if he could help Ludenius regain his memory.]
+
+355 [Swift Weapon] [The Academy]
+[It took two things from his past to fully get Ludenius's memory back.]
+
+356 [Swift Weapon] [The Academy]
+[Ludenius gave us the location of his secret stash.  In it are the spores we need to give Girian.]
+
+358 [Swift Weapon] [The Academy]
+[The elwin-mushroom is the fastest growing fungus in the Valley.  Too bad Girian isn't the fastest talker.  The ritual is now committed to memory.  Sallio sells the Elwin Powder needed for the Swift Weapon Ritual.]
+
+;Paralyze Weapon;
+360 [Paralyze Weapon] [The Academy]
+[The Thaumaturgists have decided to domesticate dragons.  We are to procure the egg clutch.]
+
+362 [Paralyze Weapon] [The Academy]
+[A river dragon nest is north east of the academy.]
+
+364 [Paralyze Weapon] [The Academy]
+[There are a great many words of wisdom that can be passed on from generation to generation.  One to pass on is to be very careful when separating a mother dragon from her egg clutch.  Another is don't let Girian discuss the Xanthippe Lectures. Sallio will sell the Xanthippe ink required for the Paralyze Weapon Ritual, which is now completely understood.]
+
+366 [Rumors] [The Academy]
+[In the laboratory, Paphos studies laboriously, trying to unlock the secrets of a Permanency Incantation.]
+
+368 [Rumors] [The Academy]
+[Paphos mentioned that he has unlocked the secrets of the Permanency Incantation.  He will not teach it unless he deems the student to have a worthy cause. He seemed very attentive when we began talking about the troubles in the Valley, and how they were intertwined with Nyflan the betrayer]
+
+370 [Rumors] [The Academy]
+[Paphos's jaw just dropped when he heard the whole story.  He gave a condensed lecture, gave us the powder and sent us off to save the Valley, armed of course, with the Permanency Incantation]
+
+372 [Rumors] [The Academy]
+[Echemnon is the custodian of artifacts at the Museum.  He has offered a reward for information regarding how the thief who stole the dagger got into the Museum.]
+
+374 [Rumors] [The Academy]
+[A rare dagger was stolen from the Museum. Echemnon mentioned that the Maetius was studying it.  Maetius can be found in the Library.]
+
+376 [Rumors] [The Academy]
+[Echemnon was pleased to learn of the secret passage. He cast an incantation to magically bind it shut.]
+
+378 [Rebellion I] [Land's End]
+[Therese mentioned her friend Ottavia works at the Museum.  She also apparently is short of drachs.]
+
+380 [Rebellion I] [Land's End]
+[Ottavia agreed to procure a Flame artifact. Everyone has his or her price it seems.]
+
+382 [Stolen Book] [Land's End]
+[Amalthia's students in Lands End are compiling the first written record of the oral tradition of the people of the river.  According to Amalthia they don't get along very well.]
+
+384 [Stolen Book] [Land's End]
+[Sirian presented Amalthia with a finished manuscript of the legends of the River People.]
+
+386 [Stolen Book] [Land's End]
+[Kastor presented Amalthia with a finished manuscript of the legends of the River People.]
+
+388 [Stolen Book] [Land's End]
+[We returned the unfinished manuscript to Amalthia.]
+
+390 [Stolen Book] [Land's End]
+[We returned the finished manuscript to Amalthia, who told us that Kastor had already seen her and warned her that the manuscript had been stolen and 'someone' might take credit.]
+
+
+;IRONWOOD;
+
+500 [Rumors] [Ironwood]
+[The Rusty Saw Pub in Ironwood was known as the The Trusty Saw Pub before someone stole the "T."  Marjo, the pub's owner has never been able to recover it.]
+
+501 [Rumors] [Ironwood]
+[Marjo was grateful when we returned the "T" from her sign.]
+
+502 [Menorac's Wife] [Ironwood]
+[Menorac's wife Rolucia is in a coma.]
+
+503 [Menorac's Wife] [Ironwood]
+[Menorac's wife fell into a deep slumber shortly after their wedding anniversary and has yet to wake up.  The necklace Rolucia wears was a an anniversary gift from Menorac.]
+
+504 [Menorac's Wife] [Ironwood]
+[We learned that Blaen, Menorac's bodyguard and assistant picked out the necklace for Rolucia.]
+
+505 [Menorac's Wife] [Ironwood]
+[Menorac didn't allow us in to see his comatose wife.  He seemed disgusted by us.]
+
+506 [Menorac's Wife] [Ironwood]
+[By examining the necklace, we were able to determine that a sleeping enchantment has been placed upon it.  We believe that a solution of the rare metal ferrin and pure spring water, sprinkled on the necklace would break the enchantment.]
+
+507 [Menorac's Wife] [Ironwood]
+[Menorac said he doesn't know where Blaen bought Rolucia's necklace, but he assumes it was from Ternia, the local jeweler.]
+
+508 [Menorac's Wife] [Ironwood]
+[We purchased some ferrin flakes from Ternia, the local jeweler.]
+
+509 [Menorac's Wife] [Ironwood]
+[We learned the location of a spring in the Ironwood Forest.]
+
+510 [Menorac's Wife] [Ironwood]
+[When asked Ternia told us that she did not craft Rolucia's necklace.]
+
+511 [Menorac's Wife] [Ironwood]
+[We inquired about other jewelers in the area.  Ternia told us that there is only one.  His name is Ancus and he lives west of town.  Apparently he is also a magician of some sort.]
+
+512 [Menorac's Wife] [Ironwood]
+[Ancus, the jeweler and thaumaturgist who lives outside of Ironwood has been killed.]
+
+513 [Menorac's Wife] [Ironwood]
+[We read Ancus's journal.  It mentioned selling a necklace with a sleeping enchantment.  It says that a mixture of flakes of the rare metal ferrin and pure spring water will dispel the enchantment.]
+
+514 [Menorac's Wife] [Ironwood]
+[Applying the ferrin solution worked!  Rolucia has awoken.  We have now left with Menorac to have some words with Blaen who procured the necklace.]
+
+516 [Menorac's Wife] [Ironwood]
+[When we confronted Blaen he revealed himself as one of the dark possessed.  We were able to defeat him in battle, and were rewarded kindly by Menorac for our efforts.  It looks as though this nightmare is finally over.]
+
+517 [Menorac's Wife] [Ironwood]
+[When we confronted Blaen he went berserk and turned into some kind of horrible creature.  The battle was hard fought, but in the end we prevailed, and were rewarded kindly by Menorac for our efforts.  It looks as though this nightmare is finally over.]
+
+518 [Rumors] [Ironwood]
+[We convinced Menorac to shut down his casino.]
+
+520 [Imprisoned Thief] [Ironwood]
+[We spoke to a thief imprisoned at the Guardian's barracks.  He is looking for someone to help him break free.]
+
+521 [Rumors] [Ironwood]
+[According to the barmaid at the Rusty Saw, the young guardian Trillis, used to be a frequent visitor to the tavern, before he was placed on a night shift to guard a prisoner.  She said that he was especially fond of their ale.]
+
+522 [Imprisoned Thief] [Ironwood]
+[To free Denomas from his cell we would have to get the key to his cell and do something about the Guardian on duty.  Denomas suggests that if we are going to try anything with one of the Guardian's we should do it at night.  There is only one Guardian on duty at night, and he is a rookie.]
+
+523 [Rumors] [Ironwood]
+[We offered the Guardian Trillis an ale, which he readily accepted.]
+
+524 [Rumors] [Ironwood]
+[We brought Trillis a second ale, he only hesitated a moment before taking.]
+
+525 [Rumors] [Ironwood]
+[We brought Trillis a third ale.  At this point he is visibly drunk.]
+
+526 [Rumors] [Ironwood]
+[When we gave Trillis his fourth ale he passed out.]
+
+527 [Imprisoned Thief] [Ironwood]
+[We freed Denomas and met him by the marker stone outside of town.  He offered to either train one of our party in thieving skills or to join us.]
+
+528 [Imprisoned Thief] [Ironwood]
+[Denomas trained one of our ranks in lock picking and picking pockets before departing into the woods.  I doubt we shall ever see him again.]
+
+529 [Menorac's Wife] [Ironwood]
+[Around Rolucia's neck is a very fancy necklace.]
+
+530 [Gambling Away the Rent] [Ironwood]
+[A mill worker named Eirir gambles away all of the money he earns.  Because of this, he and his wife owe Somnius 80 drachs in rent.  If they do not pay this soon, they will be evicted.]
+
+531 [Menorac's Wife] [Ironwood]
+[Around Rolucia's neck is a very fancy necklace.  We don't think an average jeweler could have crafted it.]
+
+532 [Gambling Away the Rent] [Ironwood]
+[We paid off Odmi and Eirir's 80 drach debt.]
+
+533 [Gambling Away the Rent] [Ironwood]
+[We managed to forge Odmi and Eirir's name onto Somnius's list of who had paid their rent.]
+
+534 [Gambling Away the Rent] [Ironwood]
+[Odmi was most grateful that we took care of her rent.  However unless something is done about Eirir's gambling, they will find themselves in the same predicament soon enough.]
+
+535 [Menorac's Wife] [Ironwood]
+[Ternia said to speak to Kaira about find a spring.]
+
+536 [Gambling Away the Rent] [Ironwood]
+[Nothing like the threat of violence to scare some sense back into a man.  We threatened to beat Eirir if he didn't stop gambling.  He kindly obliged our request.]
+
+537 [Gambling Away the Rent] [Ironwood]
+[We explained to Eirir that his luck was not bound to "turn around" and that his chances of losing now where just as great as when he started.  Swayed by our logic, he left the tables and returned home to his wife.]
+
+538 [Gambling Away the Rent] [Ironwood]
+[By explaining to him the damage it was doing to his family, we managed to convince Eirir to give up gambling.]
+
+540 [Gambling Away the Rent] [Ironwood]
+[Odmi was delighted that we convinced her husband to give up gambling.  But despite the good work we have done, unless something is done about the rent they owe, they will be evicted.
+
+542 [Gambling Away the Rent] [Ironwood]
+[Odmi was delighted that we convinced Menorac to close the casino.  But despite the good work we have done, unless something is done about the rent they owe, they will be evicted.]
+
+544 [Gambling Away the Rent] [Ironwood]
+[Odmi was most grateful that we took care of her rent.  Now that her debt is gone and her husband is no longer gambling, she shall no longer have to live in constant fear of losing her home.  We have done her quite a service.]
+
+545 [Gambling Away the Rent] [Ironwood]
+[Odmi was delighted that we convinced her husband to give up gambling.  Now that her husband is no longer gambling, and her debt is gone she shall no longer have to live in constant fear of losing her home.  We have done her quite a service.]
+
+546 [Gambling Away the Rent] [Ironwood]
+[Odmi was delighted that we convinced Menorac to close the casino.  Now that her husband can no longer gamble, and her debt is gone she shall no longer have to live in constant fear of losing her home.  We have done her quite a service.]
+
+548 [Garden Pest] [Ironwood]
+[Thekla told us that a some white animal has been digging up her garden.  She would be grateful if we killed it and brought her its pelt.]
+
+549 [Garden Pest] [Ironwood]
+[We found an young albino bingo caught in a snare a little east of Ironwood proper.  We freed the creature and were rewarded by the Goddess for our kindness.]
+
+550 [Garden Pest] [Ironwood]
+[We found an young albino bingo caught in a snare a little east of Ironwood proper.  We put the creature out of its misery.]
+
+551 [Garden Pest] [Ironwood]
+[Thekla was furious when she learned we set the bingo free.]
+
+552 [Garden Pest] [Ironwood]
+[Thekla rewarded us for the bingo pelt by teaching us the Flame ritual of 'Berserk.']
+
+554 [Missing Daughter] [Ironwood]
+[Aldir is offering a 150 drach reward for the safe return of his missing daughter Hilmi.]
+
+556 [Missing Daughter] [Ironwood]
+[The last time Aldir saw his daughter was of the Feast of Issarti.]
+
+558 [Missing Daughter] [Ironwood]
+[Aldir told us that the last time he saw his daughter was of the Feast of Issarti.  Interestingly Marjo mentioned that there was a mysterious couple from Crossing East in town for the feast.  Perhaps they have something to do with her disappearance. ]
+
+560 [Missing Daughter] [Ironwood]
+[Aldir admits that some believe that Hilmi ran off with a young man named Jaanas, who had been courting her.  Aldir however does not think this is what happened.]
+
+562 [Missing Daughter] [Ironwood]
+[There is some speculation that Hilmi ran off with a young Huntsman named Jaanas.]
+
+566 [Rumors] [Ironwood]
+[Marjo mentioned that this year a couple from Crossing East came to town for the Feast of Issarti.  This seemed quite strange to her.  She described the couple for us: the man is short and stocky and the woman has bright red hair.]
+
+568 [Rumors] [Ironwood]
+[Marjo mentioned of a strange couple from Crossing East who came to town for the Feast of Issarti.  According to Aldir that is precisely when his daughter vanished.  Perhaps these strangers have something to do with her disappearance.]
+
+570 [Rumors] [Ironwood]
+[When we inquired about the couple that Marjo described we were told that we must be referring to Kirtto and Hrosta.  To get to their farm we must go south from Crossing East proper across the river, and then to the east.]
+
+572 [Missing Daughter] [Ironwood]
+[We found Hilmi locked in the basement of Kirtto and Hrosta.]
+
+574 [Missing Daughter] [Ironwood]
+[We returned Hilmi to her father Aldir and received the 150 drach reward.  Aldir was overjoyed and asked us to come and visit him tomorrow.]
+
+576 [Missing Daughter] [Ironwood]
+[Hilmi was one of the dark possessed.  She flew into a fury and attacked us.  In the end we were able to kill her.  Aldir is heartbroken, but thanks to our efforts, alive.]
+
+578 [Missing Daughter] [Ironwood]
+[It seems Hilmi was transformed into some kind of creature.  She attacked us and we were forced to kill her.  It is fortunate for Aldir we didn't leave him alone with her.]
+
+579 [Missing Daughter] [Ironwood]
+[When we returned to see Aldir we found a most horrifying sight.  Aldir was dead and his daughter was eating his corpse.  Hilmi was one of the dark possessed, if only we'd seen it in time.  At least we were able to kill her before she got to anyone else.]
+
+580 [Missing Daughter] [Ironwood]
+[When we returned to see Aldir we found a most horrifying sight.  Aldir was dead and his daughter was eating his corpse.  She had been turned into some kind of mad creature.  She attacked us and we were forced to kill her.]
+
+582 [The Huntsmen] [Ironwood]
+[Brolund, the leader of the huntsmen, offered us a job escorting a logging party.  We turned it down.]
+
+583 [The Huntsmen] [Ironwood]
+[Brolund, the leader of the huntsmen, offered us a job escorting a logging party.  We accepted, but told him we need some time to prepare.]
+
+584 [The Huntsmen] [Ironwood]
+[While escorting the logging party we successfully fended of a bingo attack.]
+
+585 [The Huntsmen] [Ironwood]
+[While escorting loggers through the Ironwood Forest, we were beset by a troupe of bingos.  The bingos managed to kill one logger before we dispatched them.]
+
+586 [The Huntsmen] [Ironwood]
+[While escorting loggers through the Ironwood Forest, we were beset by a troupe of bingos.  The bingos managed to kill two loggers before we dispatched them.]
+
+587 [The Huntsmen] [Ironwood]
+[While escorting loggers through the Ironwood Forest, we were beset by a troupe of bingos.  The bingos managed to kill three loggers before we dispatched them.]
+
+588 [The Huntsmen] [Ironwood]
+[While escorting loggers through the Ironwood Forest, we were beset by a troupe of bingos.  They killed all four loggers before we dispatched them.]
+
+589 [The Huntsmen] [Ironwood]
+[Brolund was disgusted by our failure to protect the logging party.  He sent us on our way.]
+
+590 [The Huntsmen] [Ironwood]
+[After successfully escorting the logger party we returned to Brolund for our reward.  While there he told us of another task he needs assistance with.  A group of loggers is late in returning to the city.  Their cabin is north of Ironwood.  We are to investigate, and hopefully return to Ironwood with the logging party.]
+
+592 [The Huntsmen] [Ironwood]
+[When we went to the cabin of the missing loggers we found it surrounded by bingos.  The loggers are most likely trapped inside.]
+
+593 [The Huntsmen] [Ironwood]
+[We killed the troupe of bingos and freed the loggers trapped inside.]
+
+594 [The Huntsmen] [Ironwood]
+[We told Brolund about the trapped loggers and asked that he find someone else to take care of it.  He told us that he didn't have any more work for us.]
+
+595 [The Huntsmen] [Ironwood]
+[When we returned to Brolund after freeing the loggers, he rewarded us and told us about one more job.  Apparently some sort of beast has been killing huntsmen of late.  He wants us to find this beast, kill it, and return with its pelt.  He suggested we start looking for it at the site of its last killing, north of town.  He has promised us a great reward if we manage to return with the beast's pelt.]
+
+596 [The Huntsmen] [Ironwood]
+[We managed to track the beast, which has been killing huntsmen, to its lair.]
+
+597 [The Huntsmen] [Ironwood]
+[We successfully killed the beast that was plaguing the huntsmen.  Now we need only return to Brolund with its pelt for our reward.]
+
+598 [The Huntsmen] [Ironwood]
+[We returned the beast's pelt to Brolund.  As a reward he gave us a remarkable bow called "Heartswood."]
+
+
+;Monastery;
+;600-699;
+
+600 [River Pilgrim] [The Monastery]
+[We met a river pilgrim named Rervas who plans on riding over the falls of the Anar in a barrel of his own construction.  From the looks of his barrel, he has little chance of surviving the trip.]
+
+601 [Rumors] [The Watcher's Quest]
+[We need to seek out Alves, the blacksmith in Kellen to forge the Novacula.]
+
+602 [River Pilgrim] [The Monastery]
+[We managed to repair Rervas's barrel.  Hopefully it will withstand the fall and carry him safely down the Anar.  He told us to look for him if we ever end up in Ironwood.]
+
+603 [River Pilgrim] [The Monastery]
+[Tarha is worried about her husband Rervas.  He's left home to show is devotion to the Goddess by plummeting over the Anar Falls.]
+
+604 [River Pilgrim] [The Monastery]
+[We insulted Rervas and he left for the falls.]
+
+606 [River Pilgrim] [The Monastery]
+[We suggested that Rervas attempt to ride the falls without a barrel.  He took our suggestion to heart and he left for the falls.]
+
+608 [River Pilgrim] [The Monastery]
+[We were able to convince Rervas to return to his family.  He told us to look for him if we ever end up in Ironwood.]
+
+609 [River Pilgrim] [Ironwood]
+[For saving her husband's life Tarha rewarded us with 'Sylkie's Tear.']
+
+610 [Alian] [The Monastery]
+[A woman named Paenia who lives at the base of the dark path told us that her husband is deathly ill.  She says that he desperately wants to see his son again before he dies.  Their son is named Alian, he ran away three years ago to join the Charred Ones.]
+
+612 [River Pilgrim] [The Monastery]
+[Rangard said that there was a river pilgrim by the lake to the southwest.]
+
+614 [Rumors] [The Watcher's Quest]
+[When we showed the dagger document to Rangard he suggested we speak to Bazir about it.  His study is down the path to the west.]
+
+615 [Alian] [The Monastery]
+[The initiation ritual Rangard described ends with the monk being presented with his new name.]
+
+616 [Alian] [The Monastery]
+[The initiation ritual Rangard described ends with the monk being presented with his new name.  Perhaps someone at the monastery keeps a record of the original names of the initiates, which we could use to discover what became of Alian.]
+
+618 [Alian] [The Monastery]
+[Rangard told us that if anyone had record of the original names of the initiates it would be Zand, the chronicler.  His study is to the west.]
+
+620 [Alian] [The Monastery]
+[According to the chronicler's records, the monk named Bashnakh was once known as Alian.]
+
+622 [Alian] [The Monastery]
+[We successfully convinced Bashnakh to join us and return to his parents.]
+
+624 [Alian] [The Monastery]
+[When we brought Alian back to his parents we were in for a nasty surprise.  While we were gone his family had been killed.  Alian created a large fire to burn their remains.  He now waits by the fire.  We should probably come by later to check on him.]
+
+626 [Alian] [The Monastery]
+[Having no where else to go, Bashnakh joined our party.]
+
+628 [Rumors] [The Watcher's Quest]
+[Zand suggested that we speak to Bazir about the dagger document.]
+
+630 [Rumors] [The Watcher's Quest]
+[Bazir said that the document is about the construction of a magic blade called the "Novacula Sanguineus."  Unfortunately the text is incomplete and thus useless.]
+
+632 [Rumors] [The Watcher's Quest]
+[Bazir suspects that a complete copy of the Sanguineous Codex could be found in the monastery's archives.  This Codex could show us the way to creating the Novacula Sanguineus.]
+
+634 [Rumors] [The Watcher's Quest]
+[Bazir granted us permission to brave the cavern dweller infested archives in search of the dagger text.  The archives are located beneath the Hall of Memory.  Virmorn there will show us the entrance.]
+
+636 [The Archives] [The Monastery]
+[Virmorn opened the way to the archives.  He also told us that if we were to clear out the cavern dwellers that the monastery would be grateful.]
+
+638 [The Archives] [The Monastery]
+[We cleared out the cavern dwellers from the archives.]
+
+640 [The Archives] [The Monastery]
+[As a reward for clearing out the cavern dweller infestation, Virmorn presented us with a key to a relic storeroom in the archives.  We are to take one and only one relic of our choosing.]
+
+642 [Rumors] [The Watcher's Quest]
+[We brought the Novacula Sanguineus text to Bazir.  He told us that it would take some time to translate.]
+
+644 [Rumors] [The Watcher's Quest]
+[We were summoned before Sharag of the Charred.  He began to tell us of the true nature of the Valley's affliction when his servant Khal attacked him.  Khal however was no match for Sharag's mastery of the Flame.  He manipulated the flame in a way I have never seen before.  It is a technique that I think I may be able to emulate.]
+
+646 [Rumors] [The Watcher's Quest]
+[We were summoned before Sharag of the Charred.  He began to tell us of the true nature of the Valley's affliction when his servant Khal attacked him.  Khal however was no match for Sharag's mastery of the Flame.  He manipulated the flame in a way I have never seen before.]
+
+648 [Rumors] [The Watcher's Quest]
+[Sharag told that the true danger facing the Valley is a force known as the darkness.  The darkness is a force that possesses the souls of those who willingly submit.  It seduces its victims with promises of power or peace of mind and eventually takes over its host entirely.  This darkness is the ancient foe of the Children of the Flame.  It drove them from the Pinnacle into exile.  Now, more than a millennia later.  It has found its way here to the Valley.]
+
+650 [Rumors] [The Watcher's Quest]
+[Sharag believes that the Goddess is the only hope the Valley has for survival.  But he is confused as to why she has thus far done nothing.  Sharag has instructed us to consume some jerahd root and try to reach her spiritually.  We can procure the root at the monks' farm.  We are to return to Sharag when we have learned the Goddess's intentions.]
+
+652 [Rumors] [The Watcher's Quest]
+[Sharag taught us the secrets of using actual blood to intensify flame magic.  He believes that shedding blood on the Goddess's home island using the Novacula Sanguineus will renew her power and allow her to cleanse the Valley.  We are to speak to Bazir to learn how to forge the blade.  The entire Valley lies in our hands.  If we can't restore the Goddess in time all will be lost.]
+
+654 [Rumors] [The Watcher's Quest]
+[Bazir gave us a copy of the plans to build the Novacula Sanguineus.  He said that the blade must be forged from caldus ore by a master smith and then blessed by the flame.  If the caldus ore is anywhere in the Valley it will be in Jerrock.]
+
+663 [Rumors] [The Watcher's Quest]
+[The theft of the ancient dagger from the Academy seems suspiciously like an act of the Rebellion.  We should investigate further, perhaps the Watcher could advise us.]
+
+664 [Rumors] [The Watcher's Quest]
+[If we are interested in pursuing the dagger that was stolen from the Academy, our best bet will be to talk to Selarian, an artifact dealer in the Citadel.  If the dagger has been sold, it is likely that he will have heard about it.  Maetius says Selarian can be found in his shop in the Citadel.]
+
+665 [Rumors] [The Watcher's Quest]
+[Maetius believes that the dagger that was stolen from the Academy library is over 1500 years old and was crafted by the Children of the Flame well before their arrival in the Valley.]
+
+666 [Rumors] [The Watcher's Quest]
+[We spoke to Selarian, a dealer of antiquities, about the dagger that was stolen from the Academy.  He told us that a scholar at the Library of Leit named Ciarius has recently been hired to study a blade from a private collection.  This may be the blade that was stolen from the Academy.]
+
+667 [Rumors] [The Watcher's Quest]
+[We arrived at Ciarius's study in the library of Leit to find him dead on the floor.  Beside him lay a shattered dagger and some burned documents.]
+
+668 [Rumors] [The Watcher's Quest]
+[Entian gave us a copy of the documents Ciarius uncovered about the dagger.  Unfortunately for us the documents are written in an ancient tongue.  Entian believes that the only place we might be able to find a translator would be at the Monastery of the Charred Ones.  To get to the Monastery one must pass through the deadly system of caverns known as the Dark Path.  It is not a journey to be taken lightly.]
+
+669 [Rumors] [The Watcher's Quest]
+[We were told to seek out the Druid Gworyn at the reflecting pool in Land's End if we seek redemption in the eyes of the Goddess]
+
+670 [Atonement] [Land's End]
+[The druid Gworyn told us that in order to return to the Goddess's favor, we must slay a corrupted lupin called Ferna.  Gworyn has shown us where to find Fern's lair.]
+
+671 [Atonement] [Land's End]
+[We killed Ferna and were forgiven by the Goddess.]
+
+672 [Rebellion VI] [Land's End]
+[We have angered the Goddess.  Until we redeem ourselves, we are cut off from her aid.]
+
+673 [Rebellion VI] [Land's End]
+[We have managed to anger the Goddess again.  This time I am afraid, permanently.  We will receive no more aid from the Goddess and will never be allowed to set foot on her isle.]
+
+674 [Rumors] [The Watcher's Quest]
+[When we attempted to board our raft the sylkies pushed us back to shore.  It appears the Goddess is forbidding to travel to her isle.]
+
+675 [Rumors] [The Watcher's Quest]
+[The Goddess summoned us to her isle.  We must travel to Crossing East to construct a raft for the pilgrimage.]
+
+676 [Rumors] [The Watcher's Quest]
+[We made our way through the ruins of Kellen and found Alves hiding out in his shop.  We provided him with caldus ore and dagger plans, and he forged the Novacula.  In order to complete the dagger we now must have it blessed at a Temple of the Flame.]
+
+678 [Rumors] [The Watcher's Quest]
+[The Novacula Sanguineus is now complete!  We must hurry to the Goddess Isle.]
+
+679 [Rumors] [The Watcher's Quest]
+[The Goddess explained to us that her power has waned and return us to the Monastery to seek a way to use the flame to give her strength.]
+
+680 [Rumors] [The Watcher's Quest]
+[The Goddess explained to us that her power has waned and suggested that the Flame could provide her with the necessary strength.  Perhaps we should seek out the High Priestess or travel to the Monastery of the Charred Ones.]
+
+;Crossing East;
+;700-799;
+
+701 [Geris] [Crossing East]
+[Geris, a scholar from The Academy, has asked us to assist in his research.  He wants us to stand on a bridge, which will somehow transport us to some unknown area constructed by The Ancients.  Geris believes that The Ancients used the bridge to remove troublesome beasts.]
+
+703 [Geris] [Crossing East]
+[We agreed to help Geris finding out where the bridge leads.  He'll want to talk to us once we have returned.]
+
+705 [Geris] [Crossing East]
+[Upon returning to Crossing East we spoke with Geris about our journey through the ancient prison complex.  Now that it is cleared out, Geris decided that he wanted to go to the colony for himself, so we sent him.]
+
+707 [Rumors] [Crossing East]
+[Uva is distraught because her husband is missing.  Perhaps we should speak with her.]
+
+709 [Rumors] [Crossing East]
+[We told Uva that we would try to find her husband Avir.  To Uva's knowledge, he was last at his regular hunting grounds.]
+
+711 [Rumors] [Crossing East]
+[When she saw that we have Avir's Axe, Uva became very angry with us.]
+
+713 [Rumors] [Crossing East]
+[We found Avir and returned his axe.  He joined us in return for our promise to bring him to his home in Crossing East.]
+
+715 [Rumors] [Crossing East]
+[We met a man named Avir who will join us if we promise to bring him to his home in Crossing East.]
+
+717 [Rumors] [The Watcher's Quest]
+[In order to make a raft to go and see the Goddess, we need softened Ironwood.  Once we have softened Ironwood we must build the boat with our own hands.  Gralwn the carpenter has offered his assistance if we need it.]
+
+718 [Rumors] [The Watcher's Quest]
+[Although it has been decades since the last pilgrim.  Grawln the carpenter can assist in building a raft for the journey to Goddess Isle.]
+
+719 [Rumors] [The Watcher's Quest]
+[We have successfully constructed a raft which could take us to the Goddess Isle.]
+
+721 [Rumors] [The Watcher's Quest]
+[Ironwood can be bought from the store in Crossing East, but it is very expensive.  Apparently there is also a powerful druid by the name of Falesin who has access to Ironwood.]
+
+723 [Rumors] [The Watcher's Quest]
+[Falesin agreed to let us have his Ironwood tree if we retrieve an Ironwood Sapling for him.]
+
+727 [Rumors] [The Watcher's Quest]
+[Upon returning the Ironwood Sapling to Falesin he asked that we clear his Glade of beasts before he softens our Ironwood.  The Glade is deep in the woods west of Crossing East.]
+
+729 [Rumors] [The Watcher's Quest]
+[For clearing out his Glade, Falesin has softened our Ironwood so that we can now build a raft.]
+
+731 [Rumors] [Crossing East]
+[While passing a farm in Crossing East we came upon a bunch of women desperately trying to get through a locked door.  They seemed mad.  We're not sure why they would be doing such a thing.]
+
+733 [Rumors] [Crossing East]
+[Sau seems to know something about the mad women trying to break through the farm house door, but when we spoke to him about it he only replied that we should speak with a man named Aijo about it.  Aijo's farm is due west of Sau's.]
+
+735 [Rumors] [Crossing East]
+[We spoke with an extremely intoxicated Aijo.  He didn't seem to think he was at fault as Sau had said.]
+
+737 [Love Potion] [Crossing East]
+[Sau once again said that it wasn't his fault.  He said that we should ask Aijo about a "love potion".]
+
+739 [Love Potion] [Crossing East]
+[Aijo said that they wouldn't have needed a love potion if Sau's son wasn't so ugly.]
+
+741 [Love Potion] [Crossing East]
+[When we told Sau what Aijo said about his son, Sau said that it was Aijo who had bought a love potion from a Vangesh merchant.]
+
+743 [Love Potion] [Crossing East]
+[Aijo admitted that he had bought the potion from a Vangesh woman named "Mayna or something like that".  He said that she could probably be found in the Barrier.]
+
+745 [Love Potion] [Crossing East]
+[We talked to Mayaa, who sold Aijo the love potion.  She told us that the two ingredients to make the potion antidote were Doir Fruit and Cave Fungus.  She will mix the potion for us once we have the ingredients.]
+
+;not used 11-25-2005;
+746 [Love Potion] [Crossing East]
+[We talked to Mayaa, who sold Aijo the love potion.  She told us that the two ingredients to make the potion antidote were Doir Fruit and Cave Fungus.  We should be able to find Cave Fungus in nearly any cave in the Valley and Doir Fruit can be bought from a vendor in the Barrier.  She will mix the potion for us once we have the ingredients.]
+
+747 [Love Potion] [Crossing East]
+[Mayaa has mixed the love potion antidote for us.]
+
+749 [Love Potion] [Crossing East]
+[We gave Sau the antidote and he administered it to the women.  They should be better now.]
+
+751 [Farmer's Son] [Crossing East]
+[A farmer named Saamel in Crossing East is distraught because his son Garmer wants to run off and become a Guardian.  We promised that we would speak with Garmer about it.  He suggested that Monaro, the mayor of Crossing East, might be able to help.]
+
+753 [Farmer's Son] [Crossing East]
+[We encouraged Garmer to run off and become a Guardian.  Though Saamel will not be happy about this, it seemed the best thing for Garmer.]
+
+755 [Farmer's Son] [Crossing East]
+[Garmer beat us in a sword fight and has run off to be a Guardian.  Though Saamel will not be happy about this, it seemed the best thing for Garmer.]
+
+756 [Farmer's Son] [Crossing East]
+[We let Garmer beat us in a sword fight, which encouraged him to run off and become a Guardian.  Though Saamel will not be happy about this, it seemed the best thing for Garmer.]
+
+757 [Farmer's Son] [Crossing East]
+[We bested Garmer in a sword duel and we discouraged him from becoming a Guardian.  Though Saamel will be happy, we are not sure it is the best thing for Garmer.]
+
+759 [Farmer's Son] [Crossing East]
+[We spoke with Saamel and as expected, he was very happy to hear that Garmer no longer wants to be a Guardian.]
+
+761 [Farmer's Son] [Crossing East]
+[We spoke with Saamel and as expected, he was not happy to hear that Garmer had run off to be a Guardian.]
+
+763 [Farmer's Son] [Crossing East]
+[We spoke with Saamel and as expected, he was not happy to hear that Garmer had run off to be a Guardian.  However, once we explained to him why it was the best for Garmer, he seemed to understand.]
+
+765 [Farmer's Son] [Crossing East]
+[We spoke with Monaro about Saamel's issues with Garmer being a Guardian.  Monaro agreed to talk to Garmer and discourage him from becoming a Guardian.]
+
+767 [Crop Troubles] [Crossing East]
+[A woman named Kaulo in Crossing East told us that her husband Kieno is having problems with his field and needs help planting his crops.  He shouldn't be too far.]
+
+769 [Crop Troubles] [Crossing East]
+[We spoke with Kieno and he says that indeed there is a problem with his field.  He plants his seeds and nothing seems to happen.  We told him that we would investigate.]
+
+771 [Crop Troubles] [Crossing East]
+[We found that small hoppers are were eating the seeds Kieno plants before they have a chance to take root.]
+
+773 [Crop Troubles] [Crossing East]
+[When we told Kieno that it was hoppers that were wrecking his fields, he asked us to do what we could to fix the problem.]
+
+775 [Crop Troubles] [Crossing East]
+[We solved Kieno's hopper problem and helped him replant his field.]
+
+
+;JERROCK;
+;800-899;
+
+800 [Rumors] [The Watcher's Quest]
+[Kheiron, the guard at the gates of Jerrock, told us that the only person who gets into Jerrock is "Gaston the Courier".  Gaston is from the Academy.]
+
+802 [Rumors] [The Watcher's Quest]
+[Rialli told us that Gaston should have returned from his errand in Jerrock a while ago.  He fears that Gaston may have been help along the way.  Perhaps at his favorite resting place.]
+
+804 [Rumors] [The Watcher's Quest]
+[Gaston asked us to bring a notice from The Council to Kheiron at the Gates of Jerrock.  The notice has an unbroken seal on it.  Gaston warned us not to open it.]
+
+806 [Rumors] [The Watcher's Quest]
+[We agreed to seek out the source of the miner's uprising and return to Zephyros with the information.]
+
+808 [Rumors] [The Watcher's Quest]
+[We encountered a very nervous woman in the mining village of Jerrock today.  She seems to think that Zephyros is coming to find her and take her to the underground work camps, where her friend Jano is.  We all sense a racial tension in Jerrock that far surpasses that of any other region in the Valley.]
+
+810 [Rumors] [The Watcher's Quest]
+[Louisa told us that a man named Llerwm's plans for revenge are nearly suicidal.  His brother was killed by cave dwellers.]
+
+812 [Rumors] [The Watcher's Quest]
+[A miner in the underground workcamp named Jano gave us a ring and told us to deliver it to his wife to help his family through the rough times.  He would also like us to send love to his wife as well as his son.]
+
+814 [Rumors] [The Watcher's Quest]
+[We delivered Jano's Ring to Tilda and gave her his message.  She was overjoyed.]
+
+816 [Rumors] [The Watcher's Quest]
+[We encountered a large guard beating on a miner and intervened.  The miner should be safe now.]
+
+818 [Rumors] [The Watcher's Quest]
+[We promised Llerwm to meet him at 20 to retrieve his brother's body.  It sounds as if there will be plenty of these cavern dwellers where we are going.]
+
+820 [Rumors] [The Watcher's Quest]
+[We managed to convince Llerwm that finding his brother's body was not a good idea.  We don't think that we have to worry about him running off on a suicidal mission anytime soon.]
+
+822 [Rumors] [The Watcher's Quest]
+[Together with Llerwm, we managed to defeat the beasts and return him safely to his home.  It's a good think that we came with him, or he would not have stood a chance.]
+
+824 [Rumors] [The Watcher's Quest]
+[We managed to escape the cavern dwellers successfully.  Llerwm was not so lucky.]
+
+826 [Rumors] [The Watcher's Quest]
+[We agreed to meet Jeda in her room at 4.  She seemed very tense and alluded to the fact that there were more than one person watching us.  It's likely she is affiliated with the miner uprising that Zephyros seeks.]
+
+827 [Rumors] [The Watcher's Quest]
+[We agreed to meet Jeda in her room at 4.]
+
+828 [Rumors] [The Watcher's Quest]
+[We told Zephyros of our encounter with Jeda.  He said this information was no help to him if he does not know where the meeting is.]
+
+830 [Rumors] [The Watcher's Quest]
+[Though the leader was not at the meeting Jeda took us to, it proved to be a meeting of the rebels that Zephyros fears.  We promised to meet Argant at 23 to take out the guards while Argant and Jeda sneak into the armory and procure weapons.]
+
+831 [Rumors] [The Watcher's Quest]
+[The meeting proved to be a meeting of miner rebels.  The leader was not there.  We promised to meet Argant at Prali's at 23 to take out the Armory guards while Argant and Jeda sneak into the armory and procure weapons.]
+
+832 [Rumors] [The Watcher's Quest]
+[We told Zephyros of the miner meeting, confirming his suspicions.  He still needs us to find out who the leader of the rebellion is.]
+
+833 [Rumors] [The Watcher's Quest]
+[Though the leader was not at the meeting Jeda took us to, it proved to be a meeting of the rebels that Zephyros fears.  We promised to meet Argant at Prali's at 23 to sneak into the Armory and procure weapons while Argant and Jeda take out the Guards.]
+
+834 [Rumors] [The Watcher's Quest]
+[We successfully took out the Guardians protecting the Armory with the miners.]
+
+835 [Rumors] [The Watcher's Quest]
+[The meeting proved to be a meeting of miner rebels.  The leader was not there.  We promised to meet Argant at Prali's at 23 to sneak into the Armory and procure weapons while Argant and Jeda take out the Guards.]
+
+836 [Rumors] [The Watcher's Quest]
+[Subei is spearheading the miner uprising.  Though he is young, he seems very powerful.  He asked us to kill Zephyros.]
+
+837 [Rumors] [The Watcher's Quest]
+[We told Zephyros of the miner meeting, confirming his suspicions.  He still needs us to find out who the leader of the rebellion 	is.  It does not seem like we will be able to gain the trust of the miners unless we raid the Armory with them.]
+
+838 [Rumors] [The Watcher's Quest]
+[We agreed promised Subei that we would assassinate Zephyros.  After doing so he gave us a weapon to help us with the job.  He told us that once Zephyros was dead he could lead a united front against Zephyros' guards with the weapons we procured during the raid.  He implied that by helping him he might have access to Caldus Ore.]
+
+839 [Rumors] [The Watcher's Quest]
+[We told Zephyros of the Armory raid, confirming his suspicions.  He was confident that his guards would be able to take care of the miners.  He was more interested in who the leader of the rebellion is.]
+
+840 [Rumors] [The Watcher's Quest]
+[We informed Zephyros that Subei was the leader of the rebellion, and as a gesture of kindness Zephyros allowed us to witness his execution.  Now that we have done what we promised, Zephyros took us to take the box of Caldus Ore to Caryn in Land's End to open it.  He warned us gravely against opening it before we got there.  He then taught us a powerful Flame spell to help us on our journeys.  Despite our success in attaining the Ore, none of us shall soon forget Subei's haunting words.]
+
+841 [Rumors] [The Watcher's Quest]
+[We told Zephyros of the miner meeting, confirming his suspicions.  He was confident that his guards would be able to take care of the miners.  He was more interested in who the leader of the rebellion is.  It does not seem like we will be able to gain the trust of the miners unless we raid the Armory with them.]
+
+842 [Rumors] [The Watcher's Quest]
+[We assassinated Zephyros.  In return, Subei gave us Caldus Ore.]
+
+843 [Rumors] [The Watcher's Quest]
+[We successfully procured the weapons from the Armory.]
+
+844 [Rumors] [The Watcher's Quest]
+[Subei is spearheading the miner uprising.  Though he is young, he seems to emanate an aura of River Magic.  He is probably a skilled mage.  He asked us to kill Zephyros.]
+
+845 [Rumors] [The Watcher's Quest]
+[We informed Zephyros that Subei was the leader of the rebellion, and as a gesture of kindness Zephyros allowed us to witness his execution.  Now that we have done what we promised, Zephyros took us to take the box of Caldus Ore to Caryn in Land's End to open it.  He warned us gravely against opening it before we got there.  Despite our success in attaining the Ore, none of us shall soon forget Subei's haunting words.]
+
+846 [Rumors] [The Watcher's Quest]
+[A man named Lucius, holed up in his house in fear of his life, told us that talking to a woman named Louisa might be a good place to start learning more about the miner's rebellion.]
+
+847 [Rumors] [The Watcher's Quest]
+[We assassinated Zephyros.  In return, Subei gave us Caldus Ore and bestowed upon us the knowledge of a powerful River spell.]
+
+;ples tells about derrack;
+
+848 [Rumors] [The Barrier Fortress]
+[It would appear that Derrack, the head of the northside barracks, regularly visits the Lusty against protocol.]
+
+;promise janni to check on malpia;
+
+849 [Malpia] [Land's End]
+[We promised to check on Janni's daughter Malpia in the caves close by.  They're just north of Janni's farm.]
+
+;returned malpia home;
+
+850 [Malpia] [Land's End]
+[We saved Malpia from her tea party and brought her home to her mother Janni, who was very happy to see her.]
+
+
+;The Citadel;
+;900-1099;
+
+900 [House Flam I] [The Citadel]
+[Vittoria, Seneschal to the Matriarch of House Flam, said that an audience could be gained if we helped with an internal House problem.  One of their cobblers is underselling the prices set by the House.  We've been asked to interview all the cobblers and find out who's underselling.  The cobblers are Boreas, Sencian, and Vauna, and they can all be found in the Lower Quarters.]
+
+901 [House Flam I] [The Citadel]
+[Per Nacippe's request we picked up the box from Ianassa in Lands End.]
+
+902 [House Flam I] [The Citadel]
+[Boreas doesn't seem to be the culprit.]
+
+903 [House Flam I] [The Citadel]
+[Sencian doesn't seem to be the culprit.  He might have been hiding something, but there was no clear cut proof.]
+
+904 [House Flam I] [The Citadel]
+[Sencian revealed that Vauna is the underselling cobbler.]
+
+906 [House Flam I] [The Citadel]
+[Vauna doesn't seem to be the culprit.  She might have been hiding something, but there was no clear cut proof.]
+
+907 [House Flam I] [The Citadel]
+[When confronted, Vauna broke down and told us she is in debt to the Maleficium.  Staponia is her Maleficium contact.  She begged us to not report her to Flam.]
+
+908 [House Flam I] [The Citadel]
+[Staponia agreed to play a game for double or nothing.  The game was close, but she won.  Vauna now owes twice as much.]
+
+909 [House Flam I] [The Citadel]
+[Staponia dealt the cards and we caught her cheating.  She agreed to waive Vauna's debt rather than risk harm.]
+
+910 [House Flam I] [The Citadel]
+[Vauna was arrested and fined for her rogue activities against House Flam.  We have been granted an audience with Nacippe.]
+
+911 [House Flam I] [The Citadel]
+[Vauna went to House Flam and confessed her wrongdoing.  She was fined, but will not have to serve jail time, and her debt has been absolved.  We have been granted an audience with Nacippe.]
+
+912 [Rumors] [The Citadel]
+[Fadicus, leader of the house of Flam, says that Nacippe deals with voting issues.  In order to speak with Nacippe, we must first speak with Vittoria the House Seneschal.]
+
+913 [House Flam II] [The Citadel]
+[In order to get the voting rod of House Flam Nacippe asked us to retrieve a package from Ianassa in the Rest-house in Lands End, and return it to her.  She would say nothing about what is in the package, but he hinted that it is very valuable.]
+
+914 [House Flam II] [The Citadel]
+[Nacippe gave us the voting rod.  She outlined her reasons why we should vote for House Flam]
+
+915 [House Flam III] [The Citadel]
+[Nacippe is pleased to have House Flam be in control of the Council.  She said to go speak with Fadicus about the biggest problem House Flam is dealing with.]
+
+916 [House Flam III] [The Citadel]
+[We discussed with Fadicus the Trade Agreement with the Vangesh.  The Vangesh will not sign, and Fadicus has asked us to speak with the Vangesh Ambassador and get him to sign.]
+
+917 [House Flam III] [The Citadel]
+[Zobeida prevented any attempts to speak with the Ambassador.]
+
+918 [House Flam III] [The Citadel]
+[A text in the Library says that The Law of Sand is a series of ancient Vangesh traditions.  Apparently no Vangesh can turn away someone bearing gifts that come from vine, cave, or a flock of Banaidwe.  No one has any idea what a Banaidwe is.]
+
+919 [House Flam III] [The Citadel]
+[The texts in the Library spoke at length of the Vangesh interest in gems, and the difficulty Vangesh have of finding gems in the desert. The Vangesh have a saying, 'Truth is like a gem.  Whoever holds the most gems, makes the truth.']
+
+920 [House Flam III] [The Citadel]
+[Yezeed seems dead set against talking to us until we have shared an extraordinary amount of alcohol.]
+
+921 [House Flam III] [The Citadel]
+[Yezeed's tone implies that he may now be willing to discuss the Flam-Vangesh Trade Agreement.]
+
+922 [House Flam III] [The Citadel]
+[When asked about the Trade Agreement Yezeed outlined the reservations he ahs that prevent him from signing.  They want more gems.  They want to be able to sell their own wares rather than work with Valley merchants.  They are willing to pay commission on all sales.]
+
+923 [House Flam III] [The Citadel]
+[Fadicus said he could do nothing about the Vangesh desire for more gems, but he suggested that instead of commission on items sold, which would be to hard to track, the Vangesh pay a tax upon all goods entering the Valley.]
+
+924 [House Flam III] [The Citadel]
+[Yezeed seemed disappointed that the gems were not part of the new Trade Agreement, but did agree to sign.]
+
+925 [House Flam III] [The Citadel]
+[Fadicus gave us a mountain of drachs for getting Yezeed to sign the new Trade Agreement.]
+
+927 [House Leit I] [The Citadel]
+[We promised Rosa that we'd bring her a specimen of the new, advanced form of cavern dweller for her to study.  She knows of a hunter named Ingunar that might be able to tell us where to find one.]
+
+929 [House Leit I] [The Citadel]
+[Inugar says he'll tell us where the beast can be found if we bring him an eastern delicacy called degral.]
+
+930 [House Leit I] [The Citadel]
+[Inugar says he'll tell us where the beast can be found if we bring him an eastern delicacy called degral, which is a spice that can only be bought in The Barrier.]
+
+931 [House Leit I] [The Citadel]
+[Inugar says he'll tell us where the beast can be found if we bring him an ironwood dagger.]
+
+933 [House Leit I] [The Citadel]
+[We gave Inugar the dagger.  True to his word, he told us where we could find the beast.]
+
+935 [House Leit I] [The Citadel]
+[We gave Inugar the degral.  True to his word, he told us where we could find the beast.]
+
+937 [House Leit I] [The Citadel]
+[Rosa was very excited by the beast we brought back.  Given her high repute in her House, we have probably made a few friends in Leit.]
+
+939 [House Leit II] [The Citadel]
+[Otarian has asked me to retrieve a pair of magic spectacles.  He said that the person who has them has been blackmailing him.  Whoever this person is comes to pick up their loot in his room every day at midnight.  Otarian lives in the large house built into the canyon wall that overlooks the House Leit buildings.]
+
+941 [House Leit II] [The Citadel]
+[We saw Saures sneaking into Otarian's room at the designated time.  We should speak to her about the Magic Spectacles.]
+
+942 [House Leit II] [The Citadel]
+[Saures says that she took the glasses because Valentia will not review her thesis.  If we can convince Valencia to review and mark her thesis, Saures says she will give us the Magic Spectacles.]
+
+943 [House Leit II] [The Citadel]
+[We convinced Saures that Otarian was not responsible for Valencia not reviewing her thesis.  As a kind gesture, she gave us the glasses to return to him.]
+
+944 [House Leit II] [The Citadel]
+[We intimidated Saures into giving us the glasses.]
+
+945 [House Leit II] [The Citadel]
+[We convinced Valentia that she should review Saures' thesis.  Saures should be pleased to hear this.]
+
+946 [House Leit II] [The Citadel]
+[Otarian gave us the Leit Voting Rod.  He suggested that if he was voted head of the council, he could offer us access to some interesting and unique information.]
+
+947 [House Leit II] [The Citadel]
+[Saures was so happy that Valentia agreed to review her thesis, that she gave us Otarian's magic spectacles.]
+
+948 [House Leit II] [The Citadel]
+[We returned the Magic Spectacles to Otarian, who is very pleased that his secret will be kept safe.  At least until the next time he misplaces his spectacles.]
+
+949 [House Leit III] [The Citadel]
+[Otarian has given us directions to a library built by the Ancients that's buried under the Citadel. He's also given us permission to keep anything we find.]
+
+950 [House Leit III] [The Citadel]
+[We have informed Otarian that the ancient library has been cleared, and his scholars are safe to investigate it further.]
+
+951 [House Char I] [The Citadel]
+[We have accepted a commission by Lykia of Char to try to find the headquarters or leadership of the Maleficium.  Recent information indicates that the Cup and Candle, a tavern in the Lower East Quarter, may be a center of Maleficium activity.  She suggested that we visit the tavern in the evening and see if we can learn anything.]
+
+952 [House Char I] [The Citadel]
+[We informed Lykia that the Maleficium has been destroyed, and collected our reward.  She also told us that Thaleia has something important to speak to us about.  Her house is to the southwest of the main Char building.]
+
+953 [House Char I] [The Citadel]
+[We have learned that a man named Grillof is a member of the Maleficium.]
+
+954 [House Char I] [The Citadel]
+[Grillof has told us that the Maleficium headquarters is located in the sewers.]
+
+955 [House Char II] [The Citadel]
+[Lucien, the leader of House Char, is ill, and his wife wants us to help find a cure.]
+
+956 [House Char II] [The Citadel]
+[Lucien visited the Barrier just before falling ill.]
+
+957 [House Char II] [The Citadel]
+[Lucien has been cured, and we have collected our reward.]
+
+958 [House Char III] [The Citadel]
+[We have offered to defeat Valonian, a House Char officer, who has gone rogue.]
+
+959 [House Char III] [The Citadel]
+[Lucien's information shows that Valonian and his troops have converted a cavern in the mountains west of the Citadel into a fortified compound.  A narrow set of winding stairs leads to the cavern entrance, which has been fortified with a wooden wall.]
+
+960 [House Char III] [The Citadel]
+[We successfully bested Valonian in battle.]
+
+961 [House Char III] [The Citadel]
+[Valonian has defeated us in an honorable duel.]
+
+962 [House Char III] [The Citadel]
+[We informed Lucien that Valonian was killed, and have collected our reward.]
+
+963 [Priestess I] [The Citadel]
+[Acatia, Chief Acolyte of the Temple, has asked us to stop Numitor, a student from the Seminarium, who is hunting Sylkies.]
+
+964 [Priestess I] [The Citadel]
+[The last person to see Numitor was Tonis, a teacher at the Seminarium.]
+
+965 [Priestess I] [The Citadel]
+[Just before he started hunting Sylkies, Numitor was working with a religious text titled 'Meditations on Steam: A Flame Perspective of the Goddess'.  Tonis says there should be a copy in the Library of Leit.]
+
+966 [Priestess I] [The Citadel]
+[Numitor has a room in the Seminarium dormitory. Number 12, first floor.]
+
+967 [Priestess I] [The Citadel]
+[We have discovered the translation error that inspired Numitor's crusade against the Goddess.]
+
+968 [Priestess I] [The Citadel]
+[While reading a religious text at the library we discovered that someone made a serious translation error.]
+
+969 [Priestess I] [The Citadel]
+[Realizing the enormity of his crimes, Numitor has committed suicide.]
+
+970 [Priestess I] [The Citadel]
+[Numitor has realized his folly, and based on our recommendation is seeking penance from the Priestess.]
+
+971 [Priestess I] [The Citadel]
+[Numitor has realized his folly, and based on our recommendation is seeking a Druid who can help him clean the syklie blood from his soul.]
+
+972 [Priestess I] [The Citadel]
+[Having stopped Numitor's sylkie hunting, we returned to the Temple.  Acatia tells us that the Priestess wishes to see us.]
+
+973 [Priestess II] [The Citadel]
+[The Priestess has asked for our help.  Apparently a corpse has gone missing from the Crematorium, and she'd like us find out what happened to it, and get it back.]
+
+974 [Priestess II] [The Citadel]
+[Mersius is the acolyte responsible for the Crematorium.]
+
+975 [Priestess II] [The Citadel]
+[We discovered that a drain grate in the Rekidling room of the Crematorium has recently been moved. The drain leads directly into the sewers.]
+
+976 [Priestess II] [The Citadel]
+[Mersius tells us that bodies disappear on a regular basis from the cemetery just outside of the city.]
+
+977 [Priestess II] [The Citadel]
+[We have discovered that Vectrix, a scholar who is researching new medical techniques, took the missing corpse.   He claims that reanimating the corpses gives him a better understanding of how the body works, and that his research is medical in nature.]
+
+978 [Priestess II] [The Citadel]
+[We have decided to let Vectrix continue his work.  He has given us the missing corpse, and a copy of his journals.]
+
+979 [Priestess II] [The Citadel]
+[Although we were not able to recover the missing corpse, we were able to put a stop to the body stealing, for which the Priestess is grateful.]
+
+980 [Priestess II] [The Citadel]
+[We returned to the Temple with the missing corpse, and told the Priestess about Vectrix and his experiments.  The Priestess was very grateful.]
+
+981 [Priestess II] [The Citadel]
+[The Priestess has seen through our lies about the missing corpse, and commanded us to return to the sewers and dispose of Vectrix.]
+
+982 [Priestess II] [The Citadel]
+[The Priestess believed our lies, and was grateful for our help.  Vectrix can continue his work in safety.]
+
+983 [Priestess II] [The Citadel]
+[The Priestess has given us the Temple's voting rod in exchange for our help with the missing corpse.]
+
+984 [Catch a Muse] [The Citadel]
+[Arens's story reminds me of an old folk song.  There might be a copy at the Library of Leit.]
+
+985 [Catch a Muse] [The Citadel]
+[At the Library we fond a copy of "The Smithy's Dream", the old folk song that tells a very similar story to that of Arens the smith.  Wrote down the lyrics, and notes about performing the song.  It would also make a nice poem.]
+
+986 [Catch a Muse] [The Citadel]
+[The song 'The Smithy's Dream' has inspired Arens to return to his forge!  He is both grateful and generous.]
+
+987 [Catch a Muse] [The Citadel]
+[The poem 'The Smithy's Dream' has inspired Arens to return to his forge!  He is both grateful and generous.]
+
+988 [Rumors] [The Citadel]
+[We have agreed to escort Janasta south so she can fulfill her dying wish to Walk the Stairs.]
+
+989 [Rumors] [The Citadel]
+[Janasta has been killed, and we burned the corpse.]
+
+990 [Rumors] [The Citadel]
+[Janasta has been killed, and we have decided that the best thing to do is to take the body to the River and send her to the Goddess.]
+
+991 [Rumors] [The Citadel]
+[Janasta has been killed, and we've left her body where it fell.]
+
+992 [Rumors] [The Citadel]
+[Janasta has been killed, and we decided that the best thing to do under the circumstances was to bury her.]
+
+993 [Rumors] [The Citadel]
+[We returned Janasta's body to the river.  Sylkies came to guide her to the Goddess.]
+
+994 [Rumors] [The Citadel]
+[Janasta has fulfilled her dying wish, and Walked the Stairs.]
+
+995 [Music Box] [The Citadel]
+[Kerta the ironwood craftsperson told us that Iuliana of Flam commissioned a music box and took it without paying.  She'd like us to get the box back, and at this point is not interested in getting paid.]
+
+996 [Music Box] [The Citadel]
+[Iuliana of Flam has Kerta's music box, and she lives in the Upper West Quarter.  Her house is near the river and across from the Guardian barracks.]
+
+997 [Music Box] [The Citadel]
+[Iuliana has told us in no uncertain terms that she will not give Kerta back the music box.]
+
+998 [Music Box] [The Citadel]
+[We returned Kerta's music box, and she's very grateful.]
+
+1000 [Rumors] [The Citadel]
+[We met Fordain, the Watcher's Agent in the Citadel.  He has explained that the election of a new leader of the Council of Noble Houses in the citadel has stalemated, and the Watcher is concerned about the political stability of the Valley during this crisis time.  Fordain has suggested that we take an active role in deciding the election outcome.]
+
+1001 [Rumors] [The Citadel]
+[Fordain explained that each House and the Temple votes in the Council election with a short metal rod called a voting rod.  Whoever holds a voting rod is allowed to vote in place of that House or the Temple, so it is possible that we could decide the election by securing a majority of the voting rods.  He suggests that we must first gain the confidence and trust of a House before they would even consider giving us their voting rod.  We should talk to the Priestess or one of her assistants if we wish to obtain the Temple voting rod.]
+
+1002 [Rumors] [The Citadel]
+[Fordain gave us the name of a person to speak to at each House.  Lykia of Char, Vittoria of Flam, and Rosa of Leit.  Vittoria can be found in House Flam.  Lykia can be found upstairs in House Char.  Rosa can be found in House Leit.]
+
+1003 [Rumors] [The Citadel]
+[House Char has won the council election.]
+
+1004 [Rumors] [The Citadel]
+[House Flam has won the council election.]
+
+1005 [Rumors] [The Citadel]
+[House Leit has won the council election.]
+
+1006 [Rumors] [The Citadel]
+[We discovered footprints leading from unearthed graves in the cemetery to an entrance to the sewers.]
+
+1007 [Rumors] [The Citadel]
+[We've accepted a job from Volonius in the Citadel.  He's paying us to drop a package in the corner where the wall between the Upper and Lower meets the canyon wall, to the left of the West Gate.]
+
+1008 [Rumors] [The Citadel]
+[We left Volonius's package at the drop location as instructed.]
+
+1009 [House Leit II] [The Citadel]
+[The person blackmailing Otarian comes to his room at midnight to collect payment.  Otarian has suggested we hide outside his house and follow the blackmailer.]
+
+1010 [Priestess I] [The Citadel]
+[We've discovered a map Numitor made, which appears to list locations of hunting blinds he's set up by the river.]
+
+1011 [House Char I] [The Citadel]
+[We have found the Maleficium lair in the sewers.]
+
+1012 [House Char III] [The Citadel]
+[We've found a secret passage that appears to lead up into Valonian's encampment.]
+
+1013 [House Leit III] [The Citadel]
+[We have cleared the Ancient Library of beasts.]
+
+1015 [House Char III] [The Citadel]
+[As a reward for our efforts, House Char has granted us the use of their arms-master, Gralinus.  He should be found on the first level of the main Char building.]
+
+1016 [House Char I] [The Citadel]
+[Lykia is upstairs in House Char.]
+
+1017 [Music Box] [The Citadel]
+[Kerta says that Winnifred's dagger was never completed.  In order to complete it we should talk to Ludenius at the Academy then Morgan in the Barrier.  She says Morgan can usually be found in the Barrier marketplace by day but does not know exactly where to find Ludenius.]
+
+1018 [Music Box] [The Citadel]
+[Ludenius took Winnifred's unfinished dagger and says to come back after a day.]
+
+1019 [Music Box] [The Citadel]
+[Morgan says that she feels that there is a 'great injustice' about to occur in the Barrier.  She says that once we have figured out what's wrong and made things right, she can finish Winifred's Dagger for us.]
+
+1020 [Music Box] [The Citadel]
+[The great injustice that Morgan foretold was apparently Masseque's hanging.  Having freed Masseque she finished imbuing the blade for us.]
+
+1021 [Rumors] [The Citadel]
+[Fastoflex taught us the Palm of Flame ritual.]
+
+1024 [Rumors] [The Citadel]
+[We have been taught to dance by Terentia.]

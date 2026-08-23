@@ -1,14 +1,14 @@
 
 
-[General] 		[The Watcher's Quest]
+[Rumors] 		[The Watcher's Quest]
 
-[General] 		[The Academy]
+[Rumors] 		[The Academy]
 [Harden Armor]  	[The Academy]	[328]
 [Paralyze Weapon]   	[The Academy]	[364]
 [Swift Weapon]   	[The Academy]	[358]
 [Tuition]   		[The Academy]	[306 308]
 
-[General] 		[The Barrier Fortress]
+[Rumors] 		[The Barrier Fortress]
 [Bar Thugs]  		[The Barrier Fortress]
 [The Fever]  		[The Barrier Fortress]	[15 26 31]
 [Fuzzy]  		[The Barrier Fortress]
@@ -18,7 +18,7 @@
 [Masseque]  		[The Barrier Fortress]	[88 89 90 95]
 [Spear of Tius]  	[The Barrier Fortress]	[30]
 
-[General] 		[The Citadel]
+[Rumors] 		[The Citadel]
 [Catch a Muse]  	[The Citadel]	[986 987]
 [House Char I]  	[The Citadel]	[952]
 [House Char II]  	[The Citadel]	[957]
@@ -33,13 +33,13 @@
 [Priestess I]  		[The Citadel]	[972]
 [Priestess II]  	[The Citadel]	[979 980 982 983]
 
-[General] 		[Crossing East]
+[Rumors] 		[Crossing East]
 [Crop Troubles]  	[Crossing East]	[775]
 [Farmer's Son]  	[Crossing East]	[759 761 763]
 [Geris] 		[Crossing East]	[705]
 [Love Potion]  		[Crossing East]	[749]
 
-[General] 		[Ironwood]
+[Rumors] 		[Ironwood]
 [Gambling Away the Rent][Ironwood]	[544 545 546]
 [Garden Pest]  		[Ironwood]	[551 552]
 [The Huntsmen]  	[Ironwood]	[582 589 594 598]
@@ -47,16 +47,16 @@
 [Menorac's Wife]  	[Ironwood]	[516 517]
 [Missing Daughter]  	[Ironwood]	[574 576 578 579 580]
 
-[General] 		[Jerrock]
+[Rumors] 		[Jerrock]
 
-[General] 		[Kellen]
+[Rumors] 		[Kellen]
 [Crazy Inventor]  	[Kellen]	[107 112]
 [Eino]  		[Kellen]	[118 121 126]
 [Shepherd's Flock] 	[Kellen]	[138 140]
 [Thaumaturgist's Fence] [Kellen]	[152]
 [Vauni's Child]  	[Kellen]	[184 186]
 
-[General] 		[Land's End]
+[Rumors] 		[Land's End]
 [Atonement]  		[Land's End]	[671]
 [Broken Family]  	[Land's End]	[262]
 [Catch a Thief]  	[Land's End]	[224 232 234]
@@ -71,7 +71,7 @@
 [Stolen Book]  		[Land's End]	[282 384 386 388 390]
 [Sylkie Girl]  		[Land's End]	[219]
 
-[General] 		[The Monastery]
+[Rumors] 		[The Monastery]
 [Alian]  		[The Monastery]	[624 626]
 [The Archives]   	[The Monastery]	[640]
 [River Pilgrim]  	[The Monastery]	[602 604 606 608 609]
