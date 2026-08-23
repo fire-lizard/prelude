@@ -122,7 +122,15 @@ static volatile LONG FrameTick = 0;
 
 void PreludeFrameTick()
 {
+#ifdef _WIN32
 	InterlockedIncrement(&FrameTick);
+#else
+	//InterlockedIncrement is Win32 only and broke the mac and linux builds.
+	//The watchdog that reads this counter is inside the _WIN32 block below, so
+	//there is no reader here yet - keep the tick atomic anyway so adding one
+	//needs no second look.
+	__atomic_fetch_add(&FrameTick, 1, __ATOMIC_RELAXED);
+#endif
 }
 
 #ifdef _WIN32
