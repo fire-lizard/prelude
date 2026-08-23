@@ -30,7 +30,20 @@ int ZSTalkWin::Command(int IDFrom, int Command, int Param)
 			pWin = (ZSList *)GetChild(IDC_REPLY);
 			pWin->GetText(Param, GotoWord);
 			pWin->RemoveItem(Param);
-			ScriptContextBlock->FindLabel(GotoWord)->Process();
+			//goword and addword both log a missing label and carry on; this one
+			//dereferenced the miss, and ScriptBlock::Value sits at offset 8, so a
+			//reply whose label is gone read address 8 and killed the game
+			ScriptBlock *pWordBlock = ScriptContextBlock->FindLabel(GotoWord);
+			if(pWordBlock)
+			{
+				pWordBlock->Process();
+			}
+			else
+			{
+				DEBUG_INFO("no label for reply word: ");
+				DEBUG_INFO(GotoWord);
+				DEBUG_INFO("\n");
+			}
 			DEBUG_INFO("going to word: ");
 			DEBUG_INFO(GotoWord);
 			DEBUG_INFO("\n");
@@ -195,8 +208,16 @@ int ZSTalkWin::GoModal()
 	AddWord("Goodbye");
 
 	BeginBlock = ScriptContextBlock->FindLabel("begin");
-	
-	BeginBlock->Process();
+
+	//a character whose script has no begin label used to crash here
+	if(BeginBlock)
+	{
+		BeginBlock->Process();
+	}
+	else
+	{
+		DEBUG_INFO("character script has no begin label\n");
+	}
 
 	//loop while we're not in a done state
 	while(State != WINDOW_STATE_DONE && ZSWindow::GetMain()->GetState() != WINDOW_STATE_DONE)

@@ -1400,7 +1400,7 @@
 		(cond (ask [Dagger] [Warhammer] [Tell me about the armor] [Never mind])
 			(goto [Dagger])
 			(goto [Mace])
-			(goto [Long sword])
+			(goto [Longsword])
 			(goto [Axe])
 			(goto [armor])
 			(goto [never mind])
@@ -1482,7 +1482,7 @@
 			(goto [Boots])
 			(goto [Helm])
 			(goto [Gauntlets])
-			(goto [Large Shield])
+			(goto [Shield])
 			(goto [weapon])
 			(goto [never mind])
 		)
@@ -9777,7 +9777,7 @@
 	   ()
 	)
 	(say [What's your pleasure?])
-	(addword [Just browsing.])
+	(addword [Just browsing])
 	(addword [You're my pleasure, Darling.])
 	(addword [<make idle conversation>])
 )
@@ -16562,7 +16562,7 @@
 	(cond (comp (getchar ^LEAD^ ^INTELLIGENCE^) 8)
 	   (addword [What kind of needs?])
 	   (addword [What kind of needs?])
-	   (  (addword [I don't believe you're propositioning me])
+	   (  (addword [I can't believe you're propositioning me])
 			(addword [I want to help you with those needs])
 			(addword [I don't think so])
 	   )
@@ -24817,7 +24817,7 @@
 	(saydesc [The lady who wheels around has a crossbow in her hands.])
 	(say [Oh dear.  You should know better than to sneak up on someone like this around here.])
 	(if (flag ^TalkedHyricLouisa^)
-		(addword [I'm a friend of Hyric, she sends his regards])
+		(addword [I'm a friend of Hyric, she sends her regards])
 		()
 	)
 	(if (flag ^InfiltrateMiners^)
@@ -29275,7 +29275,7 @@
 		(say [I was beginning to think you'd never come.  Nothing has caused me to believe there are members of the Rebellion in Crossing East, but I'm troubled nonetheless.  The darkening times have not left this small town untouched.])
 	)
 	(if (flag ^KnowsDark^)
-		(addword [I'm afraid things are worth than you think])
+		(addword [I'm afraid things are worse than you think])
 		()
 	)
 	(addword [What's troubling you?])
@@ -29290,7 +29290,7 @@
 	(addlocation [Docks]  2173 1401 0 3 168 255)
 )
 
-(!I'm afraid things are worth than you think!
+(!I'm afraid things are worse than you think!
 	(say [What do you mean by that?])
 	(cond (ask [<explain about the Darkness>] [I'm afraid I cannot tell you])
 		(  (saydesc [Uva's eyes widen with fear.])
@@ -32850,7 +32850,7 @@
 
 (!I'd be happy to!
 	(say [I see I've been a good influence and you've learned some manners since out last conversation.  I'm having firewine.])
-	(addword [Barkeep!  Two firewines!])
+	(addword [Barkeep, two firewines])
 	(addword [I need help])
 );I'd be happy to;
 
@@ -33110,7 +33110,7 @@
 (!What's a girl like you doing in a place like this?!
 	(if (getchar ^LEAD^ ^SEX^)
 		(	(say [I won't bore you with my sad story, but it's not so bad.  I have friends here, and my boyfriend treats me pretty good.])
-			(addword [Where's your boyfriend?])
+			(addword [Who's your boyfriend?])
 		)
 		(	(say [As if I've never heard that line.  Thanks for the firewine, but I have a boyfriend.])
 			(ask [<done>])
@@ -34411,8 +34411,8 @@
 	(removeall)
 	(say [Cowards.  What has he done to send you groveling back to me with your tails between your legs?])
 	(cond (ask [His forces are too strong] [We agree with his cause] [We'll try again])
-		(goto [Goto we quit])
-		(goto [I don't agree with you])
+		(goto [We quit])
+		(goto [I don't agree with how you're handling this situation])
 		(goto [No news yet])
 	)
 );We can't defeat Valonian;
@@ -34851,7 +34851,7 @@
 	(removeall)
 	(say [I am sorry you feel that way.  We will defend ourselves if attacked.])
 	(cond (ask [<attack>] [Goodbye])
-		(goto [<attack>])
+		(goto [<attack him>])
 		(goto [Goodbye])
 	)
 );This mutiny must end;
@@ -38876,7 +38876,7 @@
 	(say [That doesn't make any sense.])
 	(cond (ask [It's the truth] [Alright, we procured it from a necromancer in the sewers])
 		(goto [Lied to Priestess])
-		(goto [Tell truth])
+		(goto [Tell Vectrix truth])
 	)
 );Cha failed;
 (!Speech succeeded!
@@ -40627,7 +40627,7 @@
 	(say [You have?!?  I suppose I shouldn't be so surprised.  I haven't been exactly hiding the fact.  Yes, it's an old woman's dying wish to Walk the Stairs.  A common enough desire, but I just don't think I could make it on my own what with bandits, lupins and worse wandering the Valley.  I don't have any living family to help me make the journey, and my friends are all as old as I am.])
 	(sflag ^TalkedJanasta^ 1)
 	;(addword [We could help you])
-	(addword [Can you pay for an escort?]);
+	(addword [Would you pay for an escort?]);
 	(addword [Why do you want to Walk the Stairs?])
 );I've heard you wish to Walk the Stairs;
 
@@ -41472,7 +41472,7 @@
 	)
 	
 	(if (has ^PARTY^ ^Novacula^)
-		(addword [I seek the blessing of the Flame to create a Sanguineous blade.])
+		(addword [I seek the blessings of the Flame to create a Sanguineous blade.])
 		()
 	)
 );Hello;
@@ -43672,7 +43672,7 @@
 				)
 				(	(say [You know what they say about opinions...])
 					(saydesc [He continues playing.])
-					(addword [Can you teach me how to play better?])
+					(addword [Can you teach me how to play?])
 				)
 			)
 		)
@@ -53149,6 +53149,10 @@ written documents of the children of the river;
 	)
 );Succeed;
 
+(!<make idle conversation>!
+	(callscript [LEIdle] [idle.txt] ^Lykomedes^)
+);<make idle conversation>;
+
 );Lykomedes;
 
 ;checked;
@@ -56239,7 +56243,7 @@ written documents of the children of the river;
 );begin;
 
 (!Day!
-	(if (or (flag ^SirianVexed^) (flag ^StealBookAmalthia^) );or;
+	(if (or (flag ^SirianVexed^) (flag ^StealBookAmaltheia^) );or;
 		(goto [go away])
 		()
 	);if;
@@ -56626,7 +56630,7 @@ it;
 		(goto [no really go away])
 		()
 	);if;
-	(if (flag ^StealBookAmalthia^)
+	(if (flag ^StealBookAmaltheia^)
 		(goto [go away])
 		()
 	);if;
@@ -57050,7 +57054,7 @@ it;
 
 
 (!Oh I found that box!
-	(addword [I recovered it but I can't open it])
+	(addword [I recovered the box but I can't open it])
 )
 
 (!the box fell down the hole!
