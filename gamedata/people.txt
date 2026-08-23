@@ -38728,13 +38728,19 @@
 		(
 			(saydesc [The High Priestess stares at you intently.])
 			(say [I sense you have an vessel of the Flame upon you.])
-			(ask [We seek the blessing of the Flame to create a Sanguineous blade.])
-			(say [She closes her eyes and nods.])
-			(say [I will bring forth the Flame and fill this vessel.])
-			(ask [<bless the Novacula>])
-			(push ^Priestess^)
-			(event 239)
-			(end)
+			;the blessing used to run here unconditionally and end the conversation;
+			;that hid every branch below it while the Novacula was unblessed;
+			;offer it instead, and fall through when it is refused;
+			(cond (ask [We seek the blessing of the Flame to create a Sanguineous blade.] [Not at this time])
+				(	(say [She closes her eyes and nods.])
+					(say [I will bring forth the Flame and fill this vessel.])
+					(ask [<bless the Novacula>])
+					(push ^Priestess^)
+					(event 239)
+					(end)
+				)
+				()
+			)
 		)
 		()
 	)
