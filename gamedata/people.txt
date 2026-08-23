@@ -39040,6 +39040,21 @@
 					(say [Good.])
 				)
 			)
+			;this path jumped straight to REWARD, so the corpse was never handed over;
+			;and the journal never closed - same completion as Speech succeeded;
+			(take ^PARTY^ ^Dead Body^)
+			(removejournal 973)
+			(removejournal 974)
+			(removejournal 975)
+			(removejournal 976)
+			(removejournal 977)
+			(removejournal 978)
+			(removejournal 981)
+
+			(journal 982)
+
+			(callscript [GiveXP] 3)
+			(flagp ^PartyRep^ 10)
 			(ask [<more>])
 			(goto [REWARD])
 		)
