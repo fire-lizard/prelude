@@ -1,6 +1,7 @@
 #include "ZSaskwin.h"
 #include "ZSListBox.h"
 #include "ZSEngine.h"
+#include "script.h"
 
 #define IDC_ASK_LIST	567
 LPDIRECTDRAWSURFACE7 ZSAskWin::AskSurface = NULL;
@@ -118,11 +119,16 @@ int ZSAskWin::LeftButtonDown(int x, int y, int doubleClick)
 	}
 	else
 	{
+		//Clicks that miss us still have to reach the conversation behind: that
+		//is where the say box's scrollbar lives, and an ask sits over every
+		//long speech.  This used to ask "is that window my parent", which was
+		//the talk window until the ask was reparented to the main window to
+		//survive closetalk - since then it matched nothing and no NPC message
+		//longer than the box could be scrolled.  Name the conversation instead.
 		pWin = this->GetMain()->GetChild(x,y);
-		if(pWin)
+		if(pWin && pWin != this && pWin == ScriptContextWindow)
 		{
-			if(GetParent() == pWin)
-				return pWin->LeftButtonDown(x,y, doubleClick);
+			return pWin->LeftButtonDown(x,y, doubleClick);
 		}
 	}
 

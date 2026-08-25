@@ -398,7 +398,10 @@ ZSDescribe::ZSDescribe(int NewID, int x, int y, int Width, int Height, BOOL IsPa
 	NumItems = 0;
 	pCurTop = NULL;
 	NumSelectors = 0;
-	NumVisible = ((Bounds.bottom - Bounds.top) - Border * 2) / (Engine->Graphics()->GetFontEngine()->GetTextHeight() - 1);
+	//Draw fits whole lines between the borders, so counting them with a short
+	//line height claimed one line more than it draws: a message exactly that
+	//long hid its last line and was one line too short to offer a scrollbar.
+	NumVisible = ((Bounds.bottom - Bounds.top) - Border * 2) / Engine->Graphics()->GetFontEngine()->GetTextHeight();
 
 	ZSWindow *pWin;
 	pWin = new ZSVScroll(IDC_LIST_SCROLL, Bounds.right - (Border*2), Bounds.top, (Border*2), Bounds.bottom - Bounds.top);
