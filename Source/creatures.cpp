@@ -3039,9 +3039,7 @@ ACTION_RESULT_T Creature::FollowPath()
 							//check for an event
 							if(pPortal->GetEvent() && PreludeParty.IsMember(this))
 							{
-								PreludeEvents.RunEvent(pPortal->GetEvent());
-								ScriptArg *pSA = Pop();
-								int Result = pSA->GetIntValue();
+								int Result = PreludeEvents.RunEvent(pPortal->GetEvent());
 								switch(Result)
 								{
 									case 0:
@@ -3059,7 +3057,6 @@ ACTION_RESULT_T Creature::FollowPath()
 										pPortal->SetEvent(0);
 										break;
 								}
-								delete pSA;
 							}
 							else
 							{
@@ -3390,12 +3387,8 @@ ACTION_RESULT_T Creature::MoveIn()
 						if(this->GetData(INDEX_LOOKAT_OVERRIDE).Value)
 						{
 							Push(this);
-							PreludeEvents.RunEvent(GetData(INDEX_LOOKAT_OVERRIDE).Value);
-							ScriptArg *pSA;
-							pSA = Pop();
 							BOOL Continue;
-							Continue = (BOOL)pSA->GetIntValue();
-							delete pSA;
+							Continue = (BOOL)PreludeEvents.RunEvent(GetData(INDEX_LOOKAT_OVERRIDE).Value);
 							if(Continue)
 							{		
 								//do nothing, complete move
@@ -3590,12 +3583,8 @@ ACTION_RESULT_T Creature::MoveNoRotate()
 						if(this->GetData(INDEX_LOOKAT_OVERRIDE).Value)
 						{
 							Push(this);
-							PreludeEvents.RunEvent(GetData(INDEX_LOOKAT_OVERRIDE).Value);
-							ScriptArg *pSA;
-							pSA = Pop();
 							BOOL Continue;
-							Continue = (BOOL)pSA->GetIntValue();
-							delete pSA;
+							Continue = (BOOL)PreludeEvents.RunEvent(GetData(INDEX_LOOKAT_OVERRIDE).Value);
 							if(Continue)
 							{		
 								//do nothing, complete move
@@ -5345,13 +5334,9 @@ ACTION_RESULT_T Creature::PickUp()
 				if(!PreludeParty.IsMember(pCreature) && Valley->GetRegion(pCreature->GetPosition()) == pRegion)
 				{
 					Push(pCreature);
-					PreludeEvents.RunEvent(51);
 
-					ScriptArg *pSA;
-					pSA = Pop();
 
-					Noticed = (BOOL)pSA->GetIntValue();
-					delete pSA;
+					Noticed = (BOOL)PreludeEvents.RunEvent(51);
 				}
 			}
 			pOb = pOb->GetNextUpdate();
@@ -5361,13 +5346,9 @@ ACTION_RESULT_T Creature::PickUp()
 	if(Noticed && pCreature)
 	{
 		Push(pCreature);
-		PreludeEvents.RunEvent(52);
 
-		ScriptArg *pSA;
-		pSA = Pop();
 
-		Noticed = (BOOL)pSA->GetIntValue();
-		delete pSA;
+		Noticed = (BOOL)PreludeEvents.RunEvent(52);
 
 	}
 
@@ -5471,9 +5452,10 @@ ACTION_RESULT_T Creature::Die()
 			{
 				if(pGI->GetData("DROPOVERRIDE").Value)
 				{
-					PreludeEvents.RunEvent(pGI->GetData("DROPOVERRIDE").Value);
+					ScriptArg Answer;
+					PreludeEvents.RunEvent(pGI->GetData("DROPOVERRIDE").Value, &Answer);
 					ScriptArg *pSA;
-					pSA = Pop();
+					pSA = &Answer;
 					if(pSA->GetValue() && pSA->GetType() == ARG_ITEM)
 					{
 						pNewGI = new GameItem;
@@ -5868,13 +5850,9 @@ ACTION_RESULT_T Creature::Think()
 						LastChecked = TimeNow;
 
 						Push(this);
-						PreludeEvents.RunEvent(GetData(INDEX_LOOKAT_OVERRIDE).Value);
 						BOOL Continue;
-						ScriptArg *pSA;
-						pSA = Pop();
-						Continue = (BOOL)pSA->GetIntValue();
+						Continue = (BOOL)PreludeEvents.RunEvent(GetData(INDEX_LOOKAT_OVERRIDE).Value);
 					
-						delete pSA;
 						
 						if(!Continue)
 						{
@@ -6060,20 +6038,9 @@ ACTION_RESULT_T Creature::UseItem()
 		}
 		
 		Push(this);
-		
+
+		//the event's answer was read into an if with two empty arms
 		PreludeEvents.RunEvent(pGI->GetItem()->GetData("USEOVERRIDE").Value);
-			
-		ScriptArg *pSAUsed;
-		pSAUsed = Pop();
-
-		if(pSAUsed->GetValue())
-		{
-
-		}
-		else
-		{
-
-		}
 		if(pWin)
 		{
 			pWin = ZSWindow::GetMain()->GetChild(66666);
@@ -6429,13 +6396,9 @@ ACTION_RESULT_T Creature::Open()
 																		Valley->GetRegion(pCreature->GetPosition()) == pRegion2))
 								{
 									Push(pCreature);
-									PreludeEvents.RunEvent(51);
 
-									ScriptArg *pSA;
-									pSA = Pop();
 
-									Noticed = (BOOL)pSA->GetIntValue();
-									delete pSA;
+									Noticed = (BOOL)PreludeEvents.RunEvent(51);
 								}
 							}
 							pOb = pOb->GetNextUpdate();
@@ -6444,13 +6407,9 @@ ACTION_RESULT_T Creature::Open()
 						if(Noticed && pCreature)
 						{
 							Push(pCreature);
-							PreludeEvents.RunEvent(53);
 
-							ScriptArg *pSA;
-							pSA = Pop();
 
-							Noticed = (BOOL)pSA->GetIntValue();
-							delete pSA;
+							Noticed = (BOOL)PreludeEvents.RunEvent(53);
 
 						}
 
@@ -6508,11 +6467,8 @@ ACTION_RESULT_T Creature::Open()
 			//check for an event
 			if(pPortal->GetEvent())
 			{
-				PreludeEvents.RunEvent(pPortal->GetEvent());
-				ScriptArg *pSA;
-				pSA = Pop();
 				int Result;
-				Result = pSA->GetIntValue();
+				Result = PreludeEvents.RunEvent(pPortal->GetEvent());
 				switch(Result)
 				{
 				case 0:
@@ -6530,7 +6486,6 @@ ACTION_RESULT_T Creature::Open()
 					pPortal->SetEvent(0);
 					break;
 				}
-				delete pSA;
 			}
 			break;
 		case OBJECT_ITEM:
@@ -6574,13 +6529,9 @@ ACTION_RESULT_T Creature::Open()
 							if(!PreludeParty.IsMember(pCreature) && Valley->GetRegion(pCreature->GetPosition()) == pRegion)
 							{
 								Push(pCreature);
-								PreludeEvents.RunEvent(51);
 
-								ScriptArg *pSA;
-								pSA = Pop();
 
-								Noticed = (BOOL)pSA->GetIntValue();
-								delete pSA;
+								Noticed = (BOOL)PreludeEvents.RunEvent(51);
 							}
 						}
 						pOb = pOb->GetNextUpdate();
@@ -6595,13 +6546,9 @@ ACTION_RESULT_T Creature::Open()
 			if(Noticed && pCreature)
 			{
 				Push(pCreature);
-				PreludeEvents.RunEvent(53);
 
-				ScriptArg *pSA;
-				pSA = Pop();
 
-				Noticed = (BOOL)pSA->GetIntValue();
-				delete pSA;
+				Noticed = (BOOL)PreludeEvents.RunEvent(53);
 				return ACTION_RESULT_FINISHED;
 
 			}
@@ -6729,15 +6676,10 @@ ACTION_RESULT_T Creature::PickPocket()
 		Push(this); //picker
 		Push((Creature *)pCurAction->GetTarget()); //target
 		
-		PreludeEvents.RunEvent(25); //generic pick pocket event
+		int result = PreludeEvents.RunEvent(25); //generic pick pocket event
 
 		this->ImproveSkill(INDEX_PICKPOCKET);
 
-		ScriptArg *pSA;
-		pSA = Pop();
-		int result;
-		result = pSA->GetIntValue();
-		delete pSA;
 
 		switch(result)
 		{
@@ -6799,9 +6741,10 @@ ACTION_RESULT_T Creature::PickPocket()
 
 						if(pGI->GetData("DROPOVERRIDE").Value)
 						{
-							PreludeEvents.RunEvent(pGI->GetData("DROPOVERRIDE").Value);
+							ScriptArg Answer;
+							PreludeEvents.RunEvent(pGI->GetData("DROPOVERRIDE").Value, &Answer);
 							ScriptArg *pSA;
-							pSA = Pop();
+							pSA = &Answer;
 							if(pSA->GetValue() && pSA->GetType() == ARG_ITEM)
 							{
 								this->Give(pItem, Quantity);
@@ -6828,12 +6771,8 @@ ACTION_RESULT_T Creature::PickPocket()
 		default:
 			Push((Creature *)pCurAction->GetTarget()); //target
 			//party was seend doing illegal!
-			PreludeEvents.RunEvent(53);
 			int Noticed;
-			ScriptArg *pResult;
-			pResult = Pop();
-			Noticed = pResult->GetIntValue();
-			delete pResult;
+			Noticed = PreludeEvents.RunEvent(53);
 			if(Noticed == 2)
 			{
 				Valley->IllegalActivity(this);
@@ -9151,14 +9090,10 @@ ACTION_RESULT_T Creature::GameCommand()
 		Creature *pToDismiss;
 		pToDismiss = (Creature *)pCurAction->GetData();
 		Push(pToDismiss);
-		PreludeEvents.RunEvent(DISMISS_EVENT);
 
-		ScriptArg *pSA;
-		pSA = Pop();
 
 		int Dismissed;
-		Dismissed = pSA->GetIntValue();
-		delete pSA;
+		Dismissed = PreludeEvents.RunEvent(DISMISS_EVENT);
 
 		if(Dismissed)
 		{
@@ -10499,16 +10434,12 @@ int Creature::ImproveSkill(int FieldIndex)
 	Push(FieldIndex);
 	Push(this);
 
-	PreludeEvents.RunEvent(91);
 //	pSBImproveSkill->Process();
 
-	ScriptArg *pSA;
 
-	pSA = Pop();
 	int ImproveIt;
-	ImproveIt = pSA->GetIntValue();
+	ImproveIt = PreludeEvents.RunEvent(91);
 
-	delete pSA;
 
 
 	//if so bump up the skill by one point

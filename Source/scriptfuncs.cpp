@@ -47,6 +47,17 @@ static int NextTalkWin = IDC_TALK_START;
 ScriptArg *ScriptStack[SCRIPT_STACK_SIZE];
 int StackTop = 0;
 
+//The lowest the stack has been since the current script started.  A script
+//may legitimately pop arguments its caller pushed, so "did this run leave an
+//answer" is not depth-vs-entry: it is depth-vs-how-far-down-it-reached.
+static int StackLow = 0;
+
+static void NoteStackTop()
+{
+	if(StackTop < StackLow)
+		StackLow = StackTop;
+}
+
 //The scripts drive this stack, and some of them read it without having pushed
 //anything - (cameralookat (lookstack)) in an event that never pushed a target,
 //for one.  Out of range means "nothing there" and the caller carries on; it
@@ -2434,6 +2445,7 @@ ScriptArg *Pop(ScriptArg *ArgList, ScriptArg *pDestination)
 	}
 
 	StackTop--;
+	NoteStackTop();
 
 	*pDestination = *pTop;
 
@@ -5692,8 +5704,7 @@ void ClearStack()
 	}
 
 	StackTop = 0;
-
-	
+	StackLow = 0;
 }
 
 void GetSub(ScriptArg *ToFill, char *SubString)
@@ -5866,6 +5877,49 @@ void Push(Item *pItem)
 	StackPush(ToPush);
 }
 
+int ScriptStackDepth()
+{
+	return StackTop;
+}
+
+//Start a script run: everything below here belongs to whoever called us.
+//Returns the previous mark, to be handed back to ScriptStackEndFrame - runs
+//nest (an event script can run another event).
+int ScriptStackBeginFrame()
+{
+	int Was = StackLow;
+	StackLow = StackTop;
+	return Was;
+}
+
+void ScriptStackEndFrame(int Was)
+{
+	StackLow = Was;
+	NoteStackTop();
+}
+
+int ScriptStackLow()
+{
+	return StackLow;
+}
+
+//Throw away everything pushed above a mark.  Whoever ran a script is the
+//only one who knows how much of the stack is theirs; leaving their leftovers
+//behind is what lets one script answer for the next.
+void ScriptStackDrop(int Depth)
+{
+	if(Depth < 0)
+		Depth = 0;
+
+	while(StackTop > Depth)
+	{
+		StackTop--;
+		NoteStackTop();
+		delete ScriptStack[StackTop];
+		ScriptStack[StackTop] = NULL;
+	}
+}
+
 ScriptArg *Pop()
 {
 	ScriptArg *pTop;
@@ -5877,6 +5931,7 @@ ScriptArg *Pop()
 		return new ScriptArg;
 
 	StackTop--;
+	NoteStackTop();
 	ScriptStack[StackTop] = NULL;
 
 	return pTop;

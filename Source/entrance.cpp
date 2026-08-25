@@ -29,10 +29,7 @@ BOOL Entrance::Go()
 	{
 		if(EventNum)
 		{
-			PreludeEvents.RunEvent(EventNum);
-			ScriptArg *pSA;
-			pSA = Pop();
-			if(!pSA->GetValue())
+			if(!PreludeEvents.RunEvent(EventNum))
 			{
 				return FALSE;
 			}

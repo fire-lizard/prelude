@@ -58,13 +58,15 @@ BOOL Event::AdvanceFrame()
 					return FALSE;
 				}
 
-				PreludeEvents.RunEvent(EventNum);
-				ScriptArg *pSA;
-				pSA = Pop();
-				if(pSA)
+				//Only this event's own answer decides whether it survives.  Reading
+				//the shared stack blind used to pick up whatever the last script left
+				//there, and a stale 1 means "delete this trigger" - permanently.  That
+				//is how the tracking event on Aisos's corpse vanished from a save when
+				//its own script can only ever answer 0 before the quest is given.
+				int Result;
+				Result = PreludeEvents.RunEvent(EventNum);
+
 				{
-					int Result;
-					Result = pSA->GetIntValue();
 					switch(Result)
 					{
 					case 2: //remove all of these events near this one
@@ -79,7 +81,7 @@ BOOL Event::AdvanceFrame()
 						StartX = (int)(this->GetPosition()->x) / UPDATE_SEGMENT_WIDTH - 2;
 						StartY = (int)(this->GetPosition()->y) / UPDATE_SEGMENT_HEIGHT - 2;
 						EndX = (int)(this->GetPosition()->x) / UPDATE_SEGMENT_WIDTH + 2;
-						EndY = (int)(this->GetPosition()->x) / UPDATE_SEGMENT_HEIGHT + 2;
+						EndY = (int)(this->GetPosition()->y) / UPDATE_SEGMENT_HEIGHT + 2;
 						
 						for(SegY = StartY; SegY <= EndY; SegY++)
 						for(SegX = StartX; SegX <= EndX; SegX++)
@@ -213,10 +215,12 @@ ScriptBlock *EventManager::GetEvent(int num)
 	return &SBEvents[num];
 }
 
-void EventManager::RunEvent(int Num)
+int EventManager::RunEvent(int Num, ScriptArg *pAnswer)
 {
-	char blarg[64];
-	sprintf(blarg, "\nRunning event: %i\n", Num);
+	int WasLow = ScriptStackBeginFrame();
+
+	char blarg[96];
+	sprintf(blarg, "\nRunning event: %i (stack %i)\n", Num, ScriptStackDepth());
 	DEBUG_INFO(blarg);
 	
 	GAME_STATE_T OldState;
@@ -234,7 +238,31 @@ void EventManager::RunEvent(int Num)
 
 	SBEvents[Num].Process();
 	
-	DEBUG_INFO("Done Processing Event\n");
+	//Anything above where the script reached down to is this run's: the top of
+	//it is the answer, and the rest is litter nobody will ever collect.
+	int Result = 0;
+
+	if(ScriptStackDepth() > ScriptStackLow())
+	{
+		ScriptArg *pSA = Pop();
+		Result = pSA->GetIntValue();
+
+		if(pAnswer)
+		{
+			*pAnswer = *pSA;
+			//the copy owns it now: a string or block answer is freed by whichever
+			//of the two is destroyed, and it must not be both
+			pSA->SetValue(NULL);
+		}
+
+		delete pSA;
+	}
+
+	ScriptStackDrop(ScriptStackLow());
+	ScriptStackEndFrame(WasLow);
+
+	sprintf(blarg, "Done Processing Event (stack %i, answer %i)\n", ScriptStackDepth(), Result);
+	DEBUG_INFO(blarg);
 
 	ScriptContextBlock = OldContext;
 
@@ -248,6 +276,8 @@ void EventManager::RunEvent(int Num)
 		}
 	}
 	((ZSMainWindow *)ZSWindow::GetMain())->SetHighLightNonStatic(FALSE);
+
+	return Result;
 }
 
 void EventManager::LoadEvents(const char *filename)
@@ -345,13 +375,11 @@ void EventManager::DoTimed(unsigned long CurTime)
 					{
 						pE->SetInside(TRUE);
 						Num = pE->GetNum();
-						RunEvent(pE->GetNum());
+						int Done = RunEvent(pE->GetNum());
 						RanEvent = TRUE;
 						pEToRemove = pE;
 						pE = (Event *)pE->GetNext();
-						ScriptArg *SA;
-						SA = Pop();
-						if(SA->GetValue())
+						if(Done)
 						{
 							RemoveEvent(&epTimed, pEToRemove);
 							delete pEToRemove;
@@ -371,12 +399,10 @@ void EventManager::DoTimed(unsigned long CurTime)
 				{
 					pE->SetInside(TRUE);
 					Num = pE->GetNum();
-					RunEvent(pE->GetNum());
+					int Done = RunEvent(pE->GetNum());
 					RanEvent = TRUE;
 					pE = (Event *)pE->GetNext();
-					ScriptArg *SA;
-					SA = Pop();
-					if(SA->GetValue())
+					if(Done)
 					{
 						RemoveTimed(Num);
 					}
@@ -406,12 +432,10 @@ void EventManager::DoStartCombat()
 	while(pE)
 	{
 		Num = pE->GetNum();
-		RunEvent(pE->GetNum());
+		int Done = RunEvent(pE->GetNum());
 		pE = (Event *)pE->GetNext();
-	
-		ScriptArg *SA;
-		SA = Pop();
-		if(SA->GetValue())
+
+		if(Done)
 		{
 			RemoveStartCombat(Num);
 		}
@@ -428,12 +452,10 @@ void EventManager::DoEndCombat()
 	while(pE)
 	{
 		Num = pE->GetNum();
-		RunEvent(pE->GetNum());
+		int Done = RunEvent(pE->GetNum());
 		pE = (Event *)pE->GetNext();
-	
-		ScriptArg *SA;
-		SA = Pop();
-		if(SA->GetValue())
+
+		if(Done)
 		{
 			RemoveEndCombat(Num);
 		}
@@ -450,12 +472,10 @@ void EventManager::DoCombatRound()
 	while(pE)
 	{
 		Num = pE->GetNum();
-		RunEvent(pE->GetNum());
+		int Done = RunEvent(pE->GetNum());
 		pE = (Event *)pE->GetNext();
-	
-		ScriptArg *SA;
-		SA = Pop();
-		if(SA->GetValue())
+
+		if(Done)
 		{
 			RemoveCombatRound(Num);
 		}
@@ -472,12 +492,10 @@ void EventManager::DoRest()
 	while(pE)
 	{
 		Num = pE->GetNum();
-		RunEvent(pE->GetNum());
+		int Done = RunEvent(pE->GetNum());
 		pE = (Event *)pE->GetNext();
-	
-		ScriptArg *SA;
-		SA = Pop();
-		if(SA->GetValue())
+
+		if(Done)
 		{
 			RemoveRest(Num);
 		}
