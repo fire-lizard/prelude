@@ -788,6 +788,97 @@ int main(int argc, char * argv[]) {
 		{
 			pMain->RemoveChild(pStart);
 			PreludeWorld->LoadGame(ptdAutoload);
+
+			// ponytail: TEST HOOK - PTD_FIX_EVENT=<num>,<x>,<y>,<radius>,<outfile>
+			// puts a world trigger a save has lost back into the loaded game and
+			// writes the repaired save out.  Remove before shipping.
+			const char * ptdFixEvent = getenv("PTD_FIX_EVENT");
+			if (ptdFixEvent)
+			{
+				int Num = 0;
+				float fx = 0.0f, fy = 0.0f, fr = 0.0f;
+				char OutName[64];
+				char dbg[160];
+
+				OutName[0] = 0;
+
+				if (sscanf(ptdFixEvent, "%i,%f,%f,%f,%63s", &Num, &fx, &fy, &fr, OutName) == 5)
+				{
+					Event *pEv = new Event;
+					D3DVECTOR vAt;
+
+					vAt.x = fx;
+					vAt.y = fy;
+					vAt.z = Valley->GetTileHeight((int)fx, (int)fy);
+
+					pEv->SetPosition(&vAt);
+					pEv->SetRadius(fr);
+					pEv->SetEventType(EVENT_RADIUS);
+					pEv->SetNum(Num);
+					pEv->SetBegin(0);
+					pEv->SetEnd(23);
+					pEv->SetStart(0);
+					pEv->SetFrequency(0);
+					pEv->SetInside(FALSE);
+
+					Valley->AddToUpdate((Object *)pEv);
+
+					PreludeWorld->SaveGame(OutName, "Repaired");
+
+					sprintf(dbg, "PTDFIX added event %i at %.1f,%.1f r%.1f, saved %s\n",
+						Num, fx, fy, fr, OutName);
+					DEBUG_INFO(dbg);
+				}
+				else
+				{
+					DEBUG_INFO("PTDFIX: expected <num>,<x>,<y>,<radius>,<outfile>\n");
+				}
+			}
+
+			// ponytail: TEST HOOK - PTD_MOVE_PARTY=<x>,<y> drops the party on a spot
+			// so a trigger can be walked into without driving the GUI.  Remove before
+			// shipping.
+			const char * ptdMove = getenv("PTD_MOVE_PARTY");
+			if (ptdMove)
+			{
+				int mx = 0, my = 0;
+				if (sscanf(ptdMove, "%i,%i", &mx, &my) == 2)
+				{
+					char dbg[96];
+					PreludeParty.Teleport(mx, my);
+					sprintf(dbg, "PTDMOVE party to %i,%i\n", mx, my);
+					DEBUG_INFO(dbg);
+				}
+			}
+
+			// ponytail: TEST HOOK - PTD_DUMP_EVENTS lists the event triggers the
+			// loaded game actually has, so a save can be checked without playing
+			// to the spot.  Remove before shipping.
+			if (getenv("PTD_DUMP_EVENTS"))
+			{
+				char dbg[160];
+				int sx, sy, found = 0;
+				for (sy = 0; sy < 64; sy++)
+				for (sx = 0; sx < 64; sx++)
+				{
+					Object *pOb = Valley->GetUpdateSegment(sx, sy);
+					while (pOb)
+					{
+						if (pOb->GetObjectType() == OBJECT_EVENT)
+						{
+							Event *pEv = (Event *)pOb;
+							sprintf(dbg, "PTDEVENT seg %i,%i num %i at %.1f,%.1f r%.1f\n",
+								sx, sy, pEv->GetNum(),
+								pEv->GetPosition()->x, pEv->GetPosition()->y, pEv->GetRadius());
+							DEBUG_INFO(dbg);
+							found++;
+						}
+						pOb = pOb->GetNextUpdate();
+					}
+				}
+				sprintf(dbg, "PTDEVENT total %i\n", found);
+				DEBUG_INFO(dbg);
+			}
 			PreludeWorld->SetGameState(GAME_STATE_NORMAL);
 			pMain->SetDrawWorld(DrawWorld);
 			pMain->Show();
