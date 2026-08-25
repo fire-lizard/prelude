@@ -279,7 +279,7 @@ set(PRELUDE_GAMEDATA "" CACHE PATH "Prelude to Darkness game folder to copy into
 if(PRELUDE_GAMEDATA)
 	add_custom_command(TARGET Prelude POST_BUILD
 		COMMAND rsync -a
-			--exclude=Prelude.exe --exclude=Prelude.mac --exclude=oldexe
+			--exclude=Prelude.exe --exclude=Prelude.mac* --exclude=oldexe
 			--exclude=*.dll --exclude=*.psd --exclude=Thumbs.db
 			"${PRELUDE_GAMEDATA}/" "$<TARGET_BUNDLE_CONTENT_DIR:Prelude>/Resources/"
 		COMMENT "Copying game data into Prelude.app"
