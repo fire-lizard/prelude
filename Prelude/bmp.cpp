@@ -33,7 +33,10 @@ uint32* bmp_load(const char * path, int * iw, int * ih) {
 		char tmp[1024];
 		getcwd(tmp, 1024);
 		debug_info("directory %s", tmp);
-		return NULL;
+		// ponytail: NDEBUG compiles out every caller's assert(!=NULL), so returning
+		// NULL here just segfaults later in whoever locks the surface, with no clue
+		// which file was missing. Die naming it, like the Win32 loader does.
+		exit(1);
 	}
 
 	fseek(fp, 0, SEEK_END);
@@ -61,6 +64,11 @@ uint32* bmp_load(const char * path, int * iw, int * ih) {
 	free(tmp);
 
 	fclose(fp);
+
+	if (rtx == NULL) {
+		debug_info("unsupported bmp format in %s", path);
+		exit(1);
+	}
 
 	return rtx;
 }
