@@ -26,5 +26,12 @@ void CallScript(const char *ScriptName, const char *FileName);
 
 ScriptArg *Pop();
 
+//How many values the scripts have on their shared stack right now.
+int ScriptStackDepth();
+void ScriptStackDrop(int Depth);
+int ScriptStackBeginFrame();
+void ScriptStackEndFrame(int Was);
+int ScriptStackLow();
+
 
 #endif

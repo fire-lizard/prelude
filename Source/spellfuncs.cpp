@@ -1008,14 +1008,12 @@ int Sentinel(Object *pCaster, Object *pTarget, int Level, int CallType, int Data
 	Push((int)pTarget->GetPosition()->y);
 	Push((int)pTarget->GetPosition()->x);
 
-	PreludeEvents.RunEvent(376);
+	ScriptArg Answer;
+	PreludeEvents.RunEvent(376, &Answer);
 
-	ScriptArg *pSA;
-	pSA = Pop();
 	Creature *pSentinel;
 
-	pSentinel = pSA->GetCreature();
-	delete pSA;
+	pSentinel = Answer.GetCreature();
 
 	pSentinel->SetData(INDEX_MINDAMAGE,MinDamage);
 	pSentinel->SetData(INDEX_MAXDAMAGE,MaxDamage);
@@ -1738,22 +1736,19 @@ int Golem(Object *pCaster, Object *pTarget, int Level, int CallType, int Data)
 	PreludeEvents.RunEvent(398);
 
 	
-	ScriptArg *pSA;
+	ScriptArg Answer;
 
 	Push((Creature *)pCaster);
 	Push((int)pTarget->GetPosition()->y);
 	Push((int)pTarget->GetPosition()->x);
 
-	PreludeEvents.RunEvent(375);
-
-	pSA = Pop();
+	PreludeEvents.RunEvent(375, &Answer);
 	
 	Creature *pGolem;
 
-	pGolem = pSA->GetCreature();
+	pGolem = Answer.GetCreature();
 
 	pGolem->SetLastPlacedTime(-1);
-	delete pSA;
 
 	return TRUE;
 }

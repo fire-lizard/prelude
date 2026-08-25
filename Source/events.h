@@ -4,6 +4,7 @@
 #include "Objects.h"
 
 class ScriptBlock;
+class ScriptArg;
 
 typedef enum
 {
@@ -119,7 +120,11 @@ public:
 
 	ScriptBlock *GetEvent(int num);
 
-	void RunEvent(int Num);
+	//Runs the event and answers with what its script pushed (0 if it pushed
+	//nothing).  Nothing the run leaves behind survives the call - the script
+	//stack is shared, and a leftover here is read as the *next* event's answer.
+	//Events that answer with an object (an item, a creature) fill in pAnswer.
+	int RunEvent(int Num, ScriptArg *pAnswer = NULL);
 
 	void LoadEvents(const char *filename);
 	void SaveEvents(const char *filename);

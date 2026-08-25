@@ -374,12 +374,8 @@ BOOL SpellList::Test(int Num, int Level, Object *pCaster, Object *pTarget)
 	if(Spells[Num].Levels[Level].ConfirmationEvent)
 	{
 		Push((Creature *)pCaster);
-		PreludeEvents.RunEvent(Spells[Num].Levels[Level].ConfirmationEvent);
-		ScriptArg *pSA;
-		pSA = Pop();
 		int Passed;
-		Passed = pSA->GetIntValue();
-		delete pSA;
+		Passed = PreludeEvents.RunEvent(Spells[Num].Levels[Level].ConfirmationEvent);
 		if(!Passed)
 		{
 			return FALSE;
