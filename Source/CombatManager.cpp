@@ -1111,6 +1111,42 @@ int Combat::SetActiveCombatant()
 
 int Combat::Update()
 {
+	// A turn has to make progress.  A combatant that cannot reach anyone - once
+	// bodies block a corridor, say - churns KILL -> ATTACK -> APPROACH -> FOLLOWPATH
+	// and back without ever spending an action point, and SetActiveCombatant always
+	// hands the turn to whoever has the most, so it comes straight back.  The fight
+	// then deadlocks on a creature nobody can drive: the AI has nothing left to try
+	// and the player is not allowed to act for someone outside the party, which is
+	// why only the menu still answers.  Spend the turn of anyone who has neither
+	// moved nor spent a point in three seconds.  The party is exempt: a player is
+	// allowed to sit and think.
+	static Object *pStalled = NULL;
+	static int StalledAP = -1, StalledX = -1, StalledY = -1, StalledFrames = 0;
+
+	if(pActiveCombatant && !PreludeParty.IsMember((Creature *)pActiveCombatant))
+	{
+		Creature *pAC = (Creature *)pActiveCombatant;
+		int AP = pAC->GetData(INDEX_ACTIONPOINTS).Value;
+		int X = (int)pAC->GetPosition()->x;
+		int Y = (int)pAC->GetPosition()->y;
+
+		if(pActiveCombatant == pStalled && AP == StalledAP && X == StalledX && Y == StalledY)
+		{
+			if(++StalledFrames > 90)
+			{
+				debug_info("%s cannot act, ending its turn\n", pAC->GetData(INDEX_NAME).String);
+				pAC->SetData(INDEX_ACTIONPOINTS, 0);
+				StalledFrames = 0;
+				SetActiveCombatant();
+			}
+		}
+		else
+		{
+			pStalled = pActiveCombatant;
+			StalledAP = AP; StalledX = X; StalledY = Y; StalledFrames = 0;
+		}
+	}
+
 	//Object *pOb;
 	//first update non-creature things
 	///int Offset;
@@ -1176,6 +1212,7 @@ int Combat::Update()
 					{
 						pThing->InsertAction(ACTION_IDLE,NULL,NULL);
 					}
+
 					SetActiveCombatant();
 				}
 			}
