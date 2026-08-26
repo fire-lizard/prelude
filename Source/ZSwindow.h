@@ -257,6 +257,11 @@ class ZSWindow
 		virtual int DoubleClick(int x, int y);
 		virtual int Command(int IDFrom, int Command, int Param);
 		virtual int HandleKeys(BYTE *CurrentKeys, BYTE* LastKeys);
+
+		// Key autorepeat only means "do it again" for windows that consume a key-down
+		// as input (text entry). Everything else treats it as an edge that toggles
+		// state, so a repeat must read as "still held", not as a fresh press.
+		virtual BOOL WantsKeyRepeat() { return FALSE; }
 		
 		virtual int GoModal();
 

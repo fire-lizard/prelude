@@ -243,27 +243,37 @@ void ZSInput_key_event(GLFWwindow* window, int ikey, int scancode, int action, i
 	}
 
 
+	// The pre-event state is what makes a key-down an *edge*. Snapshot it before
+	// touching input_key_state, and commit old_key_state before dispatching:
+	// HandleKeys can run a nested GoModal() loop that pumps more key events, and
+	// those must not still see this key as freshly pressed.
+	uint8_t prev_key_state[512];
+	memcpy(prev_key_state, input_key_state, sizeof(prev_key_state));
+
 	if (action == GLFW_PRESS) {
 		input_key_state[key] = 0x80;
-		input_focused_window->HandleKeys(input_key_state, old_key_state);
-		memcpy(old_key_state, input_key_state, sizeof(input_key_state));
-	}
-	else if (action == GLFW_REPEAT) {
-		input_key_state[key] = 0x0;
-		input_focused_window->HandleKeys(input_key_state, old_key_state);
-		memcpy(old_key_state, input_key_state, sizeof(input_key_state));
-		input_key_state[key] = 0x80;
-		input_focused_window->HandleKeys(input_key_state, old_key_state);
-		memcpy(old_key_state, input_key_state, sizeof(input_key_state));
 	}
 	else if (action == GLFW_RELEASE) {
 		input_key_state[key] = 0x0;
-		input_focused_window->HandleKeys(input_key_state, old_key_state);
-		memcpy(old_key_state, input_key_state, sizeof(input_key_state));
+	}
+	else if (action == GLFW_REPEAT) {
+		// ponytail: autorepeat means the key never came up, so leave input_key_state
+		// alone. Faking a release+press pair here manufactured a fresh key-down edge
+		// 30x a second, so ESC opened the main menu and closed it again on the first
+		// repeat. Re-dispatching with no edge still drives level-triggered PRESSED()
+		// camera scrolling; only text entry wants the edge, and gets it by having
+		// the key look un-held in the snapshot the handler sees.
+		if (input_focused_window->WantsKeyRepeat()) {
+			prev_key_state[key] = 0x0;
+		}
 	}
 	else {
 		debug_info("bad key state %i", action);
+		return;
 	}
+
+	memcpy(old_key_state, input_key_state, sizeof(input_key_state));
+	input_focused_window->HandleKeys(input_key_state, prev_key_state);
 
 	if (input_key_state[DIK_ESCAPE] & 0x80 &&
 		(input_key_state[DIK_LCONTROL] & 0x80 || input_key_state[DIK_RCONTROL] & 0x80) &&

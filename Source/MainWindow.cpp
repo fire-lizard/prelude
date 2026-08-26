@@ -892,6 +892,11 @@ int ZSMainWindow::Command(int IDFrom, int Command, int Param)
 }
 
 #define PRESSED(x) (CurrentKeys[x] & 0x80) 
+// Level-triggered PRESSED() is right for held keys (camera scrolling), wrong for
+// one-shot window opens: autorepeat re-dispatches while the key is still down, so
+// closing the main menu with a held ESC immediately reopened it. TAPPED() is the
+// key-down edge, matching how those windows check for ESC to close themselves.
+#define TAPPED(x) ((CurrentKeys[x] & 0x80) && !(LastKeys[x] & 0x80))
 
 int ZSMainWindow::HandleKeys(BYTE *CurrentKeys, BYTE *LastKeys)
 {
@@ -1624,7 +1629,7 @@ if(PreludeWorld->GetGameState() != GAME_STATE_COMBAT)
 
 //the main menu is available in combat too - it hides its own Save button when
 //the game state is combat
-	if(PRESSED(DIK_O) || PRESSED(DIK_ESCAPE))
+	if(TAPPED(DIK_O) || TAPPED(DIK_ESCAPE))
 	{
 		//open map screen
 		ZSMainOptionsMenu *pOpMenu;

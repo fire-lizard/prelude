@@ -500,7 +500,7 @@ int main(int argc, char * argv[]) {
 	Engine->Graphics()->Flip();
 	Engine->Graphics()->GetBBuffer()->Blt(NULL, Engine->Graphics()->GetPrimay(),NULL,NULL,NULL);
 
-	fp = SafeFileOpen("mesh.bin","rb");
+	fp = fopen("mesh.bin","rb");	// absence is meaningful here - see below
 	if(fp)
 	{
 		fclose(fp);
@@ -575,7 +575,7 @@ int main(int argc, char * argv[]) {
 
 	DEBUG_INFO("About to load Creatures\n");
 
-	fp = SafeFileOpen("creatures.bin","rb");
+	fp = fopen("creatures.bin","rb");	// absence means "rebuild me from the txt"
 	if(!fp)
 	{
 		fp = SafeFileOpen(MASTER_CREATURE_FILE,"rt");
@@ -616,7 +616,7 @@ int main(int argc, char * argv[]) {
 	
 	FILE *fpValley;
 	SetCurrentDirectory(".\\Areas");
-	fpValley = SafeFileOpen("valley.bin","rb");
+	fpValley = fopen("valley.bin","rb");	// absence means "rebuild from worldbase"
 	if(!fpValley)
 	{
 		PreludeWorld->BringUpToDate();

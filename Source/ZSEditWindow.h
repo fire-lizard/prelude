@@ -27,6 +27,7 @@ public:
 	int RightButtonDown(int x, int y);
 	int RightButtonUp(int x, int y);
 	int HandleKeys(BYTE *CurrentKeys, BYTE* LastKeys);
+	BOOL WantsKeyRepeat() { return TRUE; }
 	void GainFocus();
 	void LoseFocus();
 
