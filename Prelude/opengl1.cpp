@@ -1069,6 +1069,10 @@ static void opengl_sync_window_size(void) {
 		opengl_local_context.baseResVar, xp);
 }
 
+static void opengl_framebuffer_size_event(GLFWwindow * window, int w, int h) {
+	opengl_sync_window_size();
+}
+
 // Size the window to `w`x`h` and centre it, shrinking it if the frame and title
 // bar would not fit the monitor work area - picking a resolution at or above
 // the desktop's then gives the largest window that stays fully reachable
@@ -1230,6 +1234,15 @@ void * opengl_create_window(int w, int h, int windowed, int winW, int winH) {
 	glfwSetMouseButtonCallback(opengl_local_context.window, opengl_mouse_event);
 	glfwSetCursorPosCallback(opengl_local_context.window, opengl_mouse_cursor_event);
 	glfwSetScrollCallback(opengl_local_context.window, opengl_mouse_wheel_event);
+	// opengl_apply_fullscreen samples glfwGetFramebufferSize the instant it asks for
+	// the mode change, but X11 resizes asynchronously - so it reads the OLD size and
+	// nothing re-syncs afterwards. baseResVar then belongs to a framebuffer that no
+	// longer exists: the frame is drawn short and, because the viewport goes in at
+	// y=0 with GL's bottom-left origin, flush to the bottom with the slack at the top.
+	// Every mouse position is then that far out - which parks the pointer in
+	// GoModal's border-pan zone and scrolls the camera off the party. Let GLFW tell
+	// us when the size actually changed instead.
+	glfwSetFramebufferSizeCallback(opengl_local_context.window, opengl_framebuffer_size_event);
 	// A decorated window has a close button; without this it does nothing.
 	glfwSetWindowCloseCallback(opengl_local_context.window, opengl_close_callback);
 
